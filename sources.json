@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -100,7 +100,7 @@
       "path": "skills/obsidian-codex-knowledge-loop",
       "origin": "user-installed-workflow-snapshot",
       "files": 4,
-      "sha256_normalized_text": "55e09ac6fde8ce042d42ea3ec931b4a8b61a75fb8d1cb717cc5e71d4081668b9"
+      "sha256_normalized_text": "96438f054989253ea84775e6e721fce5c9ddb301bddcc13bea23efb62664d1b2"
     },
     {
       "name": "prompt-optimizer",

@@ -63,6 +63,26 @@ class ManagementTests(unittest.TestCase):
         self.assertEqual((target / 'SKILL.md').read_text(), 'User local work')
         self.assertFalse((self.workspace / 'Codex').exists())
 
+    def sync_profile(self):
+        M.write_json(self.repo / '.local/github-sync.json', {'skills_dir': str(self.skills)})
+
+    def test_upgrade_hook_runs_only_for_configured_production_installation(self):
+        self.sync_profile()
+        with patch.object(M.subprocess, 'run', return_value=type('Result', (), {'returncode': 0})()) as invoke:
+            M.sync_after_install(self.args())
+            self.assertEqual(invoke.call_args.args[0][-1], 'run')
+            invoke.reset_mock()
+            M.sync_after_install(self.args(skills_dir=str(self.base / 'isolated/skills')))
+            invoke.assert_not_called()
+
+    def test_sync_hook_failure_does_not_undo_successful_install(self):
+        self.install(); self.sync_profile()
+        with patch.object(M.subprocess, 'run', return_value=type('Result', (), {'returncode': 1})()), contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit) as error:
+                M.sync_after_install(self.args())
+        self.assertEqual(error.exception.code, 3)
+        self.assertTrue((self.skills / 'alpha-skill/SKILL.md').is_file())
+
     def test_adoption_and_rollback_preserve_original(self):
         target = self.skills / 'alpha-skill'; target.mkdir(parents=True)
         (target / 'SKILL.md').write_text('User local work', encoding='utf-8')

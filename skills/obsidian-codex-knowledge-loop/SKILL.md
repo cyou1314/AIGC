@@ -36,3 +36,16 @@ Discover only the selected action's runtime/provider requirements at execution t
 On closeout, record actual output, user acceptance or the scope of performed checks, and the resume point. User confirmation of a video may close the project without extra video-content QC; follow the user's explicit analysis request and the producing specialist's necessary output checks. Production checks for audio, 3D, documents or software follow their own contract.
 
 Keep reusable observations as project candidates. Run broad promotion only at the scheduled review or explicit upgrade task. Never claim rules were updated if no file change occurred. Unresolved cross-project items go to vault TODO.md. No credentials, raw chats or large media in memory. Drive remains a source/archive/fallback; never reverse-sync an empty local vault over it.
+
+## Workflow source updates and GitHub closeout
+
+The user requests local AIGC workflow updates to reach the private AIGC repository.
+After changing a registered production Skill, shared workflow knowledge or template,
+follow the configured repository's docs/AUTO_SYNC.md and run scripts/sync_github.py run
+with a validated Python interpreter. This standing instruction authorizes scoped
+workflow commits and normal pushes only, not personal project pages, media or secrets.
+Only a matching remote-main SHA confirms synchronization. On merge/privacy/validation/
+authentication failure, retain local changes and record the blocker; never force-push,
+discard user changes or label an unpushed commit as synchronized. Newly added workflow
+sources must be registered before claiming coverage. Regular creative project-memory
+updates alone do not authorize publishing private project data.

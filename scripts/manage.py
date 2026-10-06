@@ -232,8 +232,24 @@ def main():
     args = parser.parse_args()
     try:
         args.func(args)
+        if args.command in {'install', 'upgrade'}:
+            sync_after_install(args)
     except (ValueError, OSError, json.JSONDecodeError) as exc:
         print(f'ERROR: {exc}', file=sys.stderr); raise SystemExit(2)
+
+def sync_after_install(args):
+    """An installation can succeed while publication is blocked; report separately."""
+    profile = ROOT / '.local/github-sync.json'
+    if not profile.is_file():
+        return
+    settings = load(profile)
+    if Path(settings['skills_dir']).resolve() != Path(args.skills_dir).expanduser().resolve():
+        return  # isolated/test installation must not publish production changes
+    result = subprocess.run([sys.executable, str(ROOT / 'scripts/sync_github.py'), 'run'],
+                            cwd=ROOT, timeout=180)
+    if result.returncode:
+        print('Installation completed, but GitHub synchronization is blocked; local installation retained.', file=sys.stderr)
+        raise SystemExit(3)
 
 if __name__ == '__main__':
     main()
