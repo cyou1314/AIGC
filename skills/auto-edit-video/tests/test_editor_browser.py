@@ -1,0 +1,1210 @@
+from __future__ import annotations
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import threading
+import time
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+
+SKILL_DIR = Path(__file__).resolve().parents[1]
+SCRIPTS_DIR = SKILL_DIR / "scripts"
+RUMI_FIXTURE = Path(__file__).resolve().parent / "fixtures/rumi_voice_system.py"
+CHROME = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+sys.path.insert(0, str(SCRIPTS_DIR))
+
+from editor_server import EditorServer  # noqa: E402
+
+try:
+    from playwright.sync_api import sync_playwright
+except ImportError:  # pragma: no cover - optional local browser verification
+    sync_playwright = None
+
+
+@unittest.skipUnless(sync_playwright and CHROME.is_file(), "Playwright Chrome is unavailable")
+class EditorBrowserSmokeTests(unittest.TestCase):
+    def setUp(self) -> None:
+        ffmpeg = shutil.which("ffmpeg")
+        if not ffmpeg:
+            self.skipTest("ffmpeg is unavailable")
+        self._env_patch = patch.dict(os.environ, {"RUMI_VOICE_SYSTEM": str(RUMI_FIXTURE)})
+        self._env_patch.start()
+        self.addCleanup(self._env_patch.stop)
+        self._tmp = tempfile.TemporaryDirectory(prefix="auto-edit-browser-tests-")
+        self.addCleanup(self._tmp.cleanup)
+        self.project = Path(self._tmp.name) / "project"
+        for name in ("source", "working", "assets", "renders", "qa"):
+            (self.project / name).mkdir(parents=True, exist_ok=True)
+        source = self.project / "source/source.mp4"
+        rendered = subprocess.run(
+            [
+                ffmpeg,
+                "-y",
+                "-f",
+                "lavfi",
+                "-i",
+                "color=c=0x3b332d:s=360x640:d=2",
+                "-f",
+                "lavfi",
+                "-i",
+                "sine=frequency=440:sample_rate=48000",
+                "-shortest",
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                "-c:a",
+                "aac",
+                str(source),
+            ],
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(rendered.returncode, 0, rendered.stderr)
+        self.write_json(
+            "project.json",
+            {
+                "schema_version": 1,
+                "project_id": "browser-smoke",
+                "source": {"staged_path": "source/source.mp4", "duration_s": 2.0},
+                "approvals": {},
+            },
+        )
+        self.write_json(
+            "working/transcript_words.json",
+            {
+                "text": "看到 It 就想到 to V",
+                "segments": [
+                    {"id": "segment-0001", "start": 0.02, "end": 1.8, "text": "看到 It 就想到 to V"}
+                ],
+            },
+        )
+        self.write_json(
+            "working/emphasis_plan.json",
+            {"items": [{"id": "em-1", "start": 0.2, "end": 0.8, "text": "It"}]},
+        )
+        self.write_json(
+            "working/highlight_plan.json",
+            {
+                "schema_version": 1,
+                "plan_revision": "a" * 64,
+                "configuration": {"director_profile": "high-energy"},
+                "items": [
+                    {
+                        "id": "highlight-browser",
+                        "start": 0.0,
+                        "end": 1.9,
+                        "title": "It 作虛主詞",
+                        "review_status": "approved",
+                        "score": 0.9,
+                    }
+                ],
+            },
+        )
+        self.write_json("working/edit_candidates.json", {"items": []})
+        self.write_json("working/edit_decisions.json", {"items": []})
+        self.server = EditorServer(("127.0.0.1", 0), self.project)
+        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+        self.thread.start()
+        self.addCleanup(self.stop_server)
+
+    def write_json(self, relative: str, payload: object) -> None:
+        path = self.project / relative
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    def stop_server(self) -> None:
+        self.server.shutdown()
+        self.server.server_close()
+        self.thread.join(timeout=2)
+
+    def test_inline_effect_position_warning_and_card_size_round_trip(self) -> None:
+        host, port = self.server.server_address
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(executable_path=str(CHROME), headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, device_scale_factor=1)
+            console_errors: list[str] = []
+            page.on("pageerror", lambda error: console_errors.append(str(error)))
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+            page.locator("#layer-form:not([hidden])").wait_for()
+
+            initial_effect_count = page.locator("#effect-span-list .effect-span-row").count()
+            self.assertGreaterEqual(initial_effect_count, 1)
+            page.locator("#overlay-text").evaluate(
+                "el => { el.focus(); el.setSelectionRange(0, 2); el.dispatchEvent(new Event('select', {bubbles:true})); }"
+            )
+            page.locator("#effect-style").select_option("highlight")
+            page.locator("#effect-color").fill("#00cc88")
+            page.locator("#add-effect-span").click()
+            # addEffectSpan now awaits the server snap endpoint; wait for the
+            # new row instead of counting synchronously.
+            page.locator("#effect-span-list .effect-span-row").nth(
+                initial_effect_count
+            ).wait_for(timeout=5000)
+            self.assertEqual(
+                page.locator("#effect-span-list .effect-span-row").count(),
+                initial_effect_count + 1,
+            )
+
+            page.locator("#position-x").fill("62")
+            page.locator("#preview-video").evaluate(
+                # The reviewed full-screen hook owns 0.0–0.8s and intentionally
+                # replaces captions there; inspect the caption after that card.
+                "el => { el.currentTime = 1.0; el.dispatchEvent(new Event('timeupdate')); }"
+            )
+            page.locator(".preview-overlay mark.effect-highlight").first.wait_for()
+            self.assertEqual(
+                page.locator('.preview-overlay[data-overlay-id="caption-0001"]').evaluate("el => el.style.left"),
+                "62%",
+            )
+            self.assertIn("重疊", page.locator("#layout-warning").inner_text())
+
+            # A transformed inline effect must reserve its enlarged width in
+            # normal text flow. Otherwise the painted glyphs intrude into the
+            # neighbouring caption text even though DOM collision checks pass.
+            pop_word = page.locator(
+                '.preview-overlay[data-overlay-id="caption-0001"] mark.effect-pop'
+            )
+            pop_word.wait_for()
+            page.wait_for_timeout(320)
+            pop_metrics = pop_word.evaluate(
+                "el => ({layoutWidth: el.offsetWidth, visualWidth: el.getBoundingClientRect().width})"
+            )
+            self.assertLessEqual(
+                pop_metrics["visualWidth"],
+                pop_metrics["layoutWidth"] + 1,
+                pop_metrics,
+            )
+
+            page.locator('.layer-row:has-text("標題卡 · It 作虛主詞")').click()
+            self.assertTrue(page.locator("#card-height-row").is_visible())
+            page.locator("#overlay-max-width").fill("72")
+            page.locator("#card-height").fill("33")
+            page.locator("#position-y").fill("44")
+            page.locator('[data-template-group="cutout"]').click()
+            cutout_card = page.locator(".template-card:has-text('純色背景')")
+            if cutout_card.is_enabled():
+                cutout_card.click()
+                self.assertTrue(page.locator("#subject-controls").is_visible())
+                page.locator("#template-subject-x").fill("61")
+                page.locator("#template-subject-scale").fill("1.25")
+                page.locator("#template-background-color").fill("#2557a7")
+                self.assertIn("定位預覽", page.locator("#template-capability-note").inner_text())
+            page.screenshot(path="/private/tmp/auto-edit-gui-phase7-smoke.png", full_page=True)
+
+            time.sleep(0.9)
+            browser.close()
+
+        state = json.loads((self.project / "working/editor_state.json").read_text(encoding="utf-8"))
+        caption = next(item for item in state["overlays"] if item["id"] == "caption-0001")
+        self.assertEqual(caption["style"]["x"], 62)
+        self.assertTrue(any(span["style"]["effect"] == "highlight" for span in caption["effect_spans"]))
+        self.assertEqual(
+            next(span for span in caption["effect_spans"] if span["text"] == "It")["style"]["effect"],
+            "pop",
+        )
+        hook = next(item for item in state["overlays"] if item.get("design_role") == "hook")
+        self.assertEqual(hook["layout"]["width"], 72)
+        self.assertEqual(hook["layout"]["height"], 33)
+        self.assertEqual(hook["layout"]["y"], 44)
+        if state["video_template"]["id"] == "cutout-solid":
+            self.assertEqual(state["video_template"]["subject"]["x"], 61)
+            self.assertEqual(state["video_template"]["subject"]["scale"], 1.25)
+            self.assertEqual(state["video_template"]["background"]["color"], "#2557a7")
+        self.assertEqual(console_errors, [])
+
+    def test_audio_event_timeline_renders_and_round_trips_sparse_edits(self) -> None:
+        host, port = self.server.server_address
+        source_revision = "b" * 64
+        timeline = {
+            "editable": True,
+            "status": "ready",
+            "reason": None,
+            "source_render_id": "studio-audio-source",
+            "source_plan_sha256": "a" * 64,
+            "source_timeline_revision": source_revision,
+            "studio_edits_sha256": None,
+            "events": [
+                {
+                    "id": "sfx-event-0001",
+                    "trigger_id": "title-1",
+                    "trigger_onset_sample": 24000,
+                    "event_start_sample": 24000,
+                    "duration_samples": 9600,
+                    "asset_id": "short-pop-v1",
+                    "asset_transient_anchor_sample": 960,
+                    "expected_transient_sample": 24960,
+                    "role": "title_enter",
+                    "gain_db": -12,
+                    "fades": {"in_samples": 0, "out_samples": 0},
+                    "duck_group": "dialogue_priority",
+                    "evidence": {"trigger": {"id": "title-1"}},
+                    "reason": "adjacent_onset",
+                    "review_state": "approved",
+                    "source_event_sha256": "c" * 64,
+                    "edited": False,
+                },
+                {
+                    "id": "sfx-event-0002",
+                    "trigger_id": "list-1",
+                    "trigger_onset_sample": 48000,
+                    "event_start_sample": 48000,
+                    "duration_samples": 19200,
+                    "asset_id": "soft-ui-tick-v1",
+                    "asset_transient_anchor_sample": 480,
+                    "expected_transient_sample": 48480,
+                    "role": "row_reveal",
+                    "gain_db": -12,
+                    "fades": {"in_samples": 0, "out_samples": 0},
+                    "duck_group": "dialogue_priority",
+                    "evidence": {"trigger": {"id": "list-1"}},
+                    "reason": "adjacent_onset",
+                    "review_state": "approved",
+                    "source_event_sha256": "d" * 64,
+                    "edited": False,
+                },
+            ],
+        }
+        submitted: list[dict[str, object]] = []
+        saved: list[dict[str, object]] = []
+        current_project: dict[str, object] = {}
+
+        def project_route(route: object) -> None:
+            response = route.fetch()
+            payload = response.json()
+            current_project.clear()
+            current_project.update(payload)
+            payload["state"]["active_highlight_id"] = "highlight-browser"
+            payload["state"]["highlights"][0]["start"] = 0.4
+            payload["state"]["highlights"][0]["end"] = 2.0
+            payload["audio_event_timeline"] = timeline
+            if saved:
+                latest = saved[-1]
+                payload["state"] = latest
+                edited_by_id = {
+                    item["id"]: item for item in latest["audio_event_edits"]["events"]
+                }
+                payload["audio_event_timeline"] = json.loads(json.dumps(timeline))
+                payload["audio_event_timeline"]["status"] = "edited"
+                for event in payload["audio_event_timeline"]["events"]:
+                    edit = edited_by_id.get(event["id"])
+                    if edit:
+                        event["event_start_sample"] = edit["event_start_sample"]
+                        event["gain_db"] = edit["gain_db"]
+                        event["edited"] = True
+            route.fulfill(
+                status=response.status,
+                content_type="application/json",
+                body=json.dumps(payload, ensure_ascii=False),
+            )
+
+        def state_route(route: object) -> None:
+            payload = route.request.post_data_json
+            submitted.append(json.loads(json.dumps(payload)))
+            response_state = json.loads(json.dumps(payload))
+            response_state.pop("x_expected_revision", None)
+            response_state["revision"] = "e" * 64
+            saved.append(response_state)
+            route.fulfill(
+                status=200,
+                content_type="application/json",
+                body=json.dumps(
+                    {
+                        "ok": True,
+                        "updated_at": "now",
+                        "revision": "e" * 64,
+                        "invalidated_gates": ["timeline", "final"],
+                        "approval_revisions": {},
+                    }
+                ),
+            )
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(executable_path=str(CHROME), headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100})
+            page.route("**/api/project", project_route)
+            page.route("**/api/editor-state", state_route)
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+
+            events = page.locator(".timeline-audio-event")
+            self.assertEqual(events.count(), 2)
+            self.assertGreaterEqual(
+                events.nth(0).evaluate("el => parseFloat(getComputedStyle(el).fontSize)"),
+                11.2,
+            )
+            first_title = events.nth(0).get_attribute("title") or ""
+            self.assertIn("sfx-event-0001", first_title)
+            self.assertIn("short-pop-v1", first_title)
+            self.assertIn("起始 sample 24000", first_title)
+            self.assertIn("-12 dB", first_title)
+            first_geometry = events.nth(0).evaluate(
+                "el => ({left: parseFloat(el.style.left), width: parseFloat(el.style.width)})"
+            )
+            self.assertAlmostEqual(first_geometry["left"], (0.5 / 1.6) * 100, places=2)
+            self.assertAlmostEqual(first_geometry["width"], (0.2 / 1.6) * 100, places=2)
+            self.assertTrue(page.locator("#audio-event-form").is_hidden())
+            events.nth(0).click()
+            self.assertTrue(page.locator("#audio-event-form").is_visible())
+            self.assertTrue(page.locator("#layer-form").is_hidden())
+            self.assertAlmostEqual(
+                page.locator("#preview-video").evaluate("el => el.currentTime"),
+                0.9,
+                delta=0.08,
+            )
+            self.assertEqual(page.locator("#audio-event-id").input_value(), "sfx-event-0001")
+            self.assertEqual(page.locator("#audio-event-role").input_value(), "標題入場")
+            self.assertIn("48000", page.locator("#audio-event-start-seconds").inner_text())
+            self.assertIn("不可刪除", page.locator("#audio-event-policy").inner_text())
+
+            page.locator("#audio-event-start-sample").fill("36000")
+            page.locator("#audio-event-gain-db").fill("-9")
+            events.nth(1).click()
+            page.locator("#audio-event-start-sample").fill("60000")
+            page.wait_for_timeout(900)
+            self.assertTrue(saved)
+            edits = saved[-1]["audio_event_edits"]
+            self.assertEqual(
+                edits,
+                {
+                    "schema_version": 1,
+                    "source_render_id": "studio-audio-source",
+                    "source_plan_sha256": "a" * 64,
+                    "source_timeline_revision": source_revision,
+                    "events": [
+                        {
+                            "id": "sfx-event-0001",
+                            "source_event_sha256": "c" * 64,
+                            "event_start_sample": 36000,
+                            "gain_db": -9,
+                        },
+                        {
+                            "id": "sfx-event-0002",
+                            "source_event_sha256": "d" * 64,
+                            "event_start_sample": 60000,
+                            "gain_db": -12,
+                        },
+                    ],
+                },
+            )
+            self.assertEqual(submitted[-1]["x_expected_revision"], current_project["state"]["revision"])
+            self.assertIn("時間軸內容已變更", page.locator("#toast").inner_text())
+
+            saved_request_count = len(submitted)
+            page.locator("#audio-event-start-sample").evaluate(
+                "el => { el.value = '1.5'; el.dispatchEvent(new Event('input', {bubbles: true})); }"
+            )
+            self.assertTrue(page.locator("#audio-event-error").is_visible())
+            page.locator("#audio-event-gain-db").fill("-5")
+            self.assertTrue(page.locator("#audio-event-error").is_visible())
+            page.locator("#audio-event-gain-db").evaluate(
+                "el => { el.value = 'NaN'; el.dispatchEvent(new Event('input', {bubbles: true})); }"
+            )
+            self.assertTrue(page.locator("#audio-event-error").is_visible())
+            page.wait_for_timeout(900)
+            self.assertEqual(len(submitted), saved_request_count)
+
+            page.reload(wait_until="networkidle")
+            page.locator("#timeline-audio-event-sfx-event-0001").click()
+            self.assertEqual(page.locator("#audio-event-start-sample").input_value(), "36000")
+            self.assertIn("起始 sample 36000", page.locator("#timeline-audio-event-sfx-event-0001").get_attribute("title") or "")
+            self.assertIn("已調整", page.locator("#timeline-audio-event-sfx-event-0001").inner_text())
+            page.screenshot(path="/private/tmp/auto-edit-gui-phase1-audio.png", full_page=True)
+            page.locator('.layer-row:has-text("標題卡 · It 作虛主詞")').click()
+            self.assertTrue(page.locator("#layer-form").is_visible())
+            self.assertTrue(page.locator("#audio-event-form").is_hidden())
+            browser.close()
+
+    def test_unavailable_audio_event_timeline_is_safe_and_not_editable(self) -> None:
+        host, port = self.server.server_address
+
+        def project_route(route: object) -> None:
+            response = route.fetch()
+            payload = response.json()
+            payload["audio_event_timeline"] = {
+                "editable": False,
+                "status": "unavailable",
+                "reason": "finalized audio source invalid: test reason",
+                "events": [],
+            }
+            route.fulfill(
+                status=response.status,
+                content_type="application/json",
+                body=json.dumps(payload, ensure_ascii=False),
+            )
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(executable_path=str(CHROME), headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100})
+            page.route("**/api/project", project_route)
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+            self.assertEqual(page.locator(".timeline-audio-event").count(), 0)
+            audio_lane = page.locator('.timeline-track[aria-label="音訊"] .timeline-audio-item')
+            self.assertIn("原始音訊", audio_lane.inner_text())
+            self.assertIn("不可編輯", audio_lane.inner_text())
+            self.assertIn("test reason", audio_lane.inner_text())
+            self.assertTrue(page.locator("#audio-event-form").is_hidden())
+            browser.close()
+
+    def test_malformed_audio_event_timeline_fails_closed_without_page_errors(self) -> None:
+        host, port = self.server.server_address
+        source_revision = "b" * 64
+        base_event = {
+            "id": "sfx-event-0001",
+            "trigger_id": "title-1",
+            "trigger_onset_sample": 24000,
+            "event_start_sample": 24000,
+            "duration_samples": 9600,
+            "asset_id": "short-pop-v1",
+            "asset_transient_anchor_sample": 960,
+            "expected_transient_sample": 24960,
+            "role": "title_enter",
+            "gain_db": -12,
+            "fades": {"in_samples": 0, "out_samples": 0},
+            "duck_group": "dialogue_priority",
+            "evidence": {"trigger": {"id": "title-1"}},
+            "reason": "adjacent_onset",
+            "review_state": "approved",
+            "source_event_sha256": "c" * 64,
+            "edited": False,
+        }
+        base_timeline = {
+            "editable": True,
+            "status": "ready",
+            "reason": None,
+            "source_render_id": "studio-audio-source",
+            "source_plan_sha256": "a" * 64,
+            "source_timeline_revision": source_revision,
+            "studio_edits_sha256": None,
+            "events": [base_event],
+        }
+
+        def timeline_with(**changes: object) -> dict[str, object]:
+            timeline = json.loads(json.dumps(base_timeline))
+            timeline.update(changes)
+            return timeline
+
+        malformed_cases: list[tuple[str, object]] = [
+            ("missing", None),
+            ("empty-object", {}),
+            ("primitive-timeline", "not-an-object"),
+            ("array-timeline", []),
+            ("empty-events", timeline_with(events=[])),
+            ("null-event", timeline_with(events=[None])),
+            ("primitive-event", timeline_with(events=["event"])),
+            ("mixed-valid-invalid", timeline_with(events=[base_event, None])),
+            ("missing-event-fields", timeline_with(events=[{"id": "sfx-event-0001"}])),
+            ("empty-id", timeline_with(events=[{**base_event, "id": ""}])),
+            ("invalid-role", timeline_with(events=[{**base_event, "role": None}])),
+            ("invalid-asset", timeline_with(events=[{**base_event, "asset_id": []}])),
+            ("invalid-event-hash", timeline_with(events=[{**base_event, "source_event_sha256": "nope"}])),
+            ("float-start", timeline_with(events=[{**base_event, "event_start_sample": 1.5}])),
+            ("negative-start", timeline_with(events=[{**base_event, "event_start_sample": -1}])),
+            ("unsafe-start", timeline_with(events=[{**base_event, "event_start_sample": 9007199254740992}])),
+            ("zero-duration", timeline_with(events=[{**base_event, "duration_samples": 0}])),
+            ("float-duration", timeline_with(events=[{**base_event, "duration_samples": 1.5}])),
+            ("null-gain", timeline_with(events=[{**base_event, "gain_db": None}])),
+            ("low-gain", timeline_with(events=[{**base_event, "gain_db": -25}])),
+            ("high-gain", timeline_with(events=[{**base_event, "gain_db": -5}])),
+            ("invalid-source-render", timeline_with(source_render_id="")),
+            ("invalid-source-plan", timeline_with(source_plan_sha256="not-a-sha")),
+            ("invalid-source-revision", timeline_with(source_timeline_revision="not-a-sha")),
+            (
+                "long-internal-reason",
+                timeline_with(
+                    reason="/private/internal/" + ("secret-" * 80),
+                    events=[None],
+                ),
+            ),
+        ]
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(executable_path=str(CHROME), headless=True)
+            for case_name, injected_timeline in malformed_cases:
+                with self.subTest(case=case_name):
+                    def make_project_route(injected: object, missing: bool):
+                        def project_route(route: object) -> None:
+                            response = route.fetch()
+                            payload = response.json()
+                            if missing:
+                                payload.pop("audio_event_timeline", None)
+                            else:
+                                payload["audio_event_timeline"] = injected
+                            route.fulfill(
+                                status=response.status,
+                                content_type="application/json",
+                                body=json.dumps(payload, ensure_ascii=False),
+                            )
+                        return project_route
+
+                    page = browser.new_page(viewport={"width": 1440, "height": 1100})
+                    page_errors: list[str] = []
+                    page.on("pageerror", lambda error: page_errors.append(str(error)))
+                    page.route(
+                        "**/api/project",
+                        make_project_route(injected_timeline, case_name == "missing"),
+                    )
+                    page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+                    self.assertEqual(page.locator(".timeline-audio-event").count(), 0)
+                    self.assertIn(
+                        "原始音訊",
+                        page.locator('.timeline-track[aria-label="音訊"] .timeline-audio-item').inner_text(),
+                    )
+                    self.assertEqual(page_errors, [])
+                    if case_name == "long-internal-reason":
+                        lane_text = page.locator('.timeline-track[aria-label="音訊"] .timeline-audio-item').inner_text()
+                        self.assertNotIn("/private/internal/", lane_text)
+                        page.screenshot(path="/private/tmp/auto-edit-gui-phase1-audio-malformed.png", full_page=True)
+                    page.close()
+            browser.close()
+
+    def test_batch_render_shows_per_clip_qa_and_gates_all_downloads(self) -> None:
+        host, port = self.server.server_address
+        submitted: dict[str, object] = {}
+        restored: dict[str, object] = {}
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(executable_path=str(CHROME), headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100}, device_scale_factor=1)
+            console_errors: list[str] = []
+            page.on("pageerror", lambda error: console_errors.append(str(error)))
+
+            def accept_batch(route: object) -> None:
+                request = route.request
+                submitted.update(request.post_data_json)
+                route.fulfill(
+                    status=202,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "ok": True,
+                            "status": {
+                                "mode": "batch",
+                                "quality": "final",
+                                "state": "running",
+                                "completed_clips": 0,
+                                "total_clips": 1,
+                                "message": "準備整批輸出",
+                            },
+                        },
+                        ensure_ascii=False,
+                    ),
+                )
+
+            def complete_batch(route: object) -> None:
+                revision = str(submitted.get("expected_revision") or "")
+                item = {
+                    "clip_id": "highlight-browser",
+                    "status": "pass",
+                    "output": "renders/highlight-browser-final.mp4",
+                    "download_name": "highlight-browser-final.mp4",
+                    "contact_sheet": "qa/highlight-browser-contact.png",
+                    "report": "qa/highlight-browser-report.json",
+                    "warnings": [],
+                }
+                receipt = {
+                    "schema_version": 2,
+                    "delivery_kind": "batch",
+                    "state_revision": revision,
+                    "status": "pass",
+                    "item_count": 1,
+                    "items": [item],
+                    "archive": "renders/browser-smoke-highlights.zip",
+                    "archive_download_name": "browser-smoke-highlights.zip",
+                    "human_review_required": True,
+                }
+                restored["receipt"] = receipt
+                route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "mode": "batch",
+                            "quality": "final",
+                            "state": "complete",
+                            "state_revision": revision,
+                            "completed_clips": 1,
+                            "total_clips": 1,
+                            "message": "整批輸出完成",
+                            "items": [item],
+                            "output": "/renders/browser-smoke-highlights.zip",
+                            "download_name": "browser-smoke-highlights.zip",
+                            "qa": receipt,
+                        },
+                        ensure_ascii=False,
+                    ),
+                )
+
+            def restore_project(route: object) -> None:
+                response = route.fetch()
+                payload = response.json()
+                receipt = restored.get("receipt")
+                if isinstance(receipt, dict):
+                    receipt = dict(receipt)
+                    receipt["state_revision"] = payload["state"]["revision"]
+                    payload["delivery_qa"] = receipt
+                    final_revision = payload["approval_revisions"]["final"]
+                    payload.setdefault("manifest", {}).setdefault("approvals", {})["final"] = {
+                        "approved": True,
+                        "state_revision": final_revision,
+                    }
+                    payload.setdefault("approval_current", {})["final"] = True
+                route.fulfill(
+                    status=response.status,
+                    content_type="application/json",
+                    body=json.dumps(payload, ensure_ascii=False),
+                )
+
+            def approve_batch(route: object) -> None:
+                payload = route.request.post_data_json
+                revision = payload["expected_revision"]
+                route.fulfill(
+                    status=200,
+                    content_type="application/json",
+                    body=json.dumps(
+                        {
+                            "ok": True,
+                            "approval": {"approved": True, "state_revision": revision},
+                            "approval_revisions": {"final": revision},
+                            "approval_current": {"final": True},
+                        }
+                    ),
+                )
+
+            page.route("**/api/project", restore_project)
+            page.route("**/api/render-batch", accept_batch)
+            page.route("**/api/render-status", complete_batch)
+            page.route("**/api/approve", approve_batch)
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+
+            self.assertEqual(page.locator("#batch-retained-count").inner_text(), "已保留 1 段")
+            page.locator("#publish-tab").click()
+            page.locator("#render-batch-final").click()
+            self.assertTrue(page.locator("#render-button").is_disabled())
+            self.assertTrue(page.locator("#render-final").is_disabled())
+            self.assertTrue(page.locator("#render-batch-final").is_disabled())
+            self.assertTrue(page.locator("#approve-final").is_disabled())
+            page.locator("#batch-qa-grid .batch-qa-card").wait_for()
+            self.assertEqual(submitted["quality"], "final")
+            self.assertTrue(bool(submitted["expected_revision"]))
+            self.assertEqual(page.locator("#batch-progress-value").inner_text(), "1 / 1")
+            self.assertEqual(page.locator("#batch-qa-grid .batch-qa-card").count(), 1)
+            self.assertIn("查看 QA 九宮格", page.locator("#batch-qa-grid").inner_text())
+            self.assertTrue(page.locator("#batch-downloads").is_hidden())
+            self.assertEqual(page.locator("#batch-output-list a").count(), 0)
+            page.locator("#batch-qa-grid .batch-playback-button").click()
+            self.assertIn(
+                "highlight-browser-final.mp4",
+                page.locator("#preview-video").get_attribute("src") or "",
+            )
+
+            page.locator("#approve-final").click()
+            page.locator("#batch-downloads").wait_for(state="visible")
+            self.assertTrue(page.locator("#download-batch-archive").is_visible())
+            self.assertEqual(page.locator("#batch-output-list a").count(), 1)
+            self.assertIn(
+                "browser-smoke-highlights.zip",
+                page.locator("#download-batch-archive").get_attribute("href") or "",
+            )
+            self.assertIn(
+                "highlight-browser-final.mp4",
+                page.locator("#batch-output-list a").get_attribute("href") or "",
+            )
+
+            page.reload(wait_until="networkidle")
+            page.locator("#publish-tab").click()
+            page.locator("#batch-downloads").wait_for(state="visible")
+            self.assertEqual(page.locator("#batch-progress-value").inner_text(), "1 / 1")
+            self.assertEqual(page.locator("#batch-qa-grid .batch-qa-card").count(), 1)
+            self.assertEqual(page.locator("#batch-output-list a").count(), 1)
+            browser.close()
+
+        self.assertEqual(console_errors, [])
+
+    def test_production_desk_layer_variant_rights_flow(self) -> None:
+        from playwright.sync_api import sync_playwright
+
+        host, port = self.server.server_address
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(
+                executable_path=str(CHROME), headless=True
+            )
+            page = browser.new_page(viewport={"width": 1440, "height": 1100})
+            errors: list[str] = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+            page.locator("#layer-form:not([hidden])").wait_for()
+
+            # structured layer create (conceptual title card)
+            desk = page.locator("#desk-layers summary")
+            desk.scroll_into_view_if_needed()
+            page.locator("#desk-layer-type").select_option("title")
+            page.locator("#desk-layer-start").fill("0.1")
+            page.locator("#desk-layer-end").fill("0.5")
+            page.locator("#desk-layer-payload").fill(
+                '{"title_kind":"section","title":"桌面測試標題"}'
+            )
+            page.locator("#desk-layer-save").click()
+            page.locator("#desk-layer-list .batch-output-row").first.wait_for(timeout=8000)
+            self.assertIn("title", page.locator("#desk-layer-list").inner_text())
+
+            # variant add + status row
+            page.locator("#desk-variants summary").click()
+            page.locator("#desk-variant-preset").select_option("youtube-landscape")
+            page.locator("#desk-variant-add").click()
+            page.wait_for_timeout(1600)
+            page.locator("#desk-variants summary").click()  # collapse
+            page.locator("#desk-variants summary").click()  # re-open → refresh
+            page.locator("#desk-variant-list .batch-output-row").first.wait_for(timeout=8000)
+            self.assertIn("youtube-landscape", page.locator("#desk-variant-list").inner_text())
+
+            # ---- full chain (task 006 acceptance) ----
+            # asset beat from the library
+            import subprocess as sp
+
+            asset_path = self.project / "assets/imported/pic.png"
+            asset_path.parent.mkdir(parents=True, exist_ok=True)
+            sp.run(
+                [
+                    "/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg", "-y",
+                    "-f", "lavfi", "-i", "color=c=orange:s=64x64:d=1",
+                    "-frames:v", "1", str(asset_path),
+                ],
+                check=True, capture_output=True,
+            )
+            page.locator("#desk-assets summary").click()
+            page.locator("#desk-asset-library .batch-output-row").first.wait_for(timeout=8000)
+            page.locator("#desk-asset-library .batch-output-row button").first.click()
+            page.wait_for_timeout(600)
+
+            # rights: the referenced asset appears and gets asserted
+            page.locator("#desk-rights summary").click()
+            page.locator("#desk-rights-list .batch-output-row").first.wait_for(timeout=8000)
+            page.locator("#desk-rights-list .batch-output-row button").first.click()
+            page.wait_for_timeout(600)
+            page.locator("#desk-rights summary").click()
+            page.locator("#desk-rights summary").click()
+            page.wait_for_timeout(600)
+            self.assertIn("✓已授權", page.locator("#desk-rights-list").inner_text())
+
+            # variant lifecycle: approve TL → final render → approve FN → download link
+            # refresh first: the asset beat changed the snapshot revision
+            page.locator("#desk-variants summary").click()
+            page.locator("#desk-variants summary").click()
+            page.locator("#desk-variant-list .batch-output-row").first.wait_for(timeout=8000)
+            variant_row = page.locator("#desk-variant-list .batch-output-row").first
+            variant_row.get_by_role("button", name="核TL").click()
+            page.wait_for_timeout(800)
+            variant_row = page.locator("#desk-variant-list .batch-output-row").first
+            self.assertIn("TL:✓", variant_row.inner_text())
+            variant_row.get_by_role("button", name="出FN").click()
+            render_state = {}
+            for _ in range(240):
+                render_state = page.evaluate(
+                    "() => fetch('/api/render-status').then(r => r.json())"
+                )
+                if render_state.get("state") != "rendering":
+                    break
+                page.wait_for_timeout(1000)
+            self.assertEqual(
+                render_state.get("state"), "done",
+                f"variant final render failed: {render_state}",
+            )
+            page.wait_for_timeout(500)
+            page.locator("#desk-variants summary").click()
+            page.locator("#desk-variants summary").click()
+            page.locator("#desk-variant-list .batch-output-row").first.wait_for(timeout=8000)
+            variant_row = page.locator("#desk-variant-list .batch-output-row").first
+            variant_row.get_by_role("button", name="核FN").click()
+            page.wait_for_timeout(800)
+            page.locator("#desk-variants summary").click()
+            page.locator("#desk-variants summary").click()
+            page.locator("#desk-variant-list .batch-output-row").first.wait_for(timeout=8000)
+            variant_row = page.locator("#desk-variant-list .batch-output-row").first
+            self.assertIn("FN:✓", variant_row.inner_text())
+            download = variant_row.get_by_role("link", name="下載")
+            download.wait_for(timeout=8000)
+            href = download.get_attribute("href")
+            response = page.request.get(f"http://{host}:{port}{href}")
+            self.assertEqual(response.status, 200, "approved variant final must download")
+
+            self.assertEqual(errors, [], f"page errors: {errors}")
+            browser.close()
+
+    def test_production_desk_provider_search_consent_and_import(self) -> None:
+        """Provider discovery stays local to the editor and never hotlinks media."""
+        host, port = self.server.server_address
+        events: list[tuple[str, dict[str, object]]] = []
+        provider_payload = {
+            "ok": True,
+            "providers": [
+                {
+                    "id": "openverse",
+                    "label": "Openverse",
+                    "kind": "image",
+                    "consent_required": True,
+                    "cost_class": "free",
+                    "network_disclosure": "搜尋會連線至 Openverse；不會直接載入遠端圖片。",
+                    "consented": False,
+                },
+                {
+                    "id": "wikimedia",
+                    "label": "Wikimedia Commons",
+                    "kind": "image",
+                    "consent_required": True,
+                    "cost_class": "free",
+                    "network_disclosure": "搜尋會連線至 Wikimedia Commons；匯入後保存本機副本。",
+                    "consented": True,
+                },
+                {
+                    "id": "heroicons",
+                    "label": "Heroicons",
+                    "kind": "svg",
+                    "available": False,
+                    "availability_code": "svg_rasterizer_unavailable",
+                    "consent_required": True,
+                    "cost_class": "free",
+                    "network_disclosure": "SVG 只保存本機 PNG 衍生檔。",
+                    "consented": False,
+                },
+                {
+                    "id": "tabler",
+                    "label": "Tabler Icons",
+                    "kind": "svg",
+                    "available": True,
+                    "availability_code": "available",
+                    "consent_required": True,
+                    "cost_class": "free",
+                    "network_disclosure": "SVG 只保存本機 PNG 衍生檔。",
+                    "consented": True,
+                },
+            ],
+        }
+        result_payload = {
+            "import_token": "token-secret",
+            "provider_id": "openverse",
+            "candidate_id": "candidate-1",
+            "title": "River <script>alert(1)</script>",
+            "landing_url": "https://openverse.org/image/river-1",
+            "creator": "Ada Creator",
+            "license_spdx": "CC-BY-4.0",
+            "license_url": "https://creativecommons.org/licenses/by/4.0/",
+            "attribution_text": "Ada Creator / Openverse",
+            "mime_type": "image/jpeg",
+            "width": 640,
+            "height": 480,
+            "attribution_required": True,
+        }
+        svg_result_payload = {
+            "import_token": "svg-token-secret",
+            "provider_id": "tabler",
+            "kind": "svg",
+            "candidate_id": "tabler-arrow-right",
+            "title": "Arrow right <script>alert(1)</script>",
+            "landing_url": "https://tabler.io/icons/icon/arrow-right",
+            "creator": "Tabler",
+            "license_spdx": "MIT",
+            "license_url": "https://opensource.org/license/mit/",
+            "attribution_text": "Tabler Icons",
+            "mime_type": "image/svg+xml",
+            "width": 24,
+            "height": 24,
+            "attribution_required": False,
+        }
+
+        def fulfill(route: object, payload: object, status: int = 200) -> None:
+            route.fulfill(
+                status=status,
+                content_type="application/json",
+                body=json.dumps(payload, ensure_ascii=False),
+            )
+
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(
+                executable_path=str(CHROME), headless=True
+            )
+            page = browser.new_page(viewport={"width": 1440, "height": 1100})
+            console_errors: list[str] = []
+            rights_gets: list[str] = []
+            page.on("pageerror", lambda error: console_errors.append(str(error)))
+            page.on(
+                "request",
+                lambda request: rights_gets.append(request.url)
+                if request.method == "GET" and request.url.rstrip("/").endswith("/api/rights")
+                else None,
+            )
+            page.on(
+                "console",
+                lambda message: console_errors.append(message.text)
+                if message.type == "error"
+                else None,
+            )
+
+            def provider_status(route: object) -> None:
+                events.append(("status", {}))
+                fulfill(route, provider_payload)
+
+            def provider_consent(route: object) -> None:
+                body = route.request.post_data_json
+                events.append(("consent", body))
+                fulfill(route, {"ok": True, "provider_id": body["provider_id"], "consented": True})
+
+            def asset_search(route: object) -> None:
+                body = route.request.post_data_json
+                events.append(("search", body))
+                if body["provider_id"] == "tabler":
+                    fulfill(route, {"ok": True, "provider_id": "tabler", "items": [svg_result_payload]})
+                else:
+                    fulfill(route, {"ok": True, "provider_id": "openverse", "items": [result_payload]})
+
+            def asset_import(route: object) -> None:
+                body = route.request.post_data_json
+                events.append(("import", body))
+                fulfill(
+                    route,
+                    {
+                        "ok": True,
+                        "source": "assets/generated/svg/icon.png" if body["import_token"] == "svg-token-secret" else "assets/imported/river.jpg",
+                        "url": "/assets/generated/svg/icon.png" if body["import_token"] == "svg-token-secret" else "/assets/imported/river.jpg",
+                        "sha256": "a" * 64,
+                        "provider_id": "tabler" if body["import_token"] == "svg-token-secret" else "openverse",
+                        "license_spdx": "MIT" if body["import_token"] == "svg-token-secret" else "CC-BY-4.0",
+                    },
+                )
+
+            page.route("**/api/providers/status", provider_status)
+            page.route("**/api/providers/consent", provider_consent)
+            page.route("**/api/assets/search", asset_search)
+            page.route("**/api/assets/import-provider", asset_import)
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+            page.locator("#desk-assets summary").click()
+            page.wait_for_function(
+                "() => document.querySelectorAll('#desk-provider-select option').length === 4",
+                timeout=8000,
+            )
+            self.assertEqual(page.locator("#desk-provider-select option").count(), 4)
+            self.assertIn("（不可用）", page.locator("#desk-provider-select option").nth(2).inner_text())
+            page.locator("#desk-provider-select").select_option("heroicons")
+            self.assertTrue(page.locator("#desk-provider-consent").is_disabled())
+            self.assertTrue(page.locator("#desk-provider-search").is_disabled())
+            unavailable_reason = page.locator("#desk-provider-status").inner_text()
+            self.assertIn("安全轉檔引擎未就緒", unavailable_reason)
+            self.assertNotRegex(unavailable_reason, r"/|hash|sha|http")
+
+            # SVG candidates are metadata-only DOM rows and still expose an
+            # opaque import token for the server-side PNG conversion.
+            page.locator("#desk-provider-select").select_option("tabler")
+            page.locator("#desk-provider-query").fill("arrow-right")
+            page.locator("#desk-provider-search").click()
+            svg_row = page.locator("#desk-provider-results .provider-result-row").first
+            svg_row.wait_for(timeout=8000)
+            self.assertEqual(svg_row.get_attribute("data-kind"), "svg")
+            self.assertEqual(svg_row.locator("img,object,embed").count(), 0)
+            svg_row.get_by_role("button", name="匯入").click()
+            page.get_by_role("button", name="已匯入").wait_for(timeout=8000)
+            self.assertEqual(rights_gets, [], "SVG import must not refresh rights as a side-channel")
+
+            page.locator("#desk-provider-select").select_option("openverse")
+            self.assertIn("尚未同意", page.locator("#desk-provider-disclosure").inner_text())
+            self.assertFalse(page.locator("#desk-provider-consent").is_checked())
+
+            page.locator("#desk-provider-query").fill("  river stone  ")
+            page.locator("#desk-provider-search").click()
+            page.wait_for_timeout(300)
+            self.assertFalse(
+                any(
+                    kind == "search" and body.get("provider_id") == "openverse"
+                    for kind, body in events
+                ),
+                "search must not be sent without consent",
+            )
+            self.assertIn("勾選", page.locator("#desk-provider-status").inner_text())
+
+            page.locator("#desk-provider-consent").check()
+            page.locator("#desk-provider-search").click()
+            page.locator("#desk-provider-results .provider-result-row").first.wait_for(timeout=8000)
+            mutation_events = [
+                (kind, body)
+                for kind, body in events
+                if kind in {"consent", "search"}
+                and body.get("provider_id") == "openverse"
+            ]
+            self.assertEqual([kind for kind, _body in mutation_events], ["consent", "search"])
+            self.assertEqual(
+                mutation_events[0][1],
+                {"provider_id": "openverse", "consented": True, "confirmed_by": "editor"},
+            )
+            self.assertEqual(
+                mutation_events[1][1],
+                {"provider_id": "openverse", "query": "river stone", "page": 1},
+            )
+            result_row = page.locator("#desk-provider-results .provider-result-row").first
+            result_text = result_row.inner_text()
+            self.assertIn("CC-BY-4.0", result_text)
+            self.assertIn("Ada Creator", result_text)
+            self.assertIn("需列名", result_text)
+            self.assertIn("<script>", result_text)
+            self.assertEqual(result_row.locator("script").count(), 0)
+            source_link = result_row.get_by_role("link", name="來源頁")
+            self.assertEqual(source_link.get_attribute("href"), "https://openverse.org/image/river-1")
+            self.assertEqual(source_link.get_attribute("target"), "_blank")
+            self.assertIn("noopener", source_link.get_attribute("rel") or "")
+            self.assertEqual(page.locator("#desk-provider-results img").count(), 0)
+
+            result_row.get_by_role("button", name="匯入").click()
+            page.get_by_role("button", name="已匯入").wait_for(timeout=8000)
+            self.assertEqual(len(rights_gets), 1, "image import keeps the existing rights refresh")
+            import_events = [body for kind, body in events if kind == "import"]
+            self.assertEqual(
+                import_events,
+                [{"import_token": "svg-token-secret"}, {"import_token": "token-secret"}],
+            )
+            self.assertIn("已匯入", result_row.inner_text())
+            self.assertEqual(console_errors, [])
+            browser.close()
+
+    def test_project_font_selection_preview_failure_and_font_provider_metadata(self) -> None:
+        """Font selection is ID-bound, preview-safe, and never DOM-injects metadata."""
+        host, port = self.server.server_address
+        first = "font-google-fonts-0123456789abcdef-0123456789abcdef"
+        second = "font-google-fonts-fedcba9876543210-fedcba9876543210"
+        font_requests: list[str] = []
+        saved: list[dict[str, object]] = []
+        fonts_calls = 0
+        font_payload = {
+            "ok": True,
+            "engine": {"status": "present", "version": "test"},
+            "fonts": [
+                {"asset_id": first, "family": "Same <script> Family", "style": "Regular", "weight": 400, "coverage": {"count": 10}, "scripts": ["Latin"], "license_spdx": "OFL-1.1", "provider_id": "google-fonts", "sha256": "a" * 64, "availability": "verified"},
+                {"asset_id": second, "family": "Same <script> Family", "style": "Bold", "weight": 700, "coverage": {"count": 20}, "scripts": ["Latin", "Han"], "license_spdx": "OFL-1.1", "provider_id": "google-fonts", "sha256": "b" * 64, "availability": "verified"},
+            ],
+            "selected": None,
+            "selection_status": "legacy",
+            "legacy": {"current": "Legacy.ttf", "status": "unverified-legacy"},
+            "sanctioned_fallbacks": [],
+            "caption_font_asset_ids": [],
+            "disallowed_fallbacks": [],
+        }
+        provider_payload = {"ok": True, "providers": [{"id": "google-fonts", "label": "Google Fonts", "kind": "font", "consent_required": False, "consented": True, "available": True, "network_disclosure": "metadata only"}]}
+        font_result = {"import_token": "font-token", "kind": "font", "title": "<img src=x onerror=alert(1)>", "family": "<script>alert(1)</script>", "license_spdx": "OFL-1.1", "coverage": "Latin、Han", "mime_type": "font/ttf"}
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(executable_path=str(CHROME), headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100})
+
+            def fonts_route(route: object) -> None:
+                nonlocal fonts_calls
+                fonts_calls += 1
+                route.fulfill(status=200, content_type="application/json", body=json.dumps(font_payload, ensure_ascii=False))
+
+            def bytes_route(route: object) -> None:
+                font_requests.append(route.request.url)
+                if second in route.request.url:
+                    route.fulfill(status=404, content_type="text/plain", body="missing")
+                else:
+                    route.fulfill(status=200, content_type="font/ttf", body=(Path("/System/Library/Fonts/Symbol.ttf").read_bytes()))
+
+            def state_route(route: object) -> None:
+                payload = route.request.post_data_json
+                saved.append(payload)
+                route.fulfill(status=200, content_type="application/json", body=json.dumps({"ok": True, "updated_at": "now", "revision": "c" * 64, "invalidated_gates": [], "approval_revisions": {}}))
+
+            page.route("**/api/fonts", fonts_route)
+            page.route("**/api/fonts/*/bytes", bytes_route)
+            page.route("**/api/captions/status", lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps({"ok": True, "engine": {"status": "not_configured"}})))
+            page.route("**/api/editor-state", state_route)
+            page.route("**/api/providers/status", lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps(provider_payload)))
+            page.route("**/api/assets/search", lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps({"ok": True, "items": [font_result]})))
+            page.route("**/api/assets/import-provider", lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps({"ok": True, "asset_id": second})))
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+            page.locator("#layer-form:not([hidden])").wait_for()
+            self.assertEqual(page.locator("#font-family").input_value(), "__legacy__")
+
+            page.locator("#font-family").select_option(first)
+            self.assertEqual(page.locator("#font-family").input_value(), first)
+            page.wait_for_timeout(850)
+            self.assertTrue(saved)
+            first_style = next(item for item in saved[-1]["overlays"] if item["id"] == "caption-0001")["style"]
+            self.assertEqual(first_style["font_asset_id"], first)
+            self.assertEqual(first_style["font_family"], "Same <script> Family")
+            self.assertEqual(first_style["font_weight"], 400)
+            page.locator("#preview-video").evaluate(
+                "el => { el.currentTime = 1; el.dispatchEvent(new Event('timeupdate')); }"
+            )
+            page.wait_for_timeout(700)
+            self.assertTrue(any(first in url for url in font_requests))
+            preview_font = page.locator('.preview-overlay[data-overlay-id="caption-0001"]').evaluate("el => getComputedStyle(el).getPropertyValue('--overlay-font')")
+            self.assertIn(first, preview_font)
+            self.assertNotIn("assets/", preview_font)
+            self.assertNotIn("receipt", preview_font)
+
+            page.locator("#font-family").select_option(second)
+            page.wait_for_timeout(850)
+            self.assertTrue(any(second in url for url in font_requests))
+            self.assertIn("瀏覽器預覽字型載入失敗", page.locator("#font-panel").inner_text())
+            self.assertTrue(saved)
+            style = next(item for item in saved[-1]["overlays"] if item["id"] == "caption-0001")["style"]
+            self.assertEqual(style["font_asset_id"], second)
+            self.assertEqual(style["font_family"], "Same <script> Family")
+            self.assertEqual(style["font_weight"], 700)
+
+            page.locator("#desk-assets summary").click()
+            page.locator("#desk-provider-select").wait_for()
+            page.locator("#desk-provider-query").fill("safe font")
+            page.locator("#desk-provider-search").click()
+            row = page.locator("#desk-provider-results .provider-result-row").first
+            row.wait_for()
+            self.assertEqual(row.get_attribute("data-kind"), "font")
+            self.assertEqual(row.locator("img,object,embed,script").count(), 0)
+            self.assertIn("<script>", row.inner_text())
+            row.get_by_role("button", name="匯入").click()
+            page.get_by_role("button", name="已匯入").wait_for()
+            self.assertGreaterEqual(fonts_calls, 2, "font import refreshes verified font manifest")
+            browser.close()
+
+    def test_unavailable_font_manifest_preserves_existing_binding_on_unrelated_edit(self) -> None:
+        host, port = self.server.server_address
+        asset_id = "font-google-fonts-0123456789abcdef-0123456789abcdef"
+        saved: list[dict[str, object]] = []
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(executable_path=str(CHROME), headless=True)
+            page = browser.new_page(viewport={"width": 1440, "height": 1100})
+
+            def project_route(route: object) -> None:
+                response = route.fetch()
+                payload = response.json()
+                caption = next(item for item in payload["state"]["overlays"] if item["id"] == "caption-0001")
+                caption.setdefault("style", {})["font_asset_id"] = asset_id
+                route.fulfill(status=200, content_type="application/json", body=json.dumps(payload, ensure_ascii=False))
+
+            def state_route(route: object) -> None:
+                saved.append(route.request.post_data_json)
+                route.fulfill(status=200, content_type="application/json", body=json.dumps({"ok": True, "updated_at": "now", "revision": "d" * 64, "invalidated_gates": [], "approval_revisions": {}}))
+
+            page.route("**/api/project", project_route)
+            page.route("**/api/fonts", lambda route: route.fulfill(status=503, content_type="application/json", body=json.dumps({"error": "unavailable"})))
+            page.route("**/api/editor-state", state_route)
+            page.goto(f"http://{host}:{port}/", wait_until="networkidle")
+            page.locator("#layer-form:not([hidden])").wait_for()
+            self.assertTrue(page.locator("#font-family").input_value().startswith("__unavailable__:"))
+            page.locator("#font-size").fill("63")
+            page.wait_for_timeout(850)
+            self.assertTrue(saved)
+            style = next(item for item in saved[-1]["overlays"] if item["id"] == "caption-0001")["style"]
+            self.assertEqual(style["font_asset_id"], asset_id)
+            page.locator("#preview-video").evaluate(
+                "el => { el.currentTime = 1; el.dispatchEvent(new Event('timeupdate')); }"
+            )
+            preview_font = page.locator('.preview-overlay[data-overlay-id="caption-0001"]').evaluate(
+                "el => getComputedStyle(el).getPropertyValue('--overlay-font')"
+            )
+            self.assertIn(f"ProjectFont-{asset_id}", preview_font)
+            self.assertNotIn("PingFang", preview_font)
+            self.assertIn("字型清單載入失敗", page.locator("#font-panel").inner_text())
+            browser.close()
+
+
+if __name__ == "__main__":
+    unittest.main()

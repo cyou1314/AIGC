@@ -1,0 +1,10 @@
+source_path: ""
+source_version: ""
+input_role: "identity | composition | timing | story | technical-project"
+goal: ""
+preserve: []
+allowed_change: []
+output_path: ""
+output_format: ""
+verification: ""
+downstream_skill: ""

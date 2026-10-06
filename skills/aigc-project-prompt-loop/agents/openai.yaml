@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "AIGC Project Prompt Loop"
+  short_description: "Run start-to-finish AIGC video/storyboard prompt projects."
+  default_prompt: "Use $aigc-project-prompt-loop to run my AIGC video/storyboard prompt project from start to closeout."

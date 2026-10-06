@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIGC Output QC"
+  short_description: "Review generated AIGC videos and guide repairs."
+  default_prompt: "Use $aigc-output-qc to review this generated video against its production contract and recommend the lowest-cost valid next step."

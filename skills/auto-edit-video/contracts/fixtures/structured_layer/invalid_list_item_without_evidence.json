@@ -1,0 +1,20 @@
+{
+ "schema_version": 1,
+ "items": [
+  {
+   "id": "structured-layer-abcdef01",
+   "visual_plan_item_id": "visual-beat-abcdef01",
+   "type": "dynamic_list",
+   "revision": 1,
+   "evidence_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "payload": {
+    "items": [
+     {
+      "text": "第一步"
+     }
+    ]
+   },
+   "review_status": "pending"
+  }
+ ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aigc Audio Production"
+  short_description: "Help with Aigc Audio Production tasks"
+  default_prompt: "Use $aigc-audio-production to complete my requested AIGC deliverable."

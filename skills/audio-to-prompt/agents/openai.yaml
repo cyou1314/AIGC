@@ -1,0 +1,4 @@
+interface:
+  display_name: "Audio to Prompt"
+  short_description: "Fuse audio transcripts, tone, and emotion into prompts."
+  default_prompt: "Use $audio-to-prompt to transcribe this audio and turn its content and emotion into an image or video generation prompt."

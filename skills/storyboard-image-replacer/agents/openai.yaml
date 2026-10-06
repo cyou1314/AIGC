@@ -1,0 +1,4 @@
+interface:
+  display_name: "Storyboard Image Replacer"
+  short_description: "Replace storyboard panel images quickly."
+  default_prompt: "Use $storyboard-image-replacer to replace selected storyboard panels or batch replace them from a numbered image folder."

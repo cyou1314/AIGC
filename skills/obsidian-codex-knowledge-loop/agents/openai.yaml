@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIGC Knowledge Loop"
+  short_description: "Persist AIGC projects, evidence and reusable knowledge."
+  default_prompt: "Use $obsidian-codex-knowledge-loop to operate my full AIGC workflow with a persistent project page."

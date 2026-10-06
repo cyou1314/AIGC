@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "narrative": {
+      "label": "叙事影像：短剧、漫剧、动画、MV、儿歌",
+      "lead": "aigc-project-prompt-loop",
+      "support": ["aigc-screenwriter", "aigc-manga-video-director", "audio-to-prompt", "ffmpeg", "aigc-image-director", "aigc-output-qc"],
+      "deliverables": ["剧本或分镜/提示词（按请求）", "实际影像与编辑版本（成片请求）"],
+      "acceptance": ["叙事因果与时间合同", "角色/空间/声音连续性", "实际文件与用户确认或请求的QC"],
+      "boundary": "只做提示词时不强制生成；儿歌按真实歌词/音频节奏，不套短剧节拍。"
+    },
+    "image": {
+      "label": "图像设计：角色、场景、海报、商品图、静帧",
+      "lead": "aigc-image-director",
+      "support": ["imagegen", "cowart:cowart-image-gen", "cowart:cowart-image-edit", "storyboard-image-replacer", "adobe-design-from-template"],
+      "deliverables": ["所需比例和用途的真实图像或设计源文件", "指定文字/品牌资产与变体映射"],
+      "acceptance": ["主体/商品身份与参考职责", "文字准确/构图/裁切/用途适配"],
+      "boundary": "海报不默认21:9；用户只要图像提示词时不调用生成。"
+    },
+    "marketing": {
+      "label": "商业内容：广告、UGC、商品视频、社媒内容",
+      "lead": "aigc-commercial-content",
+      "support": ["ugc-product-video", "ugc-unboxing-video", "ugc-try-on-video", "ugc-tutorial-video", "ugc-website-video", "ad-multiplier", "aigc-image-director", "jianying-editing"],
+      "deliverables": ["与已确认卖点对应的内容/真实视频", "渠道版本与可核验的主张"],
+      "acceptance": ["商品真实性/演示正确性", "受众理解/CTA", "品牌与渠道规格"],
+      "boundary": "UGC只在用户要求UGC或创作者风格时进入；不把所有广告硬套开箱。"
+    },
+    "presenter": {
+      "label": "主持解说：数字人、口播、无脸知识视频",
+      "lead": "ai-host-video",
+      "alternatives": ["faceless-video"],
+      "support": ["youtube-script", "narrator", "subtitles", "video-editing", "aigc-audio-production"],
+      "deliverables": ["主持身份或明确无脸形式", "讲稿/语音/辅助画面/完成的视频（按请求）"],
+      "acceptance": ["身份与语音一致性", "事实准确/口型/讲解可理解", "字幕与画面真实对齐"],
+      "boundary": "明确无脸/旁白叙述选faceless-video；现有口播素材只要剪辑走post；只要讲稿直接用写作能力。"
+    },
+    "post": {
+      "label": "后期制作：剪辑、字幕、声音、变体导出",
+      "lead": "jianying-editing",
+      "alternatives": ["auto-edit-video", "video-editing", "ffmpeg"],
+      "support": ["capcut-edit", "subtitles", "adobe-create-social-variations", "aigc-output-qc"],
+      "deliverables": ["可编辑工程或真实导出视频（以请求为准）", "字幕/音轨/媒体路径完整"],
+      "acceptance": ["时间线和媒体可恢复", "真实导出或工程重开检查", "字幕/声音/指定渠道规格"],
+      "boundary": "本地原始口播自动粗剪选auto-edit-video；已有剪映工程选jianying-editing；简单转换用ffmpeg。"
+    },
+    "audio": {
+      "label": "音频制作：配音、音乐、音效、播客",
+      "lead": "aigc-audio-production",
+      "support": ["transcribe", "ffmpeg", "narrator", "audio-to-prompt"],
+      "deliverables": ["音频文件/分轨/文本（以请求为准）", "语音或音乐方向与实测时长"],
+      "acceptance": ["听觉核验/词句/发音/情绪", "剪切/失真/峰值和用途规格", "可用生成工具与素材来源"],
+      "boundary": "audio-to-prompt负责音频转视觉提示词；它不承担配乐生成。音乐/音效生成服务必须按需发现。"
+    },
+    "three-d": {
+      "label": "3D资产：模型、材质、绑定、动画、预演、打印",
+      "lead": "meshy-3d-generation",
+      "support": ["meshy-3d-printing"],
+      "deliverables": ["真实模型/纹理/动画/场景或打印文件（按用途）", "单位/轴向/格式与导入检查"],
+      "acceptance": ["资产在目标软件导入", "拓扑/UV/材质/骨骼按用途", "预演屏幕空间；打印尺寸和可制造性"],
+      "boundary": "图片或预览视频不能证明可用3D；Blender预演单独检查本地运行时；打印需明确实体打印请求。"
+    },
+    "knowledge": {
+      "label": "知识交付：研究、文档、PPT、表格、数据",
+      "lead": "documents",
+      "alternatives": ["Presentations", "Spreadsheets", "pdf"],
+      "support": ["google-drive:google-drive", "write-like-me:write-like-me"],
+      "deliverables": ["有来源的结论/文档/演示/工作簿", "可编辑或导出版本（按请求）"],
+      "acceptance": ["事实与引用核验", "文档渲染/公式计算/版面检查", "用户要求的内容完整性"],
+      "boundary": "根据交付格式选对应主skill；研究先核验来源，不用生图替代事实或数据。"
+    },
+    "digital": {
+      "label": "数字产品：网站、应用、Agent、交互内容",
+      "lead": "sites:sites-building",
+      "alternatives": ["website-builder", "openai-developers:agents", "agents-sdk"],
+      "support": ["sites:sites-hosting", "plugin-creator:create-plugin"],
+      "deliverables": ["可运行代码/应用/交互产物", "用户要求的部署或本地交付"],
+      "acceptance": ["核心用户路径与异常情况", "真实运行/测试", "实际部署成功才标记已发布"],
+      "boundary": "已有仓库服从仓库技术栈；指定Higgsfield/Cloudflare/SDK时使用对应能力；新游戏无专用skill不伪装支持引擎。"
+    }
+  }
+}

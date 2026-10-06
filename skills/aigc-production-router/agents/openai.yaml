@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aigc Production Router"
+  short_description: "Help with Aigc Production Router tasks"
+  default_prompt: "Use $aigc-production-router to complete my requested AIGC deliverable."

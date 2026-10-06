@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aigc Image Director"
+  short_description: "Help with Aigc Image Director tasks"
+  default_prompt: "Use $aigc-image-director to complete my requested AIGC deliverable."

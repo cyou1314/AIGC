@@ -1,0 +1,20 @@
+{
+ "schema_version": 1,
+ "items": [
+  {
+   "asset_id": "asset-cc-by",
+   "path": "assets/cc-by.png",
+   "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "origin": "folder-import",
+   "provider_id": null,
+   "source_url": null,
+   "license": {
+    "spdx": "CC-BY-4.0",
+    "attribution_required": true,
+    "attribution_text": "",
+    "verified_at": "2026-08-04T03:00:00Z"
+   },
+   "review_status": "approved"
+  }
+ ]
+}

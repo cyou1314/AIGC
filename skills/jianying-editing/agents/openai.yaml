@@ -1,0 +1,7 @@
+interface:
+  display_name: "剪映剪辑"
+  short_description: "剪映草稿检查、字幕、时间线和短视频改版与安全备份"
+  default_prompt: "使用 $jianying-editing 检查或修改这个剪映草稿，先只读分析，再按确认范围写入。"
+
+policy:
+  allow_implicit_invocation: true

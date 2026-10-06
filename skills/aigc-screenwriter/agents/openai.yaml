@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIGC Screenwriter"
+  short_description: "Diagnose and develop scripts before visual direction."
+  default_prompt: "Use $aigc-screenwriter to diagnose or develop my AIGC script before storyboard direction."

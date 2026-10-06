@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prompt Optimizer"
+  short_description: "Strengthen prompts while preserving specialist controls."
+  default_prompt: "Use $prompt-optimizer to make this instruction reliable without changing specialist decisions."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aigc Commercial Content"
+  short_description: "Help with Aigc Commercial Content tasks"
+  default_prompt: "Use $aigc-commercial-content to complete my requested AIGC deliverable."

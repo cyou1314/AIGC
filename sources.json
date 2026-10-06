@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "version": "1.0.0",
+  "provenance": "THIRD_PARTY_NOTICES.md",
+  "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
+  "skills": [
+    {
+      "name": "aigc-audio-production",
+      "path": "skills/aigc-audio-production",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 2,
+      "sha256_normalized_text": "0707a4ce4a73fef74f09c3ca3413c5e5b214ac9ad720da2d550cf7e6d8550ffd"
+    },
+    {
+      "name": "aigc-commercial-content",
+      "path": "skills/aigc-commercial-content",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 2,
+      "sha256_normalized_text": "b854ac46441006781404c55edb68b33582fdb8a5d39db392168dd8faa6e1c7cd"
+    },
+    {
+      "name": "aigc-image-director",
+      "path": "skills/aigc-image-director",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 2,
+      "sha256_normalized_text": "3123bc6205059c1c9adb57379bc6ce046c6b100b7e5329f0b03ca7bb422e5d34"
+    },
+    {
+      "name": "aigc-manga-video-director",
+      "path": "skills/aigc-manga-video-director",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 22,
+      "sha256_normalized_text": "78a82b4120467694453d263d224701962502febeece39a402727d119f2c8c1fd"
+    },
+    {
+      "name": "aigc-output-qc",
+      "path": "skills/aigc-output-qc",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 3,
+      "sha256_normalized_text": "ffb3755d6e613fafefcc4dc4086dc487ac381b0b2e205c8814e42340a3d32e71"
+    },
+    {
+      "name": "aigc-production-router",
+      "path": "skills/aigc-production-router",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 7,
+      "sha256_normalized_text": "70687a43575e9bee48c67a32e6be29781f0cb642494ea133db9d234f01543ed3"
+    },
+    {
+      "name": "aigc-project-prompt-loop",
+      "path": "skills/aigc-project-prompt-loop",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 3,
+      "sha256_normalized_text": "ce60bc63097b17a384fa7a8fa4fe34e8f9a7b9ffe45c397aab7a48ac6781e268"
+    },
+    {
+      "name": "aigc-screenwriter",
+      "path": "skills/aigc-screenwriter",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 7,
+      "sha256_normalized_text": "1ef9b811cca7788332f7c6ede4c5433e491c3d7a07346729debf0a5da1804f9b"
+    },
+    {
+      "name": "audio-to-prompt",
+      "path": "skills/audio-to-prompt",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 4,
+      "sha256_normalized_text": "4e60770c2cbf73fb55f1a0944ebf0805f815c0ee3c161f957f8cb17a1fab23db"
+    },
+    {
+      "name": "auto-edit-video",
+      "path": "skills/auto-edit-video",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 328,
+      "sha256_normalized_text": "2093220847f75d0f40541116261377dce2e20640661c87e6d9f0a888793de746"
+    },
+    {
+      "name": "capcut-edit",
+      "path": "skills/capcut-edit",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 15,
+      "sha256_normalized_text": "c8a5618170be5263ccf18f975b6e7b714d608edded29d144961ad0b05a1482cb"
+    },
+    {
+      "name": "ffmpeg",
+      "path": "skills/ffmpeg",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 2,
+      "sha256_normalized_text": "1a32525c6a734e1b62d3e9a7ebec48c52d270b8ea6e5b6390fb8d508c03c51b6"
+    },
+    {
+      "name": "jianying-editing",
+      "path": "skills/jianying-editing",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 9,
+      "sha256_normalized_text": "0b4849c8c42555622747bf559d3710b434cf5378836def1ae19b711dd185d2e9"
+    },
+    {
+      "name": "obsidian-codex-knowledge-loop",
+      "path": "skills/obsidian-codex-knowledge-loop",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 4,
+      "sha256_normalized_text": "55e09ac6fde8ce042d42ea3ec931b4a8b61a75fb8d1cb717cc5e71d4081668b9"
+    },
+    {
+      "name": "prompt-optimizer",
+      "path": "skills/prompt-optimizer",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 4,
+      "sha256_normalized_text": "72d4ab964913444e208fcf4136dfc859d763aa6a402a246b745aca3f906e8c44"
+    },
+    {
+      "name": "storyboard-image-replacer",
+      "path": "skills/storyboard-image-replacer",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 6,
+      "sha256_normalized_text": "d80fe8892b60f0e318ed13273147dad917d84927600bb00fa99cc4286902235c"
+    },
+    {
+      "name": "transcribe",
+      "path": "skills/transcribe",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 7,
+      "sha256_normalized_text": "37770aee398b4298fff18f3cac9ad8d0c445a05bf106148169a38e30f5258561"
+    }
+  ]
+}

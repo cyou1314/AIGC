@@ -1,0 +1,20 @@
+{
+ "schema_version": 1,
+ "items": [
+  {
+   "asset_id": "asset-unsafe-path",
+   "path": "assets/../outside.png",
+   "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "origin": "folder-import",
+   "provider_id": null,
+   "source_url": null,
+   "license": {
+    "spdx": "user-owned-pending",
+    "attribution_required": false,
+    "attribution_text": "",
+    "verified_at": "2026-08-04T03:00:00Z"
+   },
+   "review_status": "pending"
+  }
+ ]
+}

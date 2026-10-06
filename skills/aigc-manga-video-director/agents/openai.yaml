@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIGC Manga Video Director"
+  short_description: "Analyze video shots, storyboards, and reusable AIGC prompts."
+  default_prompt: "Use $aigc-manga-video-director to analyze this reference video into shot movement, composition, storyboard beats, and generation prompts."
