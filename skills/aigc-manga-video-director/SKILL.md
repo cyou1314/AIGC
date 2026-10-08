@@ -193,6 +193,14 @@ Read `references/aigc-manga-production-playbook.md`, `references/analysis-contra
 
 When this mode is used for cool, hype, stylish, fight, anime-action, entrance, hero-pose, or high-energy reference-video effects, also read `references/cool-video-reference-patterns.md` and choose one reusable pattern before drafting.
 
+## Live-Action Company Template
+
+The supplied company format is learning material, not a mandatory template. Prioritize the most suitable directing and prompt structure for the current story, assets, continuity, and generation conditions; lock template-specific choices only when explicitly requested for the current task. For a company-format or performance-led live-action short-drama prompt, consult the conditional `公司写实短剧时间线模板` in `references/prompt-templates.md`. Preserve its global anchors, blocking, timed action/dialogue, listener reaction, and endpoint structure; adapt rather than mechanically copying it. Treat realism, 9:16, American-English dialogue, no subtitles, and no BGM as task-specific presets, not universal defaults. Check time coverage, prop counts/state, contact physics, readable focus, and axis/eyeline continuity before delivery. Do not persist example story facts as general skill rules.
+
+## Adjacent-Shot Review
+
+For multi-shot storyboards and final video prompts, read `references/shot-language.md` and apply its `相邻镜头与剪辑节奏检查` before delivery. Inspect adjacent subject, actual shot scale, camera angle, composition, screen direction, and camera repetition. Revise unmotivated near-identical cuts; preserve intentional repetition and axis/action continuity. Allocate shot lengths from readable action, dialogue, reaction, and consequence, never by evenly dividing runtime or equating a generation unit with one shot. Keep this review internal unless a material choice or risk needs explanation.
+
 ## Quality Bar
 
 Before finishing, check that:
