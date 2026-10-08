@@ -24,7 +24,7 @@
 macOS示例：
 
 ```bash
-python3 scripts/sync_github.py setup --skills-dir "$HOME/.codex/skills" --vault "/absolute/path/My Vault/Codex" --workspace "$HOME/AIGC-workspace" --outputs "$HOME/AIGC-workspace/outputs"
+python3 scripts/sync_github.py setup --skills-dir "$HOME/.agents/skills" --vault "/absolute/path/My Vault/Codex" --workspace "$HOME/AIGC-workspace" --outputs "$HOME/AIGC-workspace/outputs"
 python3 scripts/sync_github.py status
 python3 scripts/sync_github.py run
 ```
@@ -32,7 +32,7 @@ python3 scripts/sync_github.py run
 Windows PowerShell示例：
 
 ```powershell
-py -3 scripts/sync_github.py setup --skills-dir "$env:USERPROFILE\.codex\skills" --vault "D:\My Vault\Codex" --workspace "$env:USERPROFILE\AIGC-workspace" --outputs "$env:USERPROFILE\AIGC-workspace\outputs"
+py -3 scripts/sync_github.py setup --skills-dir "$env:USERPROFILE\.agents\skills" --vault "D:\My Vault\Codex" --workspace "$env:USERPROFILE\AIGC-workspace" --outputs "$env:USERPROFILE\AIGC-workspace\outputs"
 py -3 scripts/sync_github.py status
 py -3 scripts/sync_github.py run
 ```

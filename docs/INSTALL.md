@@ -48,7 +48,7 @@ Windows示例（先替换路径）：
 py -3 scripts/manage.py install --workspace "$env:USERPROFILE\AIGC-workspace" --vault "D:\My Vault\Codex"
 ```
 
-可选参数：`--outputs` 设置成品目录；`--skills-dir` 指定Codex的实际Skill目录。默认Skill目录为 `CODEX_HOME/skills`，未设置CODEX_HOME时使用用户目录下的 `.codex/skills`。自定义目录必须同时能被当前Codex会话发现。
+可选参数：`--outputs` 设置成品目录；`--skills-dir` 指定Codex的实际Skill目录。默认Skill目录为 `$HOME/.agents/skills`（Windows为用户目录下 `.agents\skills`），不修改平台管理的CODEX_HOME。自定义目录必须同时能被当前Codex会话发现；旧 `.codex/skills` 安装仍可显式管理，但其文件存在不证明当前运行器发现。
 
 安装后在Skill目录的父目录生成：
 
@@ -91,4 +91,6 @@ Windows无需执行激活脚本，因此不必为了此仓库修改全局执行�
 
 开启新的Codex会话确认17个Skill可见，指定 `$aigc-production-router` 制作一个明确目标，先让它报告当前主Skill、缺少输入、能力边界和唯一下一步。随后使用项目页脚本建立测试项目并核验路径。安装成功与生成成功分别验收。
 
-自定义 `--skills-dir` 不在默认CODEX_HOME时，`doctor.py`不会自动找到那份安装配置；设置对应CODEX_HOME或AIGC_WORKSPACE/AIGC_VAULT/AIGC_OUTPUT_ROOT再检查。
+共享配置解析优先级：显式 `AIGC_CONFIG` → `$HOME/.agents/aigc-workflow.json` → 脚本相邻安装配置 → `CODEX_HOME/aigc-workflow.json` → 旧 `$HOME/.codex/aigc-workflow.json`。设置了不存在的显式配置会报错，不静默退回默认。AIGC_WORKSPACE/AIGC_VAULT/AIGC_OUTPUT_ROOT分别覆盖对应路径。自定义安装用AIGC_CONFIG指向实际配置，不要为了它改平台CODEX_HOME。
+
+云端setup/maintenance与全新任务验收见 [CLOUD_SETUP.md](CLOUD_SETUP.md)。

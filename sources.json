@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -44,7 +44,7 @@
       "path": "skills/aigc-production-router",
       "origin": "user-installed-workflow-snapshot",
       "files": 7,
-      "sha256_normalized_text": "70687a43575e9bee48c67a32e6be29781f0cb642494ea133db9d234f01543ed3"
+      "sha256_normalized_text": "0ec91916201416ee84ad7b9fd24a2e897229f25e0caf8bb34cd3c5adc8c45dec"
     },
     {
       "name": "aigc-project-prompt-loop",

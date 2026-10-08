@@ -1,6 +1,6 @@
 # AIGC
 
-个人 AIGC 专业制作与 Skill 工作流。适用于 Windows 与 macOS，提供跨类型路由、17个本地Skill、专业知识、项目模板、安装/升级/回滚工具，以及按生产类型分别验收的标准。
+个人 AIGC 专业制作与 Skill 工作流。适用于 Windows、macOS 与 Codex Linux 云端环境，提供跨类型路由、17个本地Skill、专业知识、项目模板、安装/升级/回滚工具，以及按生产类型分别验收的标准。
 
 初始发布：1.0.0；当前版本以 [VERSION](VERSION) 为准。仓库仅包含工作方法与代码；个人记忆、项目素材、密钥、模型和外部插件账号独立维护。
 
@@ -9,6 +9,7 @@
 | 需要做什么 | 文档 |
 |---|---|
 | 新电脑安装 | [安装与首次运行](docs/INSTALL.md) |
+| Codex云端自动加载 | [云端setup/maintenance与验收](docs/CLOUD_SETUP.md) |
 | Windows / macOS差异 | [平台兼容与依赖](docs/PLATFORMS.md) |
 | 完整专业制作流程 | [生产工作流](docs/WORKFLOW.md) |
 | 17个Skill与职责 | [Skill目录](docs/SKILLS.md) |

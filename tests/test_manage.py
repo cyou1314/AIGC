@@ -25,7 +25,7 @@ class ManagementTests(unittest.TestCase):
         (self.repo / 'knowledge/AGENTS.md').write_text('Vault: {{AIGC_VAULT}}\n', encoding='utf-8')
         (self.repo / 'knowledge/TODO.md').write_text('Default todo\n', encoding='utf-8')
         for name in ['project-quick.md', 'project-full.md']:
-            (self.repo / 'templates' / name).write_text('# Project template\n', encoding='utf-8')
+            (self.repo / 'templates' / name).write_text('# Project template\nVault: {{AIGC_VAULT}}\n', encoding='utf-8')
         (self.repo / 'VERSION').write_text('1.0.0\n', encoding='utf-8')
         self.root_patch = patch.object(M, 'ROOT', self.repo); self.root_patch.start()
         self.addCleanup(self.root_patch.stop); self.addCleanup(self.tmp.cleanup)
@@ -54,6 +54,10 @@ class ManagementTests(unittest.TestCase):
         self.assertNotIn('{{AIGC_VAULT}}', text)
         self.assertEqual(result['skills'], 2)
         self.assertEqual(M.load(M.config_for(self.skills))['vault'], str(self.workspace / 'Codex'))
+        for relative in ['AGENTS.md', 'projects/_项目快速模板.md', 'projects/_项目模板.md']:
+            page = self.workspace / 'Codex' / relative
+            self.assertNotIn('{{AIGC_VAULT}}', page.read_text(encoding='utf-8'))
+            self.assertIn(str(self.workspace / 'Codex'), page.read_text(encoding='utf-8'))
 
     def test_existing_unmanaged_skill_conflict_changes_nothing(self):
         target = self.skills / 'alpha-skill'; target.mkdir(parents=True)
@@ -97,7 +101,7 @@ class ManagementTests(unittest.TestCase):
         result = self.install()
         self.assertEqual(target.stat().st_mtime_ns, time)
         self.assertEqual(result['incoming'], [])
-        self.assertEqual(result['changed_targets'], 1)  # transaction registry only
+        self.assertEqual(result['changed_targets'], 0)  # identical installation is a complete no-op
 
     def test_upgrade_preserves_personal_todo_with_incoming(self):
         self.install()
