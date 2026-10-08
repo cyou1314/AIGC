@@ -2,11 +2,13 @@
 
 仓库 `skills/` 是17个Skill的唯一源码。初始化器把完整目录安全安装到 `$HOME/.agents/skills`，保留references/scripts/tests；配置与登记文件在 `$HOME/.agents`。不改平台CODEX_HOME，不下载依赖，不调用媒体生成，不自动发布GitHub。
 
-官方依据：[本地Skill发现路径](https://learn.chatgpt.com/docs/build-skills)、[AGENTS.md范围与优先级](https://learn.chatgpt.com/docs/agent-configuration/agents-md)、[云端setup与maintenance](https://learn.chatgpt.com/docs/environments/cloud-environment)。这些文档描述支持的机制，不替代当前网页运行器的真实验收。
+官方依据：[本地Skill发现路径](https://learn.chatgpt.com/docs/build-skills)、[AGENTS.md范围与优先级](https://learn.chatgpt.com/docs/agent-configuration/agents-md)、[新版Codex Cloud环境](https://learn.chatgpt.com/docs/environments/cloud-environments)。这些文档描述支持的机制，不替代当前网页运行器的真实验收。
 
 ## 网页环境设置
 
-先发布包含这些脚本的版本，再选择cyou1314/AIGC环境。在Setup script（也可能显示install_script）和Maintenance script字段中保存同一份 `scripts/cloud-init.sh` 的完整内容。若现有设置有其他必要步骤，保留它们并合并，不盲目覆盖。start_skill不是这套源码中的正式配置接口；若界面另有启动Skill选项，需按该平台说明核对，不能凭名字假定它执行Bash。
+先发布包含这些脚本的版本，再打开 Settings → Codex Cloud → Environments → AIGC → … → Edit。新版配置中，Install script用于准备文件与依赖，Start skill用于启动服务并验证就绪，是指令内容而非仅填写一个Skill名称。保留现有必要配置并安全合并。
+
+Install script保存下面的完整脚本；Start skill保存 [CLOUD_START.md](CLOUD_START.md) 的完整指令。让环境设置任务运行并验证后，Save draft与Republish；只有新任务会使用新版已准备文件快照，现有任务保留自己的状态。仓库后台刷新不等于重新运行安装或启动命令。
 
 可以保存以下完整调用脚本，适用于仓库已经含1.1.1或更高版本的启动阶段：
 
@@ -28,7 +30,15 @@ bash "$aigc_repo/scripts/cloud-init.sh"
 
 设置界面可选环境变量：AIGC_REPO_ROOT指向实际checkout、AIGC_WORKSPACE指向外部工作区、AIGC_VAULT/AIGC_OUTPUT_ROOT仅在需要不同路径时设置。默认工作区是仓库父目录下AIGC-workspace。不要依赖setup中的export传给agent阶段；运行路径已存入共享JSON配置。现有AIGC_CONFIG若指向另一安装，初始化器停止，需先在环境设置对齐。
 
-本任务没有网页环境设置的读取/写入API，无法检查或保存远端install_script/start_skill实际值。只有用户在该环境中保存设置后，才能证明平台真正挂接了初始化流程。缓存恢复同样运行maintenance；初始化器会恢复缺失的受管Skill，已有本地修改会阻塞并保留。
+本任务没有网页环境设置的读取/写入API，无法检查或保存远端install_script/start_skill实际值。只有环境编辑任务完成验证并Republish后，才能证明平台挂接了配置并捕获新快照；普通代码任务里安装成功不会更新发布环境。初始化器可恢复缺失的受管Skill，已有本地修改会阻塞并保留。
+
+若仍使用Codex Cloud (Legacy)，其setup和maintenance两个Bash字段可保存同一安装脚本；这个旧版流程不代替新版Install script与Start skill。
+
+## GitHub发布访问
+
+终端gh需要允许精确域名 `api.github.com`；允许 `github.com` 并不会允许它的api子域名。Settings → Codex Cloud → Environments → AIGC → Edit → Additional allowed domains追加api.github.com，保留现有域名，保存并测试；如组织策略仍阻止，由管理员调整允许规则。代理隧道403是目的域名访问阻塞，不应据此重新输入或打印Token。
+
+当前Git传输和已连接的GitHub连接器可以独立具有有效权限。连接器验证私有仓库与写权限后，正常push发布分支、创建PR、审查与标准合并即可；不绕过分支保护或强推。只有读回main SHA并验证修复提交属于其祖先，才说明代码发布成功。环境Republish与新任务发现仍需独立验收。
 
 ## 指令范围
 
