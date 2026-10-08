@@ -40,7 +40,7 @@ def load(path, default=None):
     return json.loads(path.read_text(encoding='utf-8')) if path.is_file() else (default if default is not None else {})
 
 def skills_default():
-    return Path(os.environ.get('CODEX_HOME', str(Path.home() / '.codex'))) / 'skills'
+    return Path.home() / '.agents/skills'
 
 def config_for(skills):
     return skills.parent / 'aigc-workflow.json'
@@ -61,7 +61,8 @@ def rendered_copy(source, destination, mapping):
         shutil.copy2(source, destination)
         files = [destination]
     for path in files:
-        if not path.is_file() or path.suffix not in {'.md', '.yaml', '.yml'}:
+        suffix = path.suffix if source.is_dir() else source.suffix
+        if not path.is_file() or suffix not in {'.md', '.yaml', '.yml'}:
             continue
         text = path.read_text(encoding='utf-8-sig')
         for key, value in mapping.items():
@@ -102,6 +103,10 @@ def preserve_and_restore(journal, backup, force=False):
 def install(args):
     skills = Path(args.skills_dir).expanduser().resolve()
     old_config = load(config_for(skills))
+    if not old_config and not args.workspace:
+        sys.path.insert(0, str(ROOT / 'skills/aigc-production-router/scripts'))
+        from workflow_paths import runtime_config
+        _, old_config = runtime_config()
     workspace = Path(args.workspace or old_config.get('workspace', str(Path.home() / 'AIGC-workspace'))).expanduser().resolve()
     vault = Path(args.vault or old_config.get('vault', str(workspace / 'Codex'))).expanduser().resolve()
     outputs = Path(args.outputs or old_config.get('outputs', str(workspace / 'outputs'))).expanduser().resolve()
@@ -160,6 +165,16 @@ def install(args):
                           skills_dir=str(skills), repo=str(ROOT), version=version)
         config_source = staging / 'config.json'; write_json(config_source, new_config)
         prepare(config_source, config_for(skills), 'config')
+        if (not operations and registry.get('version') == version
+                and registry.get('revision') == revision()
+                and all(str(skills / name) in registry.get('managed', {}) for name in names)):
+            print(json.dumps({'version': version, 'skills': len(names), 'changed_targets': 0,
+                              'workspace': str(workspace), 'vault': str(vault),
+                              'config': str(config_for(skills)),
+                              'transaction': registry['latest_transaction'],
+                              'backup': str(Path(registry['backup_root']) / registry['latest_transaction']),
+                              'incoming': incoming}, ensure_ascii=False, indent=2))
+            return
         managed = dict(registry.get('managed', {}))
         for op in operations:
             if op['kind'] in {'skill', 'knowledge'}:

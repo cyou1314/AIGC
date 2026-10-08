@@ -374,7 +374,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='action', required=True)
     setup = sub.add_parser('setup')
-    setup.add_argument('--skills-dir', default=str(Path(os.environ.get('CODEX_HOME', str(Path.home() / '.codex'))) / 'skills'))
+    setup.add_argument('--skills-dir', default=str(Path.home() / '.agents/skills'))
     setup.add_argument('--vault', required=True); setup.add_argument('--workspace', required=True)
     setup.add_argument('--outputs', required=True); setup.add_argument('--repository', default='cyou1314/AIGC')
     sub.add_parser('run'); sub.add_parser('status')

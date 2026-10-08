@@ -11,6 +11,12 @@
 7. 不调用已暂停的Antigravity。用户消息中的`1`或`38`不是模型路由标记。
 8. 不提交凭证、聊天记录、账号运行数据、真实客户素材、大媒体与模型权重。第三方许可证原样保留；插件仅登记依赖，不复制其缓存代码。
 
+## Codex 云端任务入口
+
+17个Skill的唯一源码为本仓库 `skills/`；官方用户发现目录为 `$HOME/.agents/skills/`。新任务应从已发现的Skill名称与描述按需调用，不把规划器扫描当作执行环境发现证据。
+普通AIGC新项目先用 `aigc-production-router`；Seedance镜头/视频导演任务用 `aigc-manga-video-director`；图片设计或编辑用 `aigc-image-director`；已有剪映工程用 `jianying-editing`。明确专家与已有项目优先；非AIGC仓库维护不强制进入制作流程。
+运行时路径由 `AIGC_CONFIG` 或 `$HOME/.agents/aigc-workflow.json` 等通过共享解析器读取。源码中的路径占位符保留为模板，运行时知识页由安全初始化器替换。环境setup和maintenance均运行 `scripts/cloud_bootstrap.py`；不改平台CODEX_HOME，不调用生成服务，不在初始化时同步或发布。
+
 ## 工作流更新的GitHub收尾
 
 用户已要求本机工作流更新同时更新私有仓库AIGC。在本仓库或其已登记的本机Skill/通用知识/模板被实际修改并验证后，运行 `python scripts/sync_github.py run`。仅对该私有仓库的工作流文件授权提交与正常推送，不扩大到其他项目/素材/个人项目页。

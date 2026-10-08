@@ -60,6 +60,22 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             PLAN.plan('image', lead='aigc-project-prompt-loop', discovered={})
 
+    def test_new_narrative_project_keeps_project_conductor(self):
+        self.assertEqual(PLAN.plan('narrative', discovered={})['selected_lead'], 'aigc-project-prompt-loop')
+
+    def test_seedance_shot_handoff_can_select_video_director(self):
+        result = PLAN.plan('narrative', lead='aigc-manga-video-director', discovered={})
+        self.assertEqual(result['selected_lead'], 'aigc-manga-video-director')
+        self.assertEqual(result['execution'], 'not-executed')
+
+    def test_still_image_edit_uses_image_director(self):
+        self.assertEqual(PLAN.plan('image', discovered={})['selected_lead'], 'aigc-image-director')
+
+    def test_existing_jianying_project_uses_postproduction_specialist(self):
+        result = PLAN.plan('post', discovered={})
+        self.assertEqual(result['selected_lead'], 'jianying-editing')
+        self.assertNotEqual(result['selected_lead'], 'aigc-manga-video-director')
+
     def test_discovery_does_not_imply_execution_or_login(self):
         result = PLAN.plan('image', discovered={'aigc-image-director': ['/local/SKILL.md']})
         self.assertEqual(result['candidates'][0]['discovery'], 'skill-discovered')

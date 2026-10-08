@@ -18,7 +18,7 @@ class PortabilityTests(unittest.TestCase):
             (root / 'aigc-workflow.json').write_text(json.dumps({
                 'workspace': str(root / 'workspace'), 'vault': str(root / 'vault'),
                 'outputs': str(root / 'outputs')}), encoding='utf-8')
-            with patch.dict(P.os.environ, {'CODEX_HOME': str(root)}, clear=True):
+            with patch.dict(P.os.environ, {'CODEX_HOME': str(root)}, clear=True), patch.object(P.Path, 'home', return_value=root / 'user'):
                 workspace, vault, outputs = P.runtime_paths()
             self.assertEqual(vault, root / 'vault')
             self.assertEqual(workspace, root / 'workspace')
@@ -37,6 +37,31 @@ class PortabilityTests(unittest.TestCase):
         self.assertEqual(vault, ROOT / '.local/记忆库')
         self.assertEqual(outputs, ROOT / '.local/媒体')
         self.assertEqual(workspace, ROOT / '.local/test-workspace')
+
+    def test_agents_config_survives_ephemeral_codex_home(self):
+        with tempfile.TemporaryDirectory() as folder:
+            home = Path(folder); config = home / '.agents/aigc-workflow.json'
+            config.parent.mkdir(); config.write_text(json.dumps({'workspace': str(home / 'real')}))
+            with patch.object(P.Path, 'home', return_value=home), patch.dict(P.os.environ, {'CODEX_HOME': str(home / 'ephemeral')}, clear=True):
+                self.assertEqual(P.runtime_config()[0], config)
+                self.assertEqual(P.runtime_paths()[0], home / 'real')
+
+    def test_legacy_config_fallback(self):
+        with tempfile.TemporaryDirectory() as folder:
+            home = Path(folder); config = home / '.codex/aigc-workflow.json'
+            config.parent.mkdir(); config.write_text(json.dumps({'workspace': str(home / 'legacy')}))
+            with patch.object(P.Path, 'home', return_value=home), patch.dict(P.os.environ, {'CODEX_HOME': str(home / 'ephemeral')}, clear=True):
+                self.assertEqual(P.runtime_paths()[0], home / 'legacy')
+
+    def test_explicit_config_takes_priority_and_missing_fails(self):
+        with tempfile.TemporaryDirectory() as folder:
+            home = Path(folder); config = home / 'chosen.json'
+            config.write_text(json.dumps({'workspace': str(home / 'chosen')}))
+            with patch.dict(P.os.environ, {'AIGC_CONFIG': str(config)}, clear=True):
+                self.assertEqual(P.runtime_paths()[0], home / 'chosen')
+                config.unlink()
+                with self.assertRaisesRegex(ValueError, 'AIGC_CONFIG does not exist'):
+                    P.runtime_paths()
 
 if __name__ == '__main__':
     unittest.main()
