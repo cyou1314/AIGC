@@ -1,6 +1,6 @@
 # Codex 云端自动加载与验收
 
-仓库 `skills/` 是17个Skill的唯一源码。初始化器把完整目录安全安装到 `$HOME/.agents/skills`，保留references/scripts/tests；配置与登记文件在 `$HOME/.agents`。不改平台CODEX_HOME，不下载依赖，不调用媒体生成，不自动发布GitHub。
+仓库 `skills/` 是20个Skill的唯一源码。初始化器把完整目录安全安装到 `$HOME/.agents/skills`，保留references/scripts/tests；配置与登记文件在 `$HOME/.agents`。不改平台CODEX_HOME，不下载依赖，不调用媒体生成，不自动发布GitHub。
 
 官方依据：[本地Skill发现路径](https://learn.chatgpt.com/docs/build-skills)、[AGENTS.md范围与优先级](https://learn.chatgpt.com/docs/agent-configuration/agents-md)、[新版Codex Cloud环境](https://learn.chatgpt.com/docs/environments/cloud-environments)。这些文档描述支持的机制，不替代当前网页运行器的真实验收。
 
@@ -82,4 +82,4 @@ check_codex_discovery使用Codex app-server的skills/list，创建新的本地�
 | 编辑商品图背景，先给编辑方案，不生成 | aigc-image-director |
 | 检查已有剪映工程的字幕与时间线，先只检查 | jianying-editing |
 
-先确认会话原生Skill清单有17项，不能只手动cat SKILL.md。任务启动与缓存恢复均需独立新网页任务证明，并确认doctor/vault路径正确。未实测时标“需新任务复验”，不能标正式投用通过。生成服务登录、额度、媒体质量与Windows/macOS原生执行是按需另验项目。
+先确认会话原生Skill清单有20项，不能只手动cat SKILL.md。任务启动与缓存恢复均需独立新网页任务证明，并确认doctor/vault路径正确。未实测时标“需新任务复验”，不能标正式投用通过。生成服务登录、额度、媒体质量与Windows/macOS原生执行是按需另验项目。

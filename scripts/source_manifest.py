@@ -33,9 +33,14 @@ def main():
         if not (directory / 'SKILL.md').is_file():
             continue
         count, sha = snapshot(directory)
-        entries.append({'name': directory.name, 'path': 'skills/' + directory.name,
-                        'origin': 'user-installed-workflow-snapshot',
-                        'files': count, 'sha256_normalized_text': sha})
+        source = directory / 'SOURCE.json'
+        provenance = json.loads(source.read_text(encoding='utf-8')) if source.is_file() else {}
+        entry = {'name': directory.name, 'path': 'skills/' + directory.name,
+                 'origin': 'adapted-upstream' if provenance else 'user-installed-workflow-snapshot',
+                 'files': count, 'sha256_normalized_text': sha}
+        if provenance:
+            entry['upstream'] = {k: provenance[k] for k in ['repository', 'path', 'revision', 'license']}
+        entries.append(entry)
     print(json.dumps({'schema_version': 1, 'version': (ROOT / 'VERSION').read_text().strip(),
                       'provenance': 'THIRD_PARTY_NOTICES.md',
                       'note': 'Packaged snapshot, not upstream release verification. Private fixtures excluded.',

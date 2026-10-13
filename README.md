@@ -1,6 +1,6 @@
 # AIGC
 
-个人 AIGC 专业制作与 Skill 工作流。适用于 Windows、macOS 与 Codex Linux 云端环境，提供跨类型路由、17个本地Skill、专业知识、项目模板、安装/升级/回滚工具，以及按生产类型分别验收的标准。
+个人 AIGC 专业制作与 Skill 工作流。适用于 Windows、macOS 与 Codex Linux 云端环境，提供跨类型路由、20个本地Skill、专业知识、项目模板、安装/升级/回滚工具，以及按生产类型分别验收的标准。
 
 初始发布：1.0.0；当前版本以 [VERSION](VERSION) 为准。仓库仅包含工作方法与代码；个人记忆、项目素材、密钥、模型和外部插件账号独立维护。
 
@@ -12,7 +12,8 @@
 | Codex云端自动加载 | [云端setup/maintenance与验收](docs/CLOUD_SETUP.md) |
 | Windows / macOS差异 | [平台兼容与依赖](docs/PLATFORMS.md) |
 | 完整专业制作流程 | [生产工作流](docs/WORKFLOW.md) |
-| 17个Skill与职责 | [Skill目录](docs/SKILLS.md) |
+| 20个Skill与职责 | [Skill目录](docs/SKILLS.md) |
+| 海报、人物服饰场景、UI网页与设计学习 | [专业视觉设计工作流](docs/DESIGN_WORKFLOW.md) |
 | 外部服务与可选插件 | [集成与能力检查](docs/INTEGRATIONS.md) |
 | 日常更新、备份、回滚 | [升级维护](docs/UPGRADE.md) |
 | 本机修改自动更新GitHub | [自动同步](docs/AUTO_SYNC.md) |
@@ -80,7 +81,7 @@ flowchart TD
 ## 仓库结构
 
 ```text
-skills/                 17个本地Skill及脚本、参考、测试
+skills/                 20个本地Skill及脚本、参考、测试
 knowledge/              可移植职业知识与工作流
 templates/              快速/完整项目页与交接合同
 docs/                   专业工作流与操作手册
@@ -92,6 +93,6 @@ VERSION + CHANGELOG.md  版本与升级记录
 
 ## 验证范围
 
-本仓库的本地工具可独立检查目录、路径、安装冲突、状态和回执。17个Skill存在不表示所有生成服务已登录；Windows CI模板不表示已经在Windows运行。实际影片、图像、音频、模型、文档和应用按项目各自验证。付费生成和发布遵循本次任务授权与预算。
+本仓库的本地工具可独立检查目录、路径、安装冲突、状态和回执。20个Skill存在不表示所有生成服务已登录；Windows CI模板不表示已经在Windows运行。实际影片、图像、音频、模型、文档和应用按项目各自验证。付费生成和发布遵循本次任务授权与预算。
 
 外部Codex插件（Kling、Meshy、Higgsfield、Adobe、Sites等）按需单独安装/连接，参考 [INTEGRATIONS](docs/INTEGRATIONS.md)。自动剪辑、转录与其他第三方代码保留原许可证，详见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。

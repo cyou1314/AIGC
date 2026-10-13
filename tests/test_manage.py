@@ -67,6 +67,23 @@ class ManagementTests(unittest.TestCase):
         self.assertEqual((target / 'SKILL.md').read_text(), 'User local work')
         self.assertFalse((self.workspace / 'Codex').exists())
 
+    def test_scoped_upgrade_preserves_other_skills_and_private_knowledge(self):
+        self.install()
+        unrelated = self.skills / 'beta-skill/SKILL.md'
+        unrelated.write_text('Unrelated local edit', encoding='utf-8')
+        todo = self.workspace / 'Codex/TODO.md'; todo.write_text('Private task', encoding='utf-8')
+        (self.repo / 'skills/alpha-skill/SKILL.md').write_text('Reviewed upgrade', encoding='utf-8')
+        result = self.install(skill=['alpha-skill'], skills_only=True)
+        self.assertEqual(result['skills'], 1)
+        self.assertEqual(unrelated.read_text(), 'Unrelated local edit')
+        self.assertEqual(todo.read_text(), 'Private task')
+        self.assertEqual(result['incoming'], [])
+
+    def test_unknown_scoped_skill_fails_before_mutation(self):
+        with self.assertRaisesRegex(ValueError, 'Unknown requested Skill'):
+            self.install(skill=['missing-skill'], skills_only=True)
+        self.assertFalse(self.skills.exists())
+
     def sync_profile(self):
         M.write_json(self.repo / '.local/github-sync.json', {'skills_dir': str(self.skills)})
 

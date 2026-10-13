@@ -11,6 +11,8 @@
 | capcut-edit | 本机已安装Skill的文档/配方快照 | 未随附capcut CLI；仅作个人备份使用，未来分发前核对上游许可 |
 | AIGC专业技能/知识 | 用户原工作流与本机修订 | 保留引用、来源说明、适用范围和证据边界 |
 | 外部Codex插件 | 仅集成依赖与名称 | 不打包插件缓存、服务代码、账户或凭证 |
+| canvas-design / frontend-design | Anthropic `anthropics/skills`，固定提交 `dbd4588f9e1033efb41dad4bef2f7947c8993d44` | 保留各Skill原LICENSE.txt与references/upstream.md；入口为2026-10-13修改版，SOURCE.json记录来源。未打包上游字体；CJK字体按当地安装与许可检查 |
+| 图像导演恢复参考 | 用户Drive `agents__aigc-image-director`目录的6份已读取通用方法 | 保留方法全文与迁移索引；历史宿主/比例不覆盖当前合同。其余14份仅目录核对，私人偏好与项目历史不上传 |
 
 初始引入的文件摘要见 `sources.json`。摘要用于追溯快照，不代表上游未来升级自动进入本仓库。
 

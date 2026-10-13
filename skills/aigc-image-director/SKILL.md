@@ -7,6 +7,14 @@ description: Direct AIGC still-image work including character and scene design, 
 
 Select the requested mode: design/critique, prompt-only, actual generation/edit, or a consistent image set. A request to make an image continues to actual generation when a tool is available. Read `{{AIGC_VAULT}}/learning/图像导演与视觉设计能力.md` when cinematic composition, reference mapping or continuity needs deeper guidance. Historical platform/model prescriptions in that page are references, not current capability guarantees.
 
+## Professional design branches
+
+Read only the branch needed for this action: [characters](references/characters.md) for identity/silhouette/multi-view, [costumes](references/costumes.md) for layers/material/function, and [environments](references/environments.md) for usable space/perspective/continuity. For mixed visual development maintain shared character, costume and scene IDs rather than three disconnected styles.
+
+Poster composition with substantial typography is led by canvas-design; this skill owns its generated main visual. UI/web layout is led by frontend-design, not image generation. Explicit design critique or a learning comparison can use aigc-design-review; video QC remains separate.
+
+Recovered methods are indexed in [recovery and sources](references/recovery-index.md). For multi-reference edits read [reference control](references/legacy-reference-control.md); for an under-authored composition read [composition engine](references/legacy-creative-composition-engine.md); for requested style/light/value diagnosis read [art direction](references/legacy-aesthetic-art-direction.md) or [visual diagnosis](references/legacy-visual-diagnosis.md). Current user intent, output format and this entrypoint override historical host presets. Do not load all recovered references for every image.
+
 ## Direct the image
 
 1. Identify visual purpose and viewing context. Use the user's size/crop; otherwise infer from the intended artifact and state consequential assumptions. A movie frame may use 21:9; a poster, product listing, thumbnail or character sheet must use its own layout. Editing inherits source geometry unless a change is requested.

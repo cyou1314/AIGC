@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.1.5",
+  "version": "1.2.0",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -19,11 +19,18 @@
       "sha256_normalized_text": "b854ac46441006781404c55edb68b33582fdb8a5d39db392168dd8faa6e1c7cd"
     },
     {
+      "name": "aigc-design-review",
+      "path": "skills/aigc-design-review",
+      "origin": "user-installed-workflow-snapshot",
+      "files": 4,
+      "sha256_normalized_text": "6d98e50c20938b91cd73c8262138bf78ef0d6f639fd0d522626b3bf589731f2b"
+    },
+    {
       "name": "aigc-image-director",
       "path": "skills/aigc-image-director",
       "origin": "user-installed-workflow-snapshot",
-      "files": 2,
-      "sha256_normalized_text": "3123bc6205059c1c9adb57379bc6ce046c6b100b7e5329f0b03ca7bb422e5d34"
+      "files": 12,
+      "sha256_normalized_text": "3856eb29aad0f35b4b986204fa0e0199f8ba4ea6d261394118e949b4db45fd80"
     },
     {
       "name": "aigc-manga-video-director",
@@ -44,7 +51,7 @@
       "path": "skills/aigc-production-router",
       "origin": "user-installed-workflow-snapshot",
       "files": 7,
-      "sha256_normalized_text": "0ec91916201416ee84ad7b9fd24a2e897229f25e0caf8bb34cd3c5adc8c45dec"
+      "sha256_normalized_text": "0eb71325212ebe7ffd2203b6918ef0f1375f385c21c38a2373e6fcdcfb5b4ead"
     },
     {
       "name": "aigc-project-prompt-loop",
@@ -75,6 +82,19 @@
       "sha256_normalized_text": "2093220847f75d0f40541116261377dce2e20640661c87e6d9f0a888793de746"
     },
     {
+      "name": "canvas-design",
+      "path": "skills/canvas-design",
+      "origin": "adapted-upstream",
+      "files": 6,
+      "sha256_normalized_text": "fa09b82429ce3d5026f5818581653e604dca4bccd8313de9246b3af1ce27b75a",
+      "upstream": {
+        "repository": "https://github.com/anthropics/skills",
+        "path": "skills/canvas-design",
+        "revision": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "license": "Apache-2.0"
+      }
+    },
+    {
       "name": "capcut-edit",
       "path": "skills/capcut-edit",
       "origin": "user-installed-workflow-snapshot",
@@ -87,6 +107,19 @@
       "origin": "user-installed-workflow-snapshot",
       "files": 2,
       "sha256_normalized_text": "1a32525c6a734e1b62d3e9a7ebec48c52d270b8ea6e5b6390fb8d508c03c51b6"
+    },
+    {
+      "name": "frontend-design",
+      "path": "skills/frontend-design",
+      "origin": "adapted-upstream",
+      "files": 6,
+      "sha256_normalized_text": "d7ec980248e167baad9fc380f1b38b78062641f87c3182991a46bbb455438899",
+      "upstream": {
+        "repository": "https://github.com/anthropics/skills",
+        "path": "skills/frontend-design",
+        "revision": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+        "license": "Apache-2.0"
+      }
     },
     {
       "name": "jianying-editing",

@@ -1,7 +1,7 @@
 ---
 type: workflow
 domain: aigc-production
-updated: 2026-10-07
+updated: 2026-10-13
 evidence: local-structure-and-state-regression-passed
 ---
 
@@ -14,14 +14,14 @@ evidence: local-structure-and-state-regression-passed
 | 交付类型 | 主入口 | 制作重点与完成依据 |
 |---|---|---|
 | 短剧、漫剧、动画、MV、儿歌 | `aigc-project-prompt-loop`，按阶段调用编剧/视频导演 | 剧情、时间合同、分镜、真实首尾帧与声音；仅提示词任务到提示词即停 |
-| 角色、场景、海报、商品图、静帧 | `aigc-image-director` → 所选图像工具 | 身份、参考职责、构图、文字和用途裁切；不默认所有图21:9 |
+| 人物/服饰/场景、商品图、静帧；海报排版 | 概念/图像用 `aigc-image-director`；海报排版用 `canvas-design` | 身份/结构/参考职责、精确文字与可编辑排版；不默认21:9 |
 | 广告、UGC、商品视频、社媒内容 | `aigc-commercial-content` → 对应UGC/视频/图像能力 | 商品事实、受众、证据、品牌与请求的行动；不把普通广告强制变成开箱 |
 | AI主持、口播、无脸解说 | 主持用 `ai-host-video`；明确无脸用 `faceless-video` | 身份/语音稳定、事实、辅助画面与实际口型；已有口播只剪辑走后期 |
 | 剪辑、字幕、混音、导出 | 已有剪映用 `jianying-editing`；原始口播自动粗剪用 `auto-edit-video` | 可恢复工程、实际导出、字幕/声音与目标规格；工程可读不等于视频合格 |
 | 配音、音乐、音效、播客 | `aigc-audio-production` → 实际可用音频工具 | 实测时长、听觉核验、发音/情绪/剪切；转录能力不等于音乐或TTS生成能力 |
 | 模型、绑定、动画、预演、打印 | Meshy相应Skill；预演按本地运行时执行 | 真实模型、导入与用途检查；打印单独明确；图片不算3D资产交付 |
 | 研究、文档、PPT、表格 | 按交付物选 documents / Presentations / Spreadsheets / pdf | 来源与事实、渲染或重算、内容完整性；不套视频分镜 |
-| 网站、应用、Agent、交互内容 | 依用户平台/现有仓库选 Sites / Higgsfield / SDK / 仓库开发 | 核心路径真实运行；部署后才叫已发布；新游戏引擎按具体项目适配 |
+| 网站、应用、Agent、交互内容 | UI网页设计用 `frontend-design`；平台/后端保留 Sites / Higgsfield / SDK / 仓库开发 | 核心路径/响应式/键盘真实运行；部署后才叫已发布；显式设计审稿用 `aigc-design-review` |
 
 精确路由与完成条件只有一份机器可读目录：`{{SKILL_ROOT}}/aigc-production-router/references/production-profiles.json`。上表用于阅读，不替代所选专家 Skill 的使用要求。
 

@@ -7,6 +7,8 @@ description: Choose and run the appropriate AIGC production workflow for a new, 
 
 Match the requested deliverable to one production profile in [references/production-profiles.json](references/production-profiles.json). This catalog is the shared route source for the memory layer and local planner. Choose by deliverable and purpose, not by a lone keyword, model name, or the word “开始”.
 
+Within image: poster/cover typography and layout select canvas-design; character/costume/environment or image editing select aigc-image-director. Within digital: requested UI/web design selects frontend-design while hosting/backend/SDK work keeps its platform route. Explicit design critique selects aigc-design-review without authorizing generation or edits. These are specialized leads within existing profiles, not three new compulsory production stages.
+
 ## Select the next production action
 
 1. Recover an existing project snapshot when available. Preserve the user's chosen tool and deliverable; a local task does not restart the project. If a specialist is explicitly named, follow it directly.

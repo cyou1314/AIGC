@@ -12,10 +12,11 @@
     "image": {
       "label": "图像设计：角色、场景、海报、商品图、静帧",
       "lead": "aigc-image-director",
+      "alternatives": ["canvas-design", "aigc-design-review"],
       "support": ["imagegen", "cowart:cowart-image-gen", "cowart:cowart-image-edit", "storyboard-image-replacer", "adobe-design-from-template"],
       "deliverables": ["所需比例和用途的真实图像或设计源文件", "指定文字/品牌资产与变体映射"],
       "acceptance": ["主体/商品身份与参考职责", "文字准确/构图/裁切/用途适配"],
-      "boundary": "海报不默认21:9；用户只要图像提示词时不调用生成。"
+      "boundary": "海报排版选canvas-design；人物/服饰/场景与图像编辑选image-director；显式设计审稿选aigc-design-review。海报不默认21:9；只要提示词不生成。"
     },
     "marketing": {
       "label": "商业内容：广告、UGC、商品视频、社媒内容",
@@ -71,11 +72,11 @@
     "digital": {
       "label": "数字产品：网站、应用、Agent、交互内容",
       "lead": "sites:sites-building",
-      "alternatives": ["website-builder", "openai-developers:agents", "agents-sdk"],
+      "alternatives": ["frontend-design", "aigc-design-review", "website-builder", "openai-developers:agents", "agents-sdk"],
       "support": ["sites:sites-hosting", "plugin-creator:create-plugin"],
       "deliverables": ["可运行代码/应用/交互产物", "用户要求的部署或本地交付"],
       "acceptance": ["核心用户路径与异常情况", "真实运行/测试", "实际部署成功才标记已发布"],
-      "boundary": "已有仓库服从仓库技术栈；指定Higgsfield/Cloudflare/SDK时使用对应能力；新游戏无专用skill不伪装支持引擎。"
+      "boundary": "UI网页设计选frontend-design，显式设计审稿选aigc-design-review；已有仓库服从技术栈，截图不是功能或部署证据。指定平台/SDK保留对应能力；新游戏无专用skill不伪装支持引擎。"
     }
   }
 }

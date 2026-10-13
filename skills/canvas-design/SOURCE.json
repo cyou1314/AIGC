@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/anthropics/skills",
+  "path": "skills/canvas-design",
+  "revision": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+  "license": "Apache-2.0",
+  "adapted": "2026-10-13",
+  "snapshot_normalization": "UTF-8/LF and trailing whitespace only; original wording retained",
+  "update_policy": "manual-reviewed-upgrade; upstream snapshot never overwrites the adapter",
+  "excluded": ["upstream canvas-fonts; use available licensed CJK fonts"]
+}

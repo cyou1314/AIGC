@@ -1,0 +1,4 @@
+interface:
+  display_name: "设计审稿与学习"
+  short_description: "审阅海报、角色服饰场景与网页设计，给出可验证返修和学习记录"
+  default_prompt: "使用 $aigc-design-review 检查这份设计，指出最高优先级问题并给出局部修改方案。"

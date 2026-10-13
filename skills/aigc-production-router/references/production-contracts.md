@@ -16,6 +16,8 @@ Use the existing project prompt loop and applicable R1/R2/R4/R5/R6 modules. Scri
 
 Use `aigc-image-director`. Confirm where it will be viewed or printed before choosing crop and text layout. Text rendering, final visual dimensions and protected product details matter more than adding style adjectives. For multi-image identity, prove the direction on a representative frame, then propagate.
 
+Poster/cover layout with exact typography selects canvas-design; generated main visuals stay with the image director. Character, costume and environment design have separate references but shared identity/world anchors. Editable layout, costume pattern and buildable space are distinct contracts; do not deliver a flat image as all three. Explicit design review uses aigc-design-review and records source/render/interaction evidence separately.
+
 ## Commercial content
 
 Use `aigc-commercial-content`. Connect one message to observable product evidence. Distinguish finished-video production from concept/script-only requests. Choose the UGC form from the explicit creative intent: product-only, unboxing, try-on, tutorial, website demonstration. For ordinary brand cinema route shot work to the existing video director, not UGC by default.
@@ -53,6 +55,8 @@ Research uses authoritative sources and distinguishes source-supported facts, in
 ## Software / interactive products
 
 Respect existing code and instructions; select a platform only when one is needed. Hosted Sites, Higgsfield products, provider-specific Agent SDK work, and an existing local repository are separate routes. API/provider requirements are checked through the chosen specialist. Run the core user path and meaningful tests; a screenshot or code listing does not establish an operational app. Publishing follows the user's actual authorization.
+
+Requested UI/web visual and interaction design selects frontend-design; preserve existing tokens/components and platform route. Verify relevant states, keyboard/focus, long Chinese text and desktop/narrow-screen behavior. Figma-native editing requires an available Figma integration; local HTML is not a Figma file. Do not require Figma setup to deliver an authorized local webpage.
 
 ## Cost and iteration
 

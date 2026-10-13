@@ -89,7 +89,7 @@ Windows无需执行激活脚本，因此不必为了此仓库修改全局执行�
 
 ## 6. 验收首次安装
 
-开启新的Codex会话确认17个Skill可见，指定 `$aigc-production-router` 制作一个明确目标，先让它报告当前主Skill、缺少输入、能力边界和唯一下一步。随后使用项目页脚本建立测试项目并核验路径。安装成功与生成成功分别验收。
+开启新的Codex会话确认20个Skill可见，指定 `$aigc-production-router` 制作一个明确目标，先让它报告当前主Skill、缺少输入、能力边界和唯一下一步。随后使用项目页脚本建立测试项目并核验路径。安装成功与生成成功分别验收。
 
 共享配置解析优先级：显式 `AIGC_CONFIG` → `$HOME/.agents/aigc-workflow.json` → 脚本相邻安装配置 → `CODEX_HOME/aigc-workflow.json` → 旧 `$HOME/.codex/aigc-workflow.json`。设置了不存在的显式配置会报错，不静默退回默认。AIGC_WORKSPACE/AIGC_VAULT/AIGC_OUTPUT_ROOT分别覆盖对应路径。自定义安装用AIGC_CONFIG指向实际配置，不要为了它改平台CODEX_HOME。
 

@@ -102,6 +102,10 @@ def preserve_and_restore(journal, backup, force=False):
 
 def install(args):
     skills = Path(args.skills_dir).expanduser().resolve()
+    requested = set(getattr(args, 'skill', None) or [])
+    available = {p.name for p in (ROOT / 'skills').iterdir() if (p / 'SKILL.md').is_file()}
+    if requested - available:
+        raise ValueError('Unknown requested Skill: ' + ', '.join(sorted(requested - available)))
     old_config = load(config_for(skills))
     if not old_config and not args.workspace:
         sys.path.insert(0, str(ROOT / 'skills/aigc-production-router/scripts'))
@@ -150,15 +154,18 @@ def install(args):
         for source in sorted((ROOT / 'skills').iterdir()):
             if not (source / 'SKILL.md').is_file():
                 continue
+            if requested and source.name not in requested:
+                continue
             if not re.fullmatch(r'[a-z0-9-]+', source.name):
                 raise ValueError('Invalid Skill directory name')
             names.append(source.name)
             prepare(source, skills / source.name, 'skill')
-        for source in sorted((ROOT / 'knowledge').rglob('*')):
-            if source.is_file():
-                prepare(source, vault / source.relative_to(ROOT / 'knowledge'), 'knowledge')
-        for name, target_name in [('project-quick.md', '_项目快速模板.md'), ('project-full.md', '_项目模板.md')]:
-            prepare(ROOT / 'templates' / name, vault / 'projects' / target_name, 'knowledge')
+        if not getattr(args, 'skills_only', False):
+            for source in sorted((ROOT / 'knowledge').rglob('*')):
+                if source.is_file():
+                    prepare(source, vault / source.relative_to(ROOT / 'knowledge'), 'knowledge')
+            for name, target_name in [('project-quick.md', '_项目快速模板.md'), ('project-full.md', '_项目模板.md')]:
+                prepare(ROOT / 'templates' / name, vault / 'projects' / target_name, 'knowledge')
         if conflicts:
             raise ValueError('Installation stopped before any target changed:\n' + '\n'.join(conflicts))
         new_config = dict(old_config, workspace=str(workspace), vault=str(vault), outputs=str(outputs),
@@ -238,6 +245,8 @@ def main():
     for command in ['install', 'upgrade']:
         p = sub.add_parser(command)
         p.add_argument('--workspace'); p.add_argument('--vault'); p.add_argument('--outputs')
+        p.add_argument('--skill', action='append', help='Install only these named Skills; repeat for multiple')
+        p.add_argument('--skills-only', action='store_true', help='Leave all knowledge/templates untouched')
         p.add_argument('--skills-dir', default=str(skills_default()))
         p.add_argument('--adopt-existing', action='store_true'); p.add_argument('--replace-local', action='store_true')
         p.set_defaults(func=install)

@@ -8,14 +8,14 @@
 
 ## 同步范围
 
-- 17个已登记本地Skill：现有源码、参考、配方、相关测试，以及其中新增的合规文件。
+- 20个已登记本地Skill：现有源码、参考、配方、相关测试，以及其中新增的合规文件。
 - 仓库已经列出的 `knowledge/agent`、`knowledge/learning` 页面：只取对应本机文件的新增改动。
 - 快速/完整项目模板。
 - 本仓库内部的维护脚本、制作手册、通用模板等合规改动。
 
 不上传个人vault的首页/TODO/AGENTS/项目页/笔记/人员信息，也不扫描整个个人vault。凭证、媒体、插件缓存、模型和排除的上游私有转录fixture不进入同步。
 
-新增第18个Skill或新的知识页面需要先纳入仓库、更新数量与测试，再运行 `python scripts/sync_github.py register --skill 新Skill名称` 或 `register --knowledge agent/新知识.md`。注册只建立新增项的基线，不改变旧项未同步改动；登记前审阅本机与仓库两份初始内容。不能自动把电脑上所有新插件和Skill都当AIGC工作流上传。不要删掉旧同步基线重新setup来掩盖未同步改动。
+新增第21个Skill或新的知识页面需要先纳入仓库、更新数量与测试，再运行 `python scripts/sync_github.py register --skill 新Skill名称` 或 `register --knowledge agent/新知识.md`。注册只建立新增项的基线，不改变旧项未同步改动；登记前审阅本机与仓库两份初始内容。不能自动把电脑上所有新插件和Skill都当AIGC工作流上传。不要删掉旧同步基线重新setup来掩盖未同步改动。
 
 ## 每台电脑首次配置
 

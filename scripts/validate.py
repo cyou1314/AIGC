@@ -32,8 +32,8 @@ def structure():
         for target in re.findall(r'\]\((references/[^)#]+|scripts/[^)#]+|assets/[^)#]+)\)', text):
             if not (directory / target).exists():
                 errors.append(f'{directory.name}: missing {target}')
-    if count != 17:
-        errors.append(f'Expected 17 bundled Skills, found {count}; update this check when adding a Skill')
+    if count != 20:
+        errors.append(f'Expected 20 bundled Skills, found {count}; update this check when adding a Skill')
     catalog = json.loads((ROOT / 'skills/aigc-production-router/references/production-profiles.json').read_text(encoding='utf-8'))
     if len(catalog['profiles']) != 9:
         errors.append('Expected nine production profiles')

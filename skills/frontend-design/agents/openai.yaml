@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI与网页设计"
+  short_description: "按现有技术栈制作UI网页，检查中文排版、响应式和真实交互"
+  default_prompt: "使用 $frontend-design 设计并实现这个网页，保留技术栈并验收核心操作。"
