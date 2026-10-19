@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 — 2026-10-19
+
+- 自动同步本机工作流；路径/版本和验证结果记录在Git提交中。
+
 ## 1.2.0 — 2026-10-13
 
 - 新增并适配canvas-design/frontend-design及设计审稿学习Skill：20个Skill，保留9类profile和R0–R8。
