@@ -19,3 +19,5 @@
 自动剪辑上游测试内有真实Studio工程和ASR逐字转录fixture。本仓库排除这些目录，保留测试代码并在没有相应私有fixture时明确跳过相关测试；不将其原始转录上传。原已安装Skill未改变，准备阶段排除的副本在仓库外可恢复归档。
 
 2026-10-20公司标准整合：用户上传的cinematic-storyboard-optimizer v0.4.0、使用说明与ai-cinematic-music-prompt-generator用于本私有工作流的学习适配。保留来源与适用边界，仅将决策方法重写到现有导演/音频Skill；未复制包内脚本、测试、代理配置或研究原文，未安装其依赖。附件未附统一再分发许可，不宣称已获得公开再分发授权；包作者的历史访问和测试不作为本次验证证据。
+
+2026-10-20补充公司包：seedance-25-prompt-reviewer为MIT，已保留scripts/LICENSE.prompt-review-checks及原版权说明；移植其账本脚本、两组功能测试并适配交接参考。storyboard-lines-extract两份ZIP完全同摘要，仅保留一份的规则/本地脚本/回归，未附许可证，不对其授予公开再分发权。short-drama-poster-director未附许可证，仅在私有工作流提炼规则及关系构图原型，未复制44张图库/完整剧名数据集或其作品案例。附件中的默认飞书发布及作者历史研究/验证声明不作为本次授权或实际证据。

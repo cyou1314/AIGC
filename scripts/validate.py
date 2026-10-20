@@ -90,6 +90,8 @@ def main():
     if not args.structure_only:
         for command in [
             [sys.executable, str(ROOT / 'skills/aigc-production-router/tests/test_workflow.py')],
+            [sys.executable, '-m', 'unittest', 'discover', '-s', str(ROOT / 'skills/aigc-manga-video-director/tests'), '-v'],
+            [sys.executable, str(ROOT / 'skills/aigc-audio-production/scripts/storyboard_lines/test_workflow.py')],
             [sys.executable, '-m', 'unittest', 'discover', '-s', str(ROOT / 'tests'), '-v']]:
             subprocess.run(command, cwd=ROOT, check=True)
 

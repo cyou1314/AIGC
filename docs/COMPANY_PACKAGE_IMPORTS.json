@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-20",
+  "purpose": "user-provided company workflow adaptation; private repository",
+  "packages": [
+    {
+      "name": "seedance-25-prompt-reviewer",
+      "sha256": "ee1e052e4de4a26d75e3e71667229876f404be8712f90f67cfec308027b54e85",
+      "license": "MIT; preserved",
+      "integration": "aigc-manga-video-director review mode, helper and behavioral regressions"
+    },
+    {
+      "name": "storyboard-lines-extract",
+      "sha256": "a3a77fd7dde6ad6d5dc7c4b03d938bb32d56822dba9251fbb1eec97a993313a8",
+      "duplicate": "storyboard-lines-extract (1).zip is byte-identical",
+      "license": "not supplied; no public redistribution claim",
+      "integration": "aigc-audio-production source dialogue workflow and local tools; no automatic external publishing"
+    },
+    {
+      "name": "short-drama-poster-director",
+      "sha256": "b1898efc0ee04f919aefd7360205ff3f6f640dfaa590680cb41b1520afdae63a",
+      "license": "not supplied; no public redistribution claim",
+      "integration": "aigc-image-director poster branch, no raw dataset copied"
+    }
+  ],
+  "evidence_boundary": "package inspection and current local tests only; upstream reading/test claims not independently inherited"
+}

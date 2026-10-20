@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.2.2",
+  "version": "1.2.3",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -8,8 +8,8 @@
       "name": "aigc-audio-production",
       "path": "skills/aigc-audio-production",
       "origin": "user-installed-workflow-snapshot",
-      "files": 3,
-      "sha256_normalized_text": "854737be1a8e7d6f591b1597029347b485d270ebcf53b7731f79c9eeb66e79f8"
+      "files": 8,
+      "sha256_normalized_text": "789a31e77eb70247a7f69c018812607af051ddc7b6ef0d7f68ea3426890b164c"
     },
     {
       "name": "aigc-commercial-content",
@@ -29,29 +29,29 @@
       "name": "aigc-image-director",
       "path": "skills/aigc-image-director",
       "origin": "user-installed-workflow-snapshot",
-      "files": 12,
-      "sha256_normalized_text": "3856eb29aad0f35b4b986204fa0e0199f8ba4ea6d261394118e949b4db45fd80"
+      "files": 14,
+      "sha256_normalized_text": "17154ae013ab17e952bad52cca932e09284c59ecb1cc0cdf4bb11494fc730697"
     },
     {
       "name": "aigc-manga-video-director",
       "path": "skills/aigc-manga-video-director",
       "origin": "user-installed-workflow-snapshot",
-      "files": 23,
-      "sha256_normalized_text": "849a63b66862bb9fb4bfc887db347f8635b80934a5de4b487b46544e7b66f8ca"
+      "files": 29,
+      "sha256_normalized_text": "f3d428a6e7184991378cbbe773a26998d907e7686b5d9fa3d4467965011496da"
     },
     {
       "name": "aigc-output-qc",
       "path": "skills/aigc-output-qc",
       "origin": "user-installed-workflow-snapshot",
       "files": 3,
-      "sha256_normalized_text": "ffb3755d6e613fafefcc4dc4086dc487ac381b0b2e205c8814e42340a3d32e71"
+      "sha256_normalized_text": "41f255afebd3a2ed383cb5d31b41ac26e2c6f1839f0a570c4ad7f2881ff944a6"
     },
     {
       "name": "aigc-production-router",
       "path": "skills/aigc-production-router",
       "origin": "user-installed-workflow-snapshot",
       "files": 7,
-      "sha256_normalized_text": "586b7ee846f897b38940a5741a9dc1b30fa230bc3259f14e98d28a875f82fdd1"
+      "sha256_normalized_text": "de9a46d30c5265aefaa00e0ec74417119ec38d927bfe9c8304762401bfafcf6e"
     },
     {
       "name": "aigc-project-prompt-loop",
@@ -140,7 +140,7 @@
       "path": "skills/prompt-optimizer",
       "origin": "user-installed-workflow-snapshot",
       "files": 4,
-      "sha256_normalized_text": "1bb37fa77886ae290d76f87cd75c0acc2fcfe5b9ccff0dc0dbd26cf87d5063d9"
+      "sha256_normalized_text": "e3abc0df73d154146567bac0d40c74777dc8380115261943f3b8b07919de2099"
     },
     {
       "name": "storyboard-image-replacer",

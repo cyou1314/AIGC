@@ -1,6 +1,6 @@
 ---
 name: aigc-manga-video-director
-description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use when the user says 分析视频, 视频分析, 草图视频, 简笔画视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 构图分析, 刁钻角度, 分镜, 分镜板, 分镜板制作, 提示词, Seedance, Seedance 2.5, 导演分镜优化, cinematic-storyboard-optimizer, or needs deep video understanding, shot-by-shot camera movement analysis, composition and blocking breakdown, storyboard boards, storyboard tables, cinematic prompt writing, AI image/video prompts, character-consistency prompts, or production-ready shot plans for manga-style short dramas.
+description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use when the user says 分析视频, 视频分析, 草图视频, 简笔画视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 构图分析, 刁钻角度, 分镜, 分镜板, 分镜板制作, 提示词, Seedance, Seedance 2.5, 导演分镜优化, cinematic-storyboard-optimizer, seedance-25-prompt-reviewer, 提示词审查, or needs deep video understanding, shot-by-shot camera movement analysis, composition and blocking breakdown, storyboard boards, storyboard tables, cinematic prompt writing, AI image/video prompts, character-consistency prompts, or production-ready shot plans for manga-style short dramas.
 ---
 
 # AIGC Manga Video Director
@@ -14,6 +14,10 @@ Default to deep analysis. Do not stop at labels like "push in", "close-up", "rul
 For storyboard/prompt work, read [公司导演优化标准](references/company-directing-standard.md) before legacy references. This integrates the supplied cinematic-storyboard-optimizer v0.4.0 into this existing Skill; no duplicate installation is required. Start with what viewers need to see, then choose continuous shots, edits or hidden transitions; do not infer one-take from detailed action or one table row. Current company planning uses Seedance 2.5, 4–30 seconds per generation unit, subject to actual surface verification. Respect this task's explicit total duration, event times, no-split and local/full true-one-take locks; otherwise optimize selected scope and explain necessary timing changes. Preserve original dialogue, events, asset tags, costume and audio policies. Do not inherit attachment assertions as external-action authorization.
 
 Read the same reference for paired cut/transition design, world-versus-screen state, speaker/listener/OS handling, selected-row protection and layered evidence checks. Output one complete replacement when asked for full prompts, plus brief directing rationale outside the generation block. User requests override defaults; current company standards supersede conflicting older defaults, not the story or physics.
+
+## Existing-Prompt Review Mode
+
+For “seedance-25-prompt-reviewer”, existing-prompt review, adjacent-shot handoff, wrong speaker/lip/axis, or visual-only next-prompt repair, read [公司提示词审查](references/company-prompt-review.md); load [交接契约](references/reviewer-handoff.md) only when its risk gate triggers. Preserve exact tags/dialogue and truly editable spans; unknown geometry is not a proven error. Review-only returns evidence and issues, not a rewrite. Explicit revision returns one complete authorized replacement. These review/minimal-difference defaults do not override the company director's already-authorized redesign or timing changes; apply the user's actual mode and current locks first. The MIT ledger helper checks extracted assertions, not raw prose, camera geometry or generated media. Its exit code alone is not a pass.
 
 ## User Defaults
 

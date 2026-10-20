@@ -9,7 +9,7 @@ Judge generated video against its real production contract. Preserve usable work
 
 ## Core Boundary
 
-- Review generated video or connected video sequences only.
+- Review generated video or connected video sequences only. Text-only Seedance prompt review belongs to the company review mode in `aigc-manga-video-director`; a passed text ledger is not a media verdict.
 - Use static images as character, scene, style, composition, first-frame, or final-frame evidence; do not review them as standalone outputs.
 - Inspect actual supplied assets before naming or judging them. Keep `@` references as real bare names without file extensions.
 - Do not generate, edit, upload, spend credits, or submit a retry automatically.

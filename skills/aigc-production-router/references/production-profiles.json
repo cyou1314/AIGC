@@ -16,7 +16,7 @@
       "support": ["imagegen", "cowart:cowart-image-gen", "cowart:cowart-image-edit", "storyboard-image-replacer", "adobe-design-from-template"],
       "deliverables": ["所需比例和用途的真实图像或设计源文件", "指定文字/品牌资产与变体映射"],
       "acceptance": ["主体/商品身份与参考职责", "文字准确/构图/裁切/用途适配"],
-      "boundary": "海报排版选canvas-design；人物/服饰/场景与图像编辑选image-director；显式设计审稿选aigc-design-review。海报不默认21:9；只要提示词不生成。"
+      "boundary": "海外短剧海报提示词/关系主视觉选image-director的公司海报分支；实际可编辑海报排版选canvas-design；人物/服饰/场景与图像编辑选image-director；显式设计审稿选aigc-design-review。海报不默认21:9；只要提示词不生成。"
     },
     "marketing": {
       "label": "商业内容：广告、UGC、商品视频、社媒内容",
@@ -50,7 +50,7 @@
       "support": ["transcribe", "ffmpeg", "narrator", "audio-to-prompt"],
       "deliverables": ["音频文件/分轨/文本（以请求为准）", "语音或音乐方向与实测时长"],
       "acceptance": ["听觉核验/词句/发音/情绪", "剪切/失真/峰值和用途规格", "可用生成工具与素材来源"],
-      "boundary": "audio-to-prompt负责音频转视觉提示词；它不承担配乐生成。音乐/音效生成服务必须按需发现。短剧器乐配乐提示词由音频主skill内公司配乐模式承接，输出动态弧线与Style/Structure；现成曲目推荐与实际音频生成分别处理。"
+      "boundary": "分镜台词按集提取/标点数字确认走audio-production的公司台词分支，不翻译、不改写、不自动发布文档。audio-to-prompt负责音频转视觉提示词；它不承担配乐生成。音乐/音效生成服务必须按需发现。短剧器乐配乐提示词由音频主skill内公司配乐模式承接，输出动态弧线与Style/Structure；现成曲目推荐与实际音频生成分别处理。"
     },
     "three-d": {
       "label": "3D资产：模型、材质、绑定、动画、预演、打印",

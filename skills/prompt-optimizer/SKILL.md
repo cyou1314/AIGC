@@ -86,6 +86,9 @@ description: "Use when a request explicitly or implicitly needs reusable instruc
 |---|---|
 | Seedance、参考视频、分镜板、运镜、构图、调度、漫画/短剧视频 Prompt | `aigc-manga-video-director` |
 | 从素材接收到反复修改、成片反馈和定稿的完整 AIGC 项目 | `aigc-project-prompt-loop` |
+| Seedance 2.5已有提示词审查、相邻分镜/只改下一镜画面 | `aigc-manga-video-director` 的公司提示词审查模式 |
+| 海外短剧海报提示词、人物层级与英文标题构图 | `aigc-image-director` 的公司海报分支 |
+| 分镜台词提取、按集整理、获准标点/数字语言化 | `aigc-audio-production` 的公司台词提取分支 |
 | 原创配乐提示词、Style/Structure双框、器乐动态弧线、短剧配乐或音效制作方案 | `aigc-audio-production` |
 | 音频、对白、转录、情绪、语速、停顿、声音氛围、口型节奏 | `audio-to-prompt` 或 `transcribe` |
 | 已生成视频、连续片段、成片验收、返修判断、连续性或口型检查 | `aigc-output-qc` |

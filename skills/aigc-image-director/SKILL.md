@@ -1,6 +1,6 @@
 ---
 name: aigc-image-director
-description: Direct AIGC still-image work including character and scene design, concept art, cinematic frames, posters, product visuals, visual identity, reference mapping, image editing and image critique. Use when the output or requested direction is a still image; moving-shot choreography stays with the video director. Coordinate actual generation through an available image tool.
+description: Direct AIGC still-image work including character and scene design, concept art, cinematic frames, posters (including short-drama-poster-director and 海外短剧海报提示词), product visuals, visual identity, reference mapping, image editing and image critique. Use when the output or requested direction is a still image; moving-shot choreography stays with the video director. Coordinate actual generation through an available image tool.
 ---
 
 # AIGC Image Director
@@ -11,9 +11,13 @@ Select the requested mode: design/critique, prompt-only, actual generation/edit,
 
 Read only the branch needed for this action: [characters](references/characters.md) for identity/silhouette/multi-view, [costumes](references/costumes.md) for layers/material/function, and [environments](references/environments.md) for usable space/perspective/continuity. For mixed visual development maintain shared character, costume and scene IDs rather than three disconnected styles.
 
-Poster composition with substantial typography is led by canvas-design; this skill owns its generated main visual. UI/web layout is led by frontend-design, not image generation. Explicit design critique or a learning comparison can use aigc-design-review; video QC remains separate.
+Actual poster composition with editable/substantial typography is led by canvas-design; this skill owns its generated main visual and the overseas short-drama poster prompt-only branch. UI/web layout is led by frontend-design, not image generation. Explicit design critique or a learning comparison can use aigc-design-review; video QC remains separate.
 
 Recovered methods are indexed in [recovery and sources](references/recovery-index.md). For multi-reference edits read [reference control](references/legacy-reference-control.md); for an under-authored composition read [composition engine](references/legacy-creative-composition-engine.md); for requested style/light/value diagnosis read [art direction](references/legacy-aesthetic-art-direction.md) or [visual diagnosis](references/legacy-visual-diagnosis.md). Current user intent, output format and this entrypoint override historical host presets. Do not load all recovered references for every image.
+
+## Overseas Short-Drama Poster Branch
+
+For “short-drama-poster-director”, overseas drama poster ideation or a prompt from exact title, plot and character references, read [公司海报导演](references/company-short-drama-poster.md) and choose useful relationship mechanisms from [构图原型](references/company-poster-prototypes.md). This prompt/visual-direction branch defaults to 3:4 only for this poster use case; user format overrides it. Lock supplied faces and visible wardrobe, design relationship hierarchy and exact-title typography together, and never import the video model/ratio into a still poster. Prompt-only returns the requested copyable prompt, not a mandatory canvas workflow. Actual editable typography/layout uses canvas-design; actual image generation remains subject to the available image tool and user scope. No-reference design must not claim identity/wardrobe verification or invent title/plot facts.
 
 ## Direct the image
 
