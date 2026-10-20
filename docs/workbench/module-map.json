@@ -2,7 +2,7 @@
   "pack_name": "aigc-production-workbench",
   "display_name": "AIGC制作工作台",
   "date": "2026-10-20",
-  "version": "1.2.4",
+  "version": "1.3.0",
   "coverage": "20 repository Skills plus integrated company branches; external plugins remain optional dependencies",
   "modules": [
     {
@@ -58,7 +58,7 @@
     {
       "name": "aigc-postproduction",
       "title": "后期与媒体工具",
-      "description": "已有剪映/CapCut工程、保守口播粗剪、分镜板替换和FFmpeg处理；保护原件并验证实际输出。",
+      "description": "手动剪映操作表、素材/字幕/导出交接、保守口播剪辑、分镜板替换和FFmpeg；不使用剪映/CapCut CLI，保护原件。",
       "source_skills": [
         "jianying-editing",
         "capcut-edit",
@@ -89,5 +89,10 @@
       ],
       "knowledge_file": "08_商业与数字内容.md"
     }
-  ]
+  ],
+  "full_source_policy": "Every original file in all 20 source Skill trees is copied byte-for-byte into the owning active module; compact knowledge is navigation only.",
+  "execution_policy": {
+    "jianying_capcut_cli": "disabled-by-user; historical references only",
+    "postproduction": "manual editor handoff; FFmpeg only for requested deterministic media work"
+  }
 }

@@ -15,10 +15,12 @@ import subprocess
 import sys
 import zipfile
 
+from workbench_distribution import enrich
+
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / 'docs/workbench'
 SKIP = {'.git', '.local', '__pycache__', '.venv', 'node_modules', '.aigc-backups'}
-GUIDES = ['使用手册.md', '安装指南.md', '常用指令速查.md', '项目快照模板.md', 'Preview_验收清单.md']
+GUIDES = ['使用手册.md', '安装指南.md', '常用指令速查.md', '项目快照模板.md', 'Preview_验收清单.md', '最简单使用方式.md', '执行合同.md', '验收说明.md']
 # Runtime-free reference material, preserved as background under each module.
 REFERENCES = {
  'aigc-writing': [('aigc-screenwriter', 'references/scene-and-dialogue.md'), ('aigc-screenwriter', 'references/script-duration-planning.md')],
@@ -122,10 +124,23 @@ def build(output):
         'defaultPrompt': ['按我的材料和目标选择一个主模块，直接完成所需结果。', '根据确认剧情写30秒Seedance 2.5完整版提示词。', '只检查这两条分镜的空间、道具和口型连续性。']
       }}}
     }
+    previous = ROOT / '.local/workbench-before-1.3.0.json'
+    if previous.is_file():
+        saved = json.loads(previous.read_text())
+        old_manifest = json.loads(saved['contents']['plugin.json'])
+        if old_manifest.get('name') != mapping['pack_name']:
+            raise ValueError('Existing plugin identity mismatch')
+        manifest = old_manifest
+        manifest['version'] = version
+        # Host-generated compatibility metadata remains synchronized.
+        if '.codex-plugin/plugin.json' in saved['contents']:
+            overlay = json.loads(saved['contents']['.codex-plugin/plugin.json'])
+            overlay['version'] = version
+            write(plugin / '.codex-plugin/plugin.json', json.dumps(overlay, ensure_ascii=False, indent=2)+'\n')
     if len(manifest['extensions']['com.openai']['interface']['shortDescription']) > 30:
         raise ValueError('Plugin subtitle is too long')
     write(plugin / 'plugin.json', json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
-    write(plugin / 'README.md', (DOCS / '使用手册.md').read_text() + '\n\n插件内docs包含安装指南/验收/快照，gpt-compatible包含可粘贴指令与9份知识。assets中的两个ZIP分别为GPT兼容包和Codex20技能源快照；它们是导入/复现材料，不是额外自动激活的工具。\n')
+    write(plugin / 'README.md', (DOCS / '使用手册.md').read_text() + '\n\n插件内docs包含安装指南/验收/快照，gpt-compatible包含可粘贴指令与18份分层知识。assets中的两个ZIP分别为GPT兼容包和Codex20技能源快照；它们是导入/复现材料，不是额外自动激活的工具。\n')
     for guide in GUIDES:
         write(plugin / 'docs' / guide, (DOCS / guide).read_text())
     write(plugin / 'docs/module-map.json', json.dumps(mapping, ensure_ascii=False, indent=2) + '\n')
@@ -135,7 +150,8 @@ def build(output):
         common = ('当前入口为八模块适配之一，覆盖原Skill：' + '、'.join(m['source_skills']) + '。\n\n'
                   '先按真实用户目标和材料工作；只读与修改、提示词与实际生成分别处理。'
                   '只加载本入口所需参考，不启动所有模块。宿主缺工具时仍可完成文本工作，'
-                  '不能声称已执行脚本/CLI/API、生成文件或验证媒体。原始资料中的路径/默认不能覆盖当前用户锁。\n\n'
+                  '不能声称已执行脚本/CLI/API、生成文件或验证媒体。原始资料中的路径/默认不能覆盖当前用户锁。'
+                  '用户明确不使用剪映/CapCut CLI，不安装、探测或调用；后期交手动剪辑表与素材/字幕/导出清单，原CLI资料仅历史参考。\n\n'
                   '阅读 [模块方法](references/workflow.md)。项目/跨模块请求按工作台主入口分流，'
                   '已有明确专业请求直接完成。\n')
         if m['name'] == 'aigc-workbench':
@@ -175,12 +191,14 @@ def build(output):
         shutil.copy2(DOCS / name, compatibility / name)
     shutil.copytree(DOCS / 'knowledge', compatibility / 'knowledge')
     shutil.copy2(DOCS / 'module-map.json', compatibility / 'module-map.json')
-    write(compatibility / 'README.md', '先读安装指南；主指令粘贴Instructions，knowledge内9个文件单独上传。JSON仅人工配置清单，ZIP不是GPT技能安装接口。工具能力需当前宿主支持。\n')
+    write(compatibility / 'README.md', '先读安装指南；主指令粘贴Instructions，knowledge内18个文件单独上传。JSON仅人工配置清单，ZIP不是GPT技能安装接口。工具能力需当前宿主支持。\n')
+    full_report = enrich(ROOT, DOCS, plugin, compatibility, mapping)
+    write(compatibility / 'README.md', '先读安装指南和最简单使用方式。主指令粘贴Instructions，knowledge内18份文件分别上传（9导航＋8完整资料＋1待核实音乐候选）。JSON是人工清单，ZIP不等于GPT自动安装。实际工具另验。\n')
     compat_zip = output / ('AIGC-GPT-compatible-' + version + '.zip')
     zip_directory(compatibility, compat_zip)
     snapshot = output / ('AIGC-Codex-source-' + version + '.zip')
     source_snapshot(snapshot)
-    (plugin / 'assets').mkdir()
+    (plugin / 'assets').mkdir(exist_ok=True)
     shutil.copy2(compat_zip, plugin / 'assets' / compat_zip.name)
     shutil.copy2(snapshot, plugin / 'assets' / snapshot.name)
     shutil.copytree(compatibility, plugin / 'gpt-compatible')
@@ -196,7 +214,7 @@ def build(output):
             if '://' not in target and not (p.parent / target).is_file():
                 raise ValueError('Missing packaged reference: '+target)
     zip_directory(plugin, plugin_zip)
-    payload = {'version':version, 'modules':len(modules), 'source_skills':len(expected), 'knowledge_files':len(knowledge),
+    payload = {'version':version, 'modules':len(modules), 'source_skills':len(expected), 'knowledge_files':full_report['knowledge_file_count'], 'full_source':full_report,
                'master_instruction_characters':len(master), 'platform_behavior':'not tested in target account',
                'archives':[]}
     for p in [plugin_zip, compat_zip, snapshot]:
