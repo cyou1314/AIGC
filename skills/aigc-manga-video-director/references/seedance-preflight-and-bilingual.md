@@ -1,5 +1,7 @@
 # Seedance Preflight And Bilingual Prompting
 
+Current company workflow: read `company-directing-standard.md` first. Its scoped locks, 2.5 planning profile, viewing-first design and one-complete-version delivery override conflicting legacy examples below.
+
 Use this reference before delivering final Seedance prompts, especially for storyboard-to-video, action shots, prompt revision, multi-shot continuity, or when the user asks whether the video will run well.
 
 Core principle: do a mental Seedance run before output. Do not only ask "is the prompt beautiful"; ask "can this short clip physically execute, preserve identity, follow one camera logic, and end on the intended frame?"
@@ -12,7 +14,7 @@ Before final prompt delivery, silently simulate the clip in this order:
 2. **Reference role check**: every `@` asset has one main role: identity, first frame, last frame, scene, camera, action, rhythm, audio, style, outfit, or prop.
 3. **Start frame check**: the first visible state is clear enough for Seedance to begin without guessing.
 4. **Action physics check**: the body can complete the described action within the duration; no impossible teleporting, sudden costume change, or too many attacks.
-5. **Camera check**: one primary camera movement; if compound, the secondary movement is subtle and motivated.
+5. **Camera check**: a motivated viewing structure; physically connected paths within continuous shots, explicit cut/receiving state at edits, valid coverage at hidden transitions. Compound movement is allowed when readable and motivated.
 6. **Continuity check**: face, hair, outfit, prop, screen direction, lighting direction, location geography, and emotional state carry from the previous shot.
 7. **Occlusion/artifact check**: risky hands, face contact, fast weapon near face, multiple people, fabric, smoke, text, and extreme rotations are simplified or constrained.
 8. **Endpoint check**: the last frame is specific: pose, crop, eye line, prop position, environment reaction, and whether motion stops or continues into the next shot.
@@ -26,7 +28,7 @@ Use this internal scoring when useful:
 
 | Item | Pass condition |
 |---|---|
-| Clarity | one visible beat, not a pile of events |
+| Clarity | coherent viewing tasks with readable state changes, not unrelated event overload |
 | Motion | subject movement and camera movement are separated |
 | Duration | action fits the clip length |
 | Identity | character anchors or `@` roles are strong enough |
@@ -42,7 +44,7 @@ Suggest a user-side modification only when it will materially improve generation
 
 - Provide a first frame when identity, pose, or composition must be exact.
 - Provide a last frame when the ending pose, transformation result, or emotional endpoint must be exact.
-- Split one prompt into two clips when it contains more than one major action beat.
+- Split production units only when readable action, dialogue, transition, or surface limits require it; multiple beats alone do not require splitting. Preserve current duration and no-cut locks.
 - Add a character reference when face, outfit, or prop consistency is central.
 - Add a scene reference when location geography, lighting direction, or set scale matters.
 - Use a video reference only for camera/action/rhythm, and explicitly forbid identity or scene transfer if needed.

@@ -119,7 +119,7 @@ For each shot, include only shot-specific deltas:
 - continuity constraints
 - avoid rules only if this shot has special risks
 
-When the target is Seedance 2.0 / Seedance 2.0 Fast, follow the existing AIGC prompt defaults: include source time ranges for recreation, avoid unnecessary model/aspect-ratio fields unless asked, and keep both complete and concise versions when useful.
+Use Seedance 2.5 as the current video planning target. Follow the director Skill’s current company standard: 4–30 seconds per production unit as a user-supplied planning condition, not an internal-shot minimum or an unverified API guarantee. Preserve this task’s explicit total duration, one-take and no-split locks; otherwise explain necessary reallocation/splitting. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
 
 ### 5. Revision Loop
 

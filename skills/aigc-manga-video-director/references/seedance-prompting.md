@@ -1,21 +1,16 @@
-# Seedance 2.0 Prompting
+# Seedance Prompting — Company 2.5 Profile
 
-Use this reference when writing prompts for Seedance 2.0 or Seedance 2.0 Fast.
+Current company workflow: read `company-directing-standard.md` first. Its scoped locks, 2.5 planning profile, viewing-first design and one-complete-version delivery override conflicting legacy examples below.
+
+Use this reference when writing prompts for Seedance 2.5 under the company planning profile.
 
 For deeper Seedance 2 directing behavior, also read `seedance-2-director-rules.md`. Use this file for the stable shot-block format and prompt field conventions; use `seedance-2-director-rules.md` for mode selection, `@` reference role maps, first/last-frame bridges, V2V/R2V/edit/extend workflows, timeline prompting, audio/dialogue/rhythm, character blocking, compression, and retake troubleshooting.
 
-## Model Assumptions
+## Current Planning Profile And Historical Material
 
-Seedance 2.0 supports multimodal audio-video generation with text, image, audio, and video inputs. It is designed for control over performance, lighting, shadow, and camera movement. Public technical material describes 4-15 second outputs and mentions the Fast version as the low-latency accelerated variant.
+Read `company-directing-standard.md` for current authority. The user's company profile plans Seedance 2.5 generation units of 4–30 seconds, with no four-second minimum for internal shots. This is a user-supplied production condition, not an independently verified API capability. Verify the actual surface, supported duration choices, references and audio controls before generation.
 
-For this user's workflow, default to image-to-video or reference-driven prompts when a sketch frame, storyboard frame, or extracted keyframe is available.
-
-## 2.0 vs 2.0 Fast
-
-- **Seedance 2.0**: use for important shots, complex camera movement, difficult angles, multi-subject blocking, emotional beats, and shots where visual quality matters most.
-- **Seedance 2.0 Fast**: use for iteration, simple single-action shots, rough timing tests, alternate camera trials, and prompt debugging.
-
-For Fast, simplify the prompt. Use one main action, one camera move, one emotional change. Avoid stacking several reveals, turns, gestures, and lens changes in one clip.
+Earlier model duration limits and quality comparisons are historical context, not current constraints or evidence that a particular product variant exists on the active surface. Adapt tested camera principles to the task instead of carrying forward those limits.
 
 ## Prompt Structure
 
@@ -57,7 +52,7 @@ Do not output separate model or aspect-ratio fields by default. Include source t
 
 ## Prompt Version Rule
 
-When outputting final Seedance prompts, provide two versions by default:
+Default to one complete copyable Seedance prompt. Provide these variants only when requested:
 
 - `完整制作版`: full detailed prompt using the standard fields.
 - `精简版`: compressed prompt under 2000 Chinese characters per prompt.
@@ -108,7 +103,7 @@ Medium-density prompt checklist: keep `时间`, needed `@` names, `首帧`, main
 
 When revising an existing prompt, always return the complete final prompt block. Do not provide only the changed sentence, partial paragraph, or patch-style edits.
 
-Even if only one field changes, rewrite the full copyable prompt. Return both `完整制作版` and `精简版` unless the user asks for one version only:
+Even if only one field changes, rewrite the full copyable prompt. Return one complete copyable version; add a concise alternative only when requested:
 
 `时间: ...`
 
@@ -134,10 +129,10 @@ If the original prompt uses the compact block with `运动` instead of separate 
 
 ## Motion Rules
 
-- Keep one clear movement per prompt.
+- Keep clear motivated motion within each continuous camera shot. A generation prompt may contain multiple camera shots or beats; do not force every prompt into a single move.
 - Use a slightly longer motion description when the camera move and subject action both matter.
 - Use multi-beat motion only when the shot has a start, development, and ending beat.
-- Do not put more than one major camera move in a Fast prompt.
+- For a constrained/fast generation surface, simplify unsupported motion after checking that surface; do not transfer historical model heuristics into universal limits.
 - Before naming a camera move, decide whether the image change comes from physical camera movement, zoom/crop, subject movement, edit/reframe, or mixed movement.
 - Describe camera movement with start framing, end framing, path/axis, speed/easing, parallax or foreground/background evidence, and focal-depth change.
 - For difficult sketch angles, preserve the sketch's camera height, tilt, and subject scale before adding visual detail.

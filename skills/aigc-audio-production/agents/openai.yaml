@@ -1,4 +1,4 @@
 interface:
   display_name: "Aigc Audio Production"
-  short_description: "Help with Aigc Audio Production tasks"
+  short_description: "配音、短剧器乐配乐双框提示词、音效与混音方案"
   default_prompt: "Use $aigc-audio-production to complete my requested AIGC deliverable."

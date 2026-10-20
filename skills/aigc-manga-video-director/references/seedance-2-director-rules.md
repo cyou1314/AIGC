@@ -1,6 +1,8 @@
-# Seedance 2 Director Rules
+# Seedance 2.5 Director Rules
 
-Use this reference when the task needs Seedance 2.0 / Seedance 2.0 Fast prompt writing, prompt revision, multimodal reference planning, multi-shot timeline prompts, video edit/extend prompts, dialogue/audio prompts, or troubleshooting a failed generation.
+Current company workflow: read `company-directing-standard.md` first. Its scoped locks, 2.5 planning profile, viewing-first design and one-complete-version delivery override conflicting legacy examples below.
+
+Use this reference when the task needs Seedance 2.5 (company planning profile; verify the actual generation surface) prompt writing, prompt revision, multimodal reference planning, multi-shot timeline prompts, video edit/extend prompts, dialogue/audio prompts, or troubleshooting a failed generation.
 
 This file is a general production rule set. Do not bind it to any single project, character world, or current title. Project-specific standards belong in a project profile; this reference only keeps reusable Seedance directing logic.
 
@@ -29,7 +31,7 @@ Before writing a final prompt, do this in order:
 3. Choose mode: T2V, I2V, V2V, R2V, FLF2V, edit, extend, or sequence.
 4. Build a reference role map before drafting. Every uploaded image/video/audio gets one primary job and optional secondary jobs.
 5. Name one directorial intention for the clip or shot: reveal, threat, decision, attraction, pursuit, transformation, intimacy, shock, proof, comedy beat, product desire, etc.
-6. Build the prompt around one visible beat, one primary camera move, one lighting logic, one performance/action focus, and one sound/rhythm intent.
+6. Choose the viewing structure first: continuous, edited, hidden transitions, or a motivated mixture. Give each camera shot a readable task, lighting logic, action focus, and endpoint. Plan actual paths only within continuous shots; cuts use attention/state handoff.
 7. Run the preflight simulation from `seedance-preflight-and-bilingual.md`: mode, reference roles, first frame, action physics, camera path, continuity, artifact risks, endpoint, and likely retake cause.
 8. Run the compactness pass: delete filler before deleting control points.
 9. If revising after a bad generation, diagnose the cause before adding more adjectives.
@@ -48,7 +50,7 @@ Use conservative Seedance assumptions unless the user or current platform docs s
 - If exact platform fields matter, verify current limits before stating them as facts.
 - If the user is using Higgsfield-style multi-shot prompting, put a top production line before the prompt: `Total: [duration] / [shot count] / [aspect ratio]`.
 - In this user's existing copyable shot-block workflow, do not add separate model or aspect-ratio fields unless the user asks. Keep source `时间` as source-video timing, not a model parameter.
-- For long or complex ideas, split into multiple shots or multiple clips instead of overloading one 4-6 second generation.
+- For complex material, choose shot coverage and then production units. The company planning profile uses 4–30 seconds per generation unit, not per internal shot; verify actual surface options before generating.
 - If using a reference video, specify which parts transfer: camera, action, rhythm, expression, edit cadence, sound, or transition. Also specify what must not transfer when needed.
 - Avoid presenting community tricks as official behavior. Treat them as useful prompt heuristics.
 

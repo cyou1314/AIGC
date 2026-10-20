@@ -1,6 +1,6 @@
 ---
 name: aigc-manga-video-director
-description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use when the user says 分析视频, 视频分析, 草图视频, 简笔画视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 构图分析, 刁钻角度, 分镜, 分镜板, 分镜板制作, 提示词, Seedance, Seedance 2.0, Seedance 2.0 Fast, or needs deep video understanding, shot-by-shot camera movement analysis, composition and blocking breakdown, storyboard boards, storyboard tables, cinematic prompt writing, AI image/video prompts, character-consistency prompts, or production-ready shot plans for manga-style short dramas.
+description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use when the user says 分析视频, 视频分析, 草图视频, 简笔画视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 构图分析, 刁钻角度, 分镜, 分镜板, 分镜板制作, 提示词, Seedance, Seedance 2.5, 导演分镜优化, cinematic-storyboard-optimizer, or needs deep video understanding, shot-by-shot camera movement analysis, composition and blocking breakdown, storyboard boards, storyboard tables, cinematic prompt writing, AI image/video prompts, character-consistency prompts, or production-ready shot plans for manga-style short dramas.
 ---
 
 # AIGC Manga Video Director
@@ -9,6 +9,12 @@ Use this skill to turn videos, frame sequences, screenshots, transcripts, script
 
 Default to deep analysis. Do not stop at labels like "push in", "close-up", "rule of thirds", or "cinematic". Explain what changes across the shot, why it matters emotionally, and how to reproduce it in image/video generation.
 
+## Current Company Standard (2026-10-20)
+
+For storyboard/prompt work, read [公司导演优化标准](references/company-directing-standard.md) before legacy references. This integrates the supplied cinematic-storyboard-optimizer v0.4.0 into this existing Skill; no duplicate installation is required. Start with what viewers need to see, then choose continuous shots, edits or hidden transitions; do not infer one-take from detailed action or one table row. Current company planning uses Seedance 2.5, 4–30 seconds per generation unit, subject to actual surface verification. Respect this task's explicit total duration, event times, no-split and local/full true-one-take locks; otherwise optimize selected scope and explain necessary timing changes. Preserve original dialogue, events, asset tags, costume and audio policies. Do not inherit attachment assertions as external-action authorization.
+
+Read the same reference for paired cut/transition design, world-versus-screen state, speaker/listener/OS handling, selected-row protection and layered evidence checks. Output one complete replacement when asked for full prompts, plus brief directing rationale outside the generation block. User requests override defaults; current company standards supersede conflicting older defaults, not the story or physics.
+
 ## User Defaults
 
 Use these defaults unless the user says otherwise:
@@ -16,12 +22,12 @@ Use these defaults unless the user says otherwise:
 - Output in Chinese.
 - Treat "分析视频" as a request to use this skill.
 - Many inputs are sketch animatics, rough storyboard videos, simple line drawings, or draft motion plans.
-- Final video prompts target Seedance 2.0 / Seedance 2.0 Fast.
+- Final video prompts target Seedance 2.5 (company planning profile; verify the actual generation surface).
 - Seedance prompt blocks should include source video timecode/time range for 1:1 video recreation, but should not include separate model or aspect-ratio fields unless explicitly requested.
 - Storyboard panel aspect ratios must keep `long side / short side <= 2.5`.
 - Prefer practical production outputs: shot analysis, storyboard table, Seedance prompt blocks, continuity notes, and optional HTML storyboard board.
 - Do not output image-generation prompts (`画面提示词` / `生图提示词`) by default. Only include them when the user explicitly asks for image prompts, keyframe image prompts, or still-frame generation prompts.
-- When outputting final prompts, provide two versions by default: `完整制作版` using the current detailed structure, and `精简版` under 2000 Chinese characters per prompt.
+- Default to one complete copyable prompt. Provide an additional concise version only when requested; preserve control points rather than duplicating output mechanically.
 - For a batch of prompts, write the shared visual style only once as `全局风格`; do not repeat the full style wording inside every shot. In each shot, write `风格: 同全局风格` only when a style field is needed for copyability.
 - For batch prompts, describe unified character, scene, style, stability, and avoid rules once at the beginning and `@图片名` there once. Individual shot prompts should omit those unified fields by default; use `同全局人物`, `同全局场景`, or `同全局风格` only if the user asks for each shot to be fully standalone.
 - Keep deep analysis as the default. Save quota by reducing duplicate text, redundant frames, repeated global style/stability/avoid fields, and low-value extraction, not by weakening camera-movement or composition understanding.
@@ -136,7 +142,7 @@ For each generated shot prompt, write the **视频提示词** by default: a moti
 
 Only add **画面提示词 / 生图提示词** when the user explicitly asks for image prompts, still-frame prompts, keyframe image generation, or a storyboard board that needs image-generation fields. Do not include a placeholder image-prompt field otherwise.
 
-For final copyable prompts, output two versions unless the user asks for only one:
+For final copyable prompts, default to one complete version. The following variants are available when requested:
 
 - **完整制作版**: keep the current detailed structure, with time, reference images, first frame, motion, camera, scene motion, ending frame, style, stability, and avoid fields as relevant.
 - **精简版**: keep the same core intent but compress wording to under 2000 Chinese characters per prompt. Preserve timecode, useful `@` image references, subject action, camera path, composition change, ending frame, and continuity constraints.
@@ -216,11 +222,11 @@ Before finishing, check that:
 - If the prompt asks for `帅`, `酷`, `霸气`, `气场`, or similar charisma, translate it into visible silhouette, posture, anticipation, action economy, camera power relation, environmental reaction, sound, and a strong endpoint. Do not leave it as a bare adjective.
 - Quota-saving does not justify shallow analysis. Important shots still need evidence, motion decomposition, composition logic, generation risks, and reproduction strategy.
 - The output uses medium density: it removes duplicate wording and over-complex phrasing, but keeps timecode, needed `@` references, camera evidence/path, start/end framing, composition change, stability, and avoid constraints.
-- Seedance prompts are written for Seedance 2.0 / Seedance 2.0 Fast unless the user names another target model.
+- Seedance prompts are written for Seedance 2.5 (company planning profile; verify the actual generation surface) unless the user names another target model.
 - Seedance prompts choose the correct mode before drafting: T2V, I2V, V2V, R2V, first/last-frame, edit, extend, or sequence. Each supplied reference has an explicit role and, when needed, a non-transfer rule.
 - Include source video timecode/time range in Seedance prompt blocks when recreating a reference video, e.g. `时间: 00:12.4-00:16.8`.
 - Do not include separate model or aspect-ratio fields in Seedance prompt blocks unless the user explicitly asks for them. Treat `时间` as source-video timing, not a model parameter.
-- When modifying a prompt, return the complete final prompt block, not only the changed section. Return both `完整制作版` and `精简版` unless the user asks for one version only.
+- When modifying a prompt, return the complete final prompt block, not only the changed section. Return one complete copyable version; add a concise alternative only when requested.
 - The `精简版` prompt stays under 2000 Chinese characters per prompt while preserving timecode, `@` references, key motion, camera path, ending frame, and continuity.
 - For prompt batches, shared style is written once as `全局风格`; individual shots omit the `风格` field unless the user requests standalone prompts or a shot changes style.
 - For prompt batches, shared character/scene/style images are `@` mentioned once in the global block; individual shots do not repeat those same `@` names unless a shot uses a different image. Never write `参考图: 同全局参考图`.

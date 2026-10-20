@@ -1,6 +1,6 @@
 ---
 name: aigc-audio-production
-description: Plan and coordinate AIGC audio deliverables such as voiceover, dubbing, podcasts, music, sound effects and mix preparation. Use when the requested output is sound or an audio production plan. Pure transcription belongs to transcribe, and audio-to-video prompt conversion belongs to audio-to-prompt.
+description: Plan and coordinate AIGC audio deliverables such as voiceover, dubbing, podcasts, music, sound effects and mix preparation. Use when the requested output is sound, an audio production plan, or scene-synchronized music prompts including Style/Structure boxes and 短剧配乐. Pure transcription belongs to transcribe, and audio-to-video prompt conversion belongs to audio-to-prompt.
 ---
 
 # AIGC Audio Production
@@ -14,6 +14,8 @@ Lock the user's text, language, names/pronunciation and chosen voice reference. 
 Use `narrator` only when its explicit trigger and fixed-window/continuous-read/presenter-overlay modes fit. Otherwise discover an available voice-generation tool for the requested task. Transcription credentials do not establish TTS readiness. Character dialogue and narrator delivery have different breathing and performance requirements.
 
 ## Music / sound effects
+
+For scene-driven instrumental scoring or “短剧配乐 / ai-cinematic-music-prompt-generator”, read [公司短剧配乐标准](references/company-scoring-standard.md). Integrate the supplied company music workflow here rather than requiring a duplicate Skill. Deliver narrative dynamics, English Style and Structure blocks, dialogue-aware music silence, and evidence-based sync hits. Adapt the arc and acoustic palette to the scene; no mandatory six-stage trajectory, universal synth ban, universal loudness, or universal Style/Lyrics UI. Existing-track recommendation, pure effects and actual audio generation remain separate modes. Preserve explicit no-BGM policies unless the current request changes them.
 
 Capture scene purpose, musical energy curve, instrumentation/timbre, tempo or temporal landmarks when known, and where dialogue needs space. Sound effects specify cause, material, distance and synchronization landmark. Discover the actual music/effects generator when the user requests audio creation; do not fabricate a supported provider from the installed transcribe or image tools.
 

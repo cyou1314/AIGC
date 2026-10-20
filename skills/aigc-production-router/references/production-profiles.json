@@ -50,7 +50,7 @@
       "support": ["transcribe", "ffmpeg", "narrator", "audio-to-prompt"],
       "deliverables": ["音频文件/分轨/文本（以请求为准）", "语音或音乐方向与实测时长"],
       "acceptance": ["听觉核验/词句/发音/情绪", "剪切/失真/峰值和用途规格", "可用生成工具与素材来源"],
-      "boundary": "audio-to-prompt负责音频转视觉提示词；它不承担配乐生成。音乐/音效生成服务必须按需发现。"
+      "boundary": "audio-to-prompt负责音频转视觉提示词；它不承担配乐生成。音乐/音效生成服务必须按需发现。短剧器乐配乐提示词由音频主skill内公司配乐模式承接，输出动态弧线与Style/Structure；现成曲目推荐与实际音频生成分别处理。"
     },
     "three-d": {
       "label": "3D资产：模型、材质、绑定、动画、预演、打印",

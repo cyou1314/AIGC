@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.2.1",
+  "version": "1.2.2",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -8,8 +8,8 @@
       "name": "aigc-audio-production",
       "path": "skills/aigc-audio-production",
       "origin": "user-installed-workflow-snapshot",
-      "files": 2,
-      "sha256_normalized_text": "0707a4ce4a73fef74f09c3ca3413c5e5b214ac9ad720da2d550cf7e6d8550ffd"
+      "files": 3,
+      "sha256_normalized_text": "854737be1a8e7d6f591b1597029347b485d270ebcf53b7731f79c9eeb66e79f8"
     },
     {
       "name": "aigc-commercial-content",
@@ -36,8 +36,8 @@
       "name": "aigc-manga-video-director",
       "path": "skills/aigc-manga-video-director",
       "origin": "user-installed-workflow-snapshot",
-      "files": 22,
-      "sha256_normalized_text": "9831eeb57ca12e1de22aa025ebabd77d5695b5ed33c31a552ffb9dd4b5768d53"
+      "files": 23,
+      "sha256_normalized_text": "849a63b66862bb9fb4bfc887db347f8635b80934a5de4b487b46544e7b66f8ca"
     },
     {
       "name": "aigc-output-qc",
@@ -51,14 +51,14 @@
       "path": "skills/aigc-production-router",
       "origin": "user-installed-workflow-snapshot",
       "files": 7,
-      "sha256_normalized_text": "0eb71325212ebe7ffd2203b6918ef0f1375f385c21c38a2373e6fcdcfb5b4ead"
+      "sha256_normalized_text": "586b7ee846f897b38940a5741a9dc1b30fa230bc3259f14e98d28a875f82fdd1"
     },
     {
       "name": "aigc-project-prompt-loop",
       "path": "skills/aigc-project-prompt-loop",
       "origin": "user-installed-workflow-snapshot",
       "files": 3,
-      "sha256_normalized_text": "ce60bc63097b17a384fa7a8fa4fe34e8f9a7b9ffe45c397aab7a48ac6781e268"
+      "sha256_normalized_text": "8e3e8b1a4e777fe2437f312ec7c8905b1c0033a9ca677cde77279937e8fec987"
     },
     {
       "name": "aigc-screenwriter",
@@ -140,7 +140,7 @@
       "path": "skills/prompt-optimizer",
       "origin": "user-installed-workflow-snapshot",
       "files": 4,
-      "sha256_normalized_text": "72d4ab964913444e208fcf4136dfc859d763aa6a402a246b745aca3f906e8c44"
+      "sha256_normalized_text": "1bb37fa77886ae290d76f87cd75c0acc2fcfe5b9ccff0dc0dbd26cf87d5063d9"
     },
     {
       "name": "storyboard-image-replacer",

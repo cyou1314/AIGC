@@ -1,14 +1,16 @@
 # Prompt Templates
 
+Current company workflow: read `company-directing-standard.md` first. Its scoped locks, 2.5 planning profile, viewing-first design and one-complete-version delivery override conflicting legacy examples below.
+
 Use these templates when writing AIGC manga/drama video prompts. Prefer concrete camera instructions over generic labels. Do not output image prompts unless the user explicitly asks for image/still-frame/keyframe generation prompts.
 
 Templates are reference structures, not mandatory forms. Select, merge, shorten, or expand them according to the specific task: source material, shot complexity, one-shot vs multi-shot structure, reference images, audio, target model, and whether the user needs analysis, a copyable prompt, or a production board. If the user provides a template, learn its useful ordering and constraints, then adapt it to the current shot instead of copying the layout mechanically.
 
-Default video prompt target: Seedance 2.0 and Seedance 2.0 Fast. Read `seedance-prompting.md` when writing final prompts for these models.
+Default video prompt target: Seedance 2.5 under the company planning profile. Read `seedance-prompting.md` when writing final prompts for these models.
 
 Before final Seedance output, read `seedance-preflight-and-bilingual.md` and run a mental preflight: can the clip execute physically, preserve identity, follow one camera logic, and end on the intended frame? Revise before output when the answer is no.
 
-Default final prompt output has two versions:
+Default to one complete copyable prompt. Optional requested variants:
 
 - `完整制作版`: detailed prompt using the current full structure.
 - `精简版`: compressed prompt under 2000 Chinese characters per prompt.

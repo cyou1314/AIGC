@@ -1,6 +1,8 @@
 # AIGC Manga Production Playbook
 
-Use this playbook for the user's recurring workflow: sketch/rough video analysis, shot language breakdown, storyboard planning, and Seedance 2.0 / 2.0 Fast prompt writing.
+Current company workflow: read `company-directing-standard.md` first. Its scoped locks, 2.5 planning profile, viewing-first design and one-complete-version delivery override conflicting legacy examples below.
+
+Use this playbook for the user's recurring workflow: sketch/rough video analysis, shot language breakdown, storyboard planning, and Seedance 2.5 (company planning profile) prompt writing.
 
 ## Default Working Style
 
@@ -8,13 +10,13 @@ Always optimize for production use. The user needs outputs that can be used to g
 
 Default output language: Chinese.
 
-Default target model for video prompts: Seedance 2.0 / Seedance 2.0 Fast.
+Default target model for video prompts: Seedance 2.5 (company planning profile; verify the actual generation surface).
 
 Main shot table placement: put the shot table at the very top or the very bottom of the answer. Default to the top for video analysis, storyboard plans, and production handoff. Use the bottom only when a short conclusion or warning must come first. Do not place the shot table in the middle between long analysis sections.
 
 Image reference placement: when the user provides images, place them inline exactly where they are used. The `@` mention should contain only the image name, not position, coordinates, file path, or role/location text. Do not dump all images in a separate reference list if they can be attached to specific shots or prompt fields.
 
-Prompt versioning: when outputting final prompts, provide two versions by default:
+Prompt versioning: default to one complete copyable prompt; provide these variants only when requested:
 
 - `完整制作版`: detailed production prompt using the current full structure.
 - `精简版`: compressed copyable prompt under 2000 Chinese characters per prompt.
@@ -159,12 +161,12 @@ Do not use extreme panel ratios such as `1:3`, `3:1`, `9:26`, or `26:9`.
 Do this:
 
 1. Ask or infer whether the prompt is for image generation, Seedance video generation, or both.
-2. If no model is named, assume Seedance 2.0 / 2.0 Fast for video.
+2. If no model is named, assume Seedance 2.5 (company planning profile) for video.
 3. Build or update character anchors when recurring characters or character references are present.
 4. Include source time/time range when recreating source video; do not output model/ratio fields by default.
 5. Insert user-provided images into the prompt where they matter, especially `参考图`, `首帧`, `尾帧`, `风格`, and `稳定性`. Use `@图片名` only; do not include position, coordinates, path, or file extension in the mention.
 6. Make camera motion concrete and start-to-end.
-7. Output both `完整制作版` and `精简版` unless the user asks for only one.
+7. Output one complete copyable version; add a concise alternative only when requested.
 8. If modifying an existing prompt, always return the complete final prompt, not only the changed part.
 9. Keep the prompt medium-density: concise enough to copy, complete enough to reproduce the shot. Do not pad with repeated style words or theory.
 
@@ -229,7 +231,7 @@ Good: `画面把人物放在下三分之一, 楼梯线向头顶汇聚, 镜头从
 
 ## Seedance Prompt Rules
 
-Use one clear movement per prompt unless the user asks for a complex multi-beat shot.
+For each continuous camera shot, use a clear motivated movement logic. A generation prompt may contain multiple shots or beats; choose structure from the viewing task, not a fixed move count.
 
 Prefer:
 
@@ -250,7 +252,7 @@ Avoid:
 
 When revising prompts, never answer with only the changed segment. Always regenerate the full copyable final prompt block, even if only one line changed.
 
-Return two versions by default:
+Default to one complete copyable version. Optional requested variants:
 
 - `完整制作版`: use the full prompt pattern below.
 - `精简版`: keep the same timecode, needed `@` references, subject action, camera path, composition change, ending frame, style, and stability constraints, but keep the prompt under 2000 Chinese characters.
@@ -363,7 +365,7 @@ Keep final answers practical:
 - place the main shot table at the top by default, or at the bottom if it works better as an appendix
 - do not bury the shot table between analysis paragraphs
 - when images are supplied, put `@图片名` references where they are used; strip `.png/.jpg/.jpeg/.webp` suffixes; for unified character/scene/style references, mention them once in the global block, not repeatedly in every shot
-- provide prompts in two versions by default: full production version plus concise version under 2000 Chinese characters
+- provide one complete copyable prompt by default; a concise alternative under 2000 Chinese characters is optional when requested
 - keep deep analysis for important shots; save quota through less repetition and better frame selection, not through shallow reading
 - keep wording medium-density: simple and direct, but preserve timecode, camera path/evidence, composition change, continuity, and generation risks
 - choose templates case by case; do not hard-apply a template when the material needs a different structure

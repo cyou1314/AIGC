@@ -86,6 +86,7 @@ description: "Use when a request explicitly or implicitly needs reusable instruc
 |---|---|
 | Seedance、参考视频、分镜板、运镜、构图、调度、漫画/短剧视频 Prompt | `aigc-manga-video-director` |
 | 从素材接收到反复修改、成片反馈和定稿的完整 AIGC 项目 | `aigc-project-prompt-loop` |
+| 原创配乐提示词、Style/Structure双框、器乐动态弧线、短剧配乐或音效制作方案 | `aigc-audio-production` |
 | 音频、对白、转录、情绪、语速、停顿、声音氛围、口型节奏 | `audio-to-prompt` 或 `transcribe` |
 | 已生成视频、连续片段、成片验收、返修判断、连续性或口型检查 | `aigc-output-qc` |
 | OpenAI API、当前模型、模型迁移、官方 Prompt 指南、Codex 产品行为 | `openai-docs` |
