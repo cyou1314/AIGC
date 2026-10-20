@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.1",
+  "version": "1.3.2",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -8,8 +8,8 @@
       "name": "aigc-audio-production",
       "path": "skills/aigc-audio-production",
       "origin": "user-installed-workflow-snapshot",
-      "files": 8,
-      "sha256_normalized_text": "789a31e77eb70247a7f69c018812607af051ddc7b6ef0d7f68ea3426890b164c"
+      "files": 11,
+      "sha256_normalized_text": "5881039b2c257195ec206ede8fc4d7235e43e8979c04b240fa2225f0ffa7cd3f"
     },
     {
       "name": "aigc-commercial-content",

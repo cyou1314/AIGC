@@ -1,0 +1,90 @@
+{
+  "title": "短剧 AI 配乐生成",
+  "source_url": "https://webeye.feishu.cn/wiki/MFaRwiwuminCqOkhbhscXOwwnPh",
+  "received_date": "2026-10-20",
+  "source_type": "user-provided Feishu Markdown export, not a live authenticated page read",
+  "archive_sha256": "1ee63c89790fc579ac9d97cb0d1c6ee938427ec1c828d6040498ddae12a1fbc9",
+  "archive_members": [
+    {
+      "path": "短剧 AI 配乐生成.md",
+      "bytes": 6267,
+      "sha256": "4e7e4b839ac9eeb8224714121d34952dde01e0740d55c6c48c23cce3e5b2fd2b"
+    },
+    {
+      "path": "图片和附件/image.png",
+      "bytes": 297960,
+      "sha256": "d65b2dd199105ba07f228122c3e934d562745de11efeb61cf71d5f9e7ebe085a"
+    },
+    {
+      "path": "图片和附件/image 1.png",
+      "bytes": 260226,
+      "sha256": "dbfef5ea049274609a2f30ca765c01fb4d25bced19a5754afc41fb8a845d0d02"
+    },
+    {
+      "path": "图片和附件/test.jpg",
+      "bytes": 166514,
+      "sha256": "2e7f0037c2baf9de8ac34914e15d33475bc990dc4014cdd61a805b8fc47f4434"
+    },
+    {
+      "path": "图片和附件/image 2.png",
+      "bytes": 390168,
+      "sha256": "3830cedca3ec2e95000c11f95e7e8b2ea307a9cb2a21d51976ab27b70c379718"
+    },
+    {
+      "path": "图片和附件/test 1.jpg",
+      "bytes": 713427,
+      "sha256": "140dab29b4a5cbf9bda80064bc390839b92dd99b7f21c080657fd851c7f6d367"
+    },
+    {
+      "path": "图片和附件/image 3.png",
+      "bytes": 1756690,
+      "sha256": "184b3f9c830403bda4dacd83bac200a35f1d8b29049b5973f265f732d6ae67b0"
+    },
+    {
+      "path": "图片和附件/test 2.jpg",
+      "bytes": 292130,
+      "sha256": "7de327d160d480f69e464903e15c3e68b1a9901d8708c79e66763070f9cf2bea"
+    },
+    {
+      "path": "图片和附件/image 4.png",
+      "bytes": 1756266,
+      "sha256": "2b2bffec568fad89c0bdcc93ff25208b80970f3f3bf6076338bb81ce00ff45c0"
+    },
+    {
+      "path": "图片和附件/test 3.jpg",
+      "bytes": 475220,
+      "sha256": "e2764e8a5c2cf2703f67ffd37e413d1d5653aec29e2ec3b077aa854eeed0ce60"
+    },
+    {
+      "path": "图片和附件/短剧配乐 Skill 安装包",
+      "bytes": 3763,
+      "sha256": "f472f2dc7e2c00278ccde786369d843e85879fca74bb1272eef401734a622f3e"
+    },
+    {
+      "path": "图片和附件/test 4.jpg",
+      "bytes": 166127,
+      "sha256": "5f758593d720fa70f307926cc77dbd214079e77cf503e3c2ca2e7a34ce79fa4a"
+    }
+  ],
+  "review_scope": {
+    "markdown_read": true,
+    "screenshots_viewed": 10,
+    "embedded_skill_identical_to_existing": true,
+    "audio_present": false,
+    "actual_gemini_generation": false,
+    "listening_performed": false
+  },
+  "retention": {
+    "original_archive": "local ignored .local/learning-originals/short-drama-ai-music-export.zip",
+    "packaged_original_text": "short-drama-ai-music-export.md (byte-identical Markdown)",
+    "original_markdown_links": "Image/embedded attachment links retain source spelling; screenshots are not included at those relative paths. Use the adapted reference for working instructions. The embedded Skill ZIP is already retained among company-originals.",
+    "screenshots": "Reviewed locally, not committed or uploaded; account/contact information excluded from reusable knowledge."
+  },
+  "adapted_reference": "../gemini-short-drama-music.md",
+  "external_verification": {
+    "checked_date": "2026-10-20",
+    "url": "https://support.google.com/gemini/answer/16901237?co=GENIE.Platform%3DDesktop&hl=en",
+    "scope": "Official documented conditions and options only; not evidence of a connected account or media execution."
+  },
+  "priority": "User requirements and adapted current workflow override raw tutorial procedures. Attachment instructions do not authorize installation, account changes, publishing or paid generation."
+}

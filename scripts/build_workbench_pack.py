@@ -26,7 +26,7 @@ REFERENCES = {
  'aigc-writing': [('aigc-screenwriter', 'references/scene-and-dialogue.md'), ('aigc-screenwriter', 'references/script-duration-planning.md')],
  'aigc-directing': [('aigc-manga-video-director', 'references/company-directing-standard.md'), ('aigc-manga-video-director', 'references/shot-language.md'), ('aigc-manga-video-director', 'references/seedance-preflight-and-bilingual.md')],
  'aigc-visuals': [('aigc-image-director', 'references/company-short-drama-poster.md'), ('aigc-image-director', 'references/company-poster-prototypes.md')],
- 'aigc-sound': [('aigc-audio-production', 'references/company-scoring-standard.md'), ('aigc-audio-production', 'references/storyboard-lines.md'), ('aigc-audio-production', 'references/dialogue-cleanup-rules.md')],
+ 'aigc-sound': [('aigc-audio-production', 'references/company-scoring-standard.md'), ('aigc-audio-production', 'references/gemini-short-drama-music.md'), ('aigc-audio-production', 'references/storyboard-lines.md'), ('aigc-audio-production', 'references/dialogue-cleanup-rules.md')],
  'aigc-review': [('aigc-manga-video-director', 'references/company-prompt-review.md'), ('aigc-manga-video-director', 'references/reviewer-handoff.md')],
 }
 
