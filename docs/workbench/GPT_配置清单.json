@@ -1,0 +1,18 @@
+{
+  "name": "AIGC制作工作台",
+  "description": "把剧情、分镜、海报、台词、配乐与返修整理成可直接使用的制作结果；按任务自动选择模块，保留公司标准和原始约束。",
+  "instructions_file": "GPT_主指令.txt",
+  "conversation_starters": [
+    "根据这份剧情写一版完整剧本，先合理确定短片形式。",
+    "把这段确认剧情写成30秒Seedance 2.5完整版提示词，保留台词。",
+    "检查这两条分镜的空间和口型连续性，只报告问题。",
+    "从附件按集原样提取台词，不翻译、不润色、不去重。"
+  ],
+  "recommended_capabilities": {
+    "web_search": "核实平台/音乐来源时按需",
+    "code_interpreter_data_analysis": "处理XLSX、可运行的纯Python与文件导出时建议启用",
+    "image_generation": "只有要实际图片时启用；提示词任务无需",
+    "external_apps_actions": "只有明确任务需要且已经连接时使用，不因上传知识自动接通"
+  },
+  "account_note": "已有GPT能否编辑及新建资格由账户/工作区决定；见官方来源与安装指南。"
+}

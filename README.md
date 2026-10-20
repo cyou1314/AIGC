@@ -1,5 +1,7 @@
 # AIGC
 
+面向日常使用的八类入口和GPT/插件适配见[工作台手册](docs/workbench/使用手册.md)与[安装指南](docs/workbench/安装指南.md)。原20个Skill保持不变，按任务调用，不要求每次跑完整流程。
+
 当前视频工作流统一以 **Seedance 2.5** 规划；公司每生成片段4–30秒，内部摄影镜头无4秒下限，实际入口能力在生成前核验。已有分镜优化采用[公司导演标准](skills/aigc-manga-video-director/references/company-directing-standard.md)，短剧配乐提示词采用[公司配乐标准](skills/aigc-audio-production/references/company-scoring-standard.md)。默认交一版完整提示词，明确总长/真实不切/资产与对白约束优先。
 
 个人 AIGC 专业制作与 Skill 工作流。适用于 Windows、macOS 与 Codex Linux 云端环境，提供跨类型路由、20个本地Skill、专业知识、项目模板、安装/升级/回滚工具，以及按生产类型分别验收的标准。

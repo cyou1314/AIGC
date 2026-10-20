@@ -1,0 +1,93 @@
+{
+  "pack_name": "aigc-production-workbench",
+  "display_name": "AIGC制作工作台",
+  "date": "2026-10-20",
+  "version": "1.2.4",
+  "coverage": "20 repository Skills plus integrated company branches; external plugins remain optional dependencies",
+  "modules": [
+    {
+      "name": "aigc-workbench",
+      "title": "项目统筹",
+      "description": "项目分流、阶段恢复、任务交接和交付归档；目标明确时直接交专业模块，不强制跑全流程。",
+      "source_skills": [
+        "aigc-production-router",
+        "aigc-project-prompt-loop",
+        "obsidian-codex-knowledge-loop"
+      ],
+      "knowledge_file": "01_项目统筹.md"
+    },
+    {
+      "name": "aigc-writing",
+      "title": "编剧与剧情",
+      "description": "原创剧本、改编、剧情诊断和获准对白修复；已确认剧情的摄影工作交导演。",
+      "source_skills": [
+        "aigc-screenwriter"
+      ],
+      "knowledge_file": "02_编剧与剧情.md"
+    },
+    {
+      "name": "aigc-directing",
+      "title": "导演与分镜",
+      "description": "Seedance 2.5分镜、机位调度、观看节奏、连续/剪辑/转场和完整版视频提示词。",
+      "source_skills": [
+        "aigc-manga-video-director"
+      ],
+      "knowledge_file": "03_导演与分镜.md"
+    },
+    {
+      "name": "aigc-visuals",
+      "title": "图像与海报",
+      "description": "角色服饰场景、海外短剧海报主视觉、精确标题和可编辑版式；静帧不套视频画幅。",
+      "source_skills": [
+        "aigc-image-director",
+        "canvas-design"
+      ],
+      "knowledge_file": "04_图像与海报.md"
+    },
+    {
+      "name": "aigc-sound",
+      "title": "声音与台词",
+      "description": "分镜台词提取、转录、声音节奏、英文配乐双框、音效与配音方案，区分已有音乐推荐和实际生成。",
+      "source_skills": [
+        "aigc-audio-production",
+        "audio-to-prompt",
+        "transcribe"
+      ],
+      "knowledge_file": "05_声音与台词.md"
+    },
+    {
+      "name": "aigc-postproduction",
+      "title": "后期与媒体工具",
+      "description": "已有剪映/CapCut工程、保守口播粗剪、分镜板替换和FFmpeg处理；保护原件并验证实际输出。",
+      "source_skills": [
+        "jianying-editing",
+        "capcut-edit",
+        "auto-edit-video",
+        "storyboard-image-replacer",
+        "ffmpeg"
+      ],
+      "knowledge_file": "06_后期与媒体工具.md"
+    },
+    {
+      "name": "aigc-review",
+      "title": "审查与返修",
+      "description": "已有提示词审查、视觉审稿、实片QC和语义不变的提示词整理；按实际证据和授权范围工作。",
+      "source_skills": [
+        "aigc-output-qc",
+        "aigc-design-review",
+        "prompt-optimizer"
+      ],
+      "knowledge_file": "07_审查与返修.md"
+    },
+    {
+      "name": "aigc-commercial-digital",
+      "title": "商业与数字内容",
+      "description": "产品/广告/UGC事实与创意，及UI网页设计；根据交付分流，不捏造效果或发布状态。",
+      "source_skills": [
+        "aigc-commercial-content",
+        "frontend-design"
+      ],
+      "knowledge_file": "08_商业与数字内容.md"
+    }
+  ]
+}
