@@ -124,7 +124,9 @@ def build(output):
         'defaultPrompt': ['按我的材料和目标选择一个主模块，直接完成所需结果。', '根据确认剧情写30秒Seedance 2.5完整版提示词。', '只检查这两条分镜的空间、道具和口型连续性。']
       }}}
     }
-    previous = ROOT / '.local/workbench-before-1.3.0.json'
+    previous = ROOT / ('.local/workbench-before-' + version + '.json')
+    if not previous.is_file():
+        previous = ROOT / '.local/workbench-before-1.3.0.json'
     if previous.is_file():
         saved = json.loads(previous.read_text())
         old_manifest = json.loads(saved['contents']['plugin.json'])
@@ -136,6 +138,32 @@ def build(output):
         if '.codex-plugin/plugin.json' in saved['contents']:
             overlay = json.loads(saved['contents']['.codex-plugin/plugin.json'])
             overlay['version'] = version
+            overlay['interface']['displayName'] = mapping['display_name']
+            write(plugin / '.codex-plugin/plugin.json', json.dumps(overlay, ensure_ascii=False, indent=2)+'\n')
+    manifest['extensions']['com.openai']['interface']['displayName'] = mapping['display_name']
+    branding = mapping.get('branding')
+    if branding:
+        icon_source = (DOCS / branding['source_file']).resolve()
+        if not icon_source.is_relative_to(DOCS.resolve()) or not icon_source.is_file() or icon_source.is_symlink():
+            raise ValueError('Brand icon source must be a contained regular file')
+        icon_bytes = icon_source.read_bytes()
+        if hashlib.sha256(icon_bytes).hexdigest() != branding['sha256']:
+            raise ValueError('Brand icon differs from the selected original')
+        if (icon_bytes[:8] != b'\x89PNG\r\n\x1a\n' or len(icon_bytes) > 5 * 1024 * 1024
+                or not 48 <= int.from_bytes(icon_bytes[16:20], 'big') <= 4096
+                or icon_bytes[16:20] != icon_bytes[20:24]):
+            raise ValueError('Expected a square PNG icon, 48-4096 pixels, at most 5 MiB')
+        for field, key in [('logo', 'logo'), ('composerIcon', 'composer_icon')]:
+            target = Path(branding[key])
+            if target.is_absolute() or '..' in target.parts or not target.parts or target.parts[0] != 'assets':
+                raise ValueError('Brand icon target must be inside assets')
+            icon_target = plugin / target
+            icon_target.parent.mkdir(parents=True, exist_ok=True)
+            icon_target.write_bytes(icon_bytes)
+            manifest['extensions']['com.openai']['interface'][field] = './' + target.as_posix()
+        if previous.is_file() and '.codex-plugin/plugin.json' in saved['contents']:
+            for field in ['logo', 'composerIcon']:
+                overlay['interface'][field] = manifest['extensions']['com.openai']['interface'][field]
             write(plugin / '.codex-plugin/plugin.json', json.dumps(overlay, ensure_ascii=False, indent=2)+'\n')
     if len(manifest['extensions']['com.openai']['interface']['shortDescription']) > 30:
         raise ValueError('Plugin subtitle is too long')
@@ -187,6 +215,10 @@ def build(output):
     shutil.copy2(review / 'scripts/LICENSE.prompt-review-checks', plugin / 'skills/aigc-review/LICENSE')
     compatibility = output / 'AIGC-GPT-compatible'
     compatibility.mkdir()
+    if branding:
+        icon = compatibility / branding['logo']
+        icon.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(plugin / branding['logo'], icon)
     for name in ['GPT_主指令.txt','GPT_配置清单.json',*GUIDES]:
         shutil.copy2(DOCS / name, compatibility / name)
     shutil.copytree(DOCS / 'knowledge', compatibility / 'knowledge')

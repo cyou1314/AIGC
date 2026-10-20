@@ -1,5 +1,5 @@
 {
-  "name": "AIGC制作工作台",
+  "name": "Xan",
   "description": "把剧情、分镜、海报、台词、配乐与返修整理成可直接使用的制作结果；按任务自动选择模块，保留公司标准和原始约束。",
   "instructions_file": "GPT_主指令.txt",
   "conversation_starters": [

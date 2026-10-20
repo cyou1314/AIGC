@@ -1,8 +1,8 @@
 {
   "pack_name": "aigc-production-workbench",
-  "display_name": "AIGC制作工作台",
+  "display_name": "Xan",
   "date": "2026-10-20",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "coverage": "20 repository Skills plus integrated company branches; external plugins remain optional dependencies",
   "modules": [
     {
@@ -94,5 +94,16 @@
   "execution_policy": {
     "jianying_capcut_cli": "disabled-by-user; historical references only",
     "postproduction": "manual editor handoff; FFmpeg only for requested deterministic media work"
+  },
+  "branding": {
+    "logo": "assets/deck-icon.png",
+    "composer_icon": "assets/deck-icon.png",
+    "source_file": "resources/deck-icon.png",
+    "sha256": "8935ae0ca77bf31ab991864e04aef23c3a570ffed910f7c9e744726dc8b0f6e2",
+    "origin": {
+      "repository": "https://github.com/cyou1314/Deck",
+      "path": "assets/deck-icon.png",
+      "git_blob_sha": "59798e875729861059da1966dce5520fa85d9b29"
+    }
   }
 }

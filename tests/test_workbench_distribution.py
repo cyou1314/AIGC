@@ -69,10 +69,16 @@ class WorkbenchDistributionTests(unittest.TestCase):
         self.assertIn('未逐首试听',(k/'18_音乐候选目录.md').read_text())
 
     def test_existing_plugin_presentation_preserved_except_version(self):
-        previous=ROOT/'.local/workbench-before-1.3.0.json'
+        previous=ROOT/('.local/workbench-before-'+(ROOT/'VERSION').read_text().strip()+'.json')
+        if not previous.is_file():previous=ROOT/'.local/workbench-before-1.3.0.json'
         if not previous.is_file():self.skipTest('No existing private plugin metadata in this test environment')
         old=json.loads(json.loads(previous.read_text())['contents']['plugin.json'])
         new=json.loads((self.plugin/'plugin.json').read_text());old['version']=new['version']
+        mapping=json.loads((ROOT/'docs/workbench/module-map.json').read_text())
+        old['extensions']['com.openai']['interface']['displayName']=mapping['display_name']
+        if mapping.get('branding'):
+            old['extensions']['com.openai']['interface']['logo']='./'+mapping['branding']['logo']
+            old['extensions']['com.openai']['interface']['composerIcon']='./'+mapping['branding']['composer_icon']
         self.assertEqual(old,new)
 
     def run_helper(self,*args,success=True):
