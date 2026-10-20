@@ -9,6 +9,8 @@ description: "Use when a request explicitly or implicitly needs reusable instruc
 
 ## Core Contract
 
+For explicit spreadsheet prompt-section deletion / storyboard-prompt-trimmer, use [storyboard section trimming](references/storyboard-section-trimming.md). It is a bounded file transformation, not permission to remove semantic anchors during ordinary prompt optimization. Preserve originals and use the validated new-output helper; the archived upstream in-place script is historical source only.
+
 - 默认使用中文；用户指定其他语言或目标工具需要其他语言时遵从目标。
 - 用户没有说“Prompt”或“优化”也可以自动介入，但只在请求实质上是给另一个模型或工具的可复用指令，或命中下方可观察条件时介入。
 - 自动介入不等于自动改写。先识别专业负责人，再执行一次静默质量判断；专业 Skill 的事实、素材、生产逻辑和最终专业决定始终优先。

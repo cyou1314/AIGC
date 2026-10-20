@@ -21,6 +21,7 @@ TASKS = {
  'commercial-script': ('aigc-commercial-digital','text',()),
  'music-prompt': ('aigc-sound','text',()),
  'lines-extract': ('aigc-sound','file',()),
+ 'prompt-trim': ('aigc-review','file',()),
  'media-inspect': ('aigc-postproduction','file',('ffprobe',)),
  'media-edit': ('aigc-postproduction','file',('ffmpeg','ffprobe')),
  'editor-project': ('aigc-postproduction','handoff',()),
@@ -49,7 +50,7 @@ def preflight(task, input_path=None):
     module,kind,bins=TASKS[task]
     source=Path(input_path).expanduser().resolve() if input_path else None
     dependencies=[{'name':x,'available':bool(shutil.which(x))} for x in bins]
-    if source and source.suffix.lower()=='.xlsx' and task=='lines-extract':
+    if source and source.suffix.lower()=='.xlsx' and task in {'lines-extract','prompt-trim'}:
         dependencies.append({'name':'openpyxl','available':importlib.util.find_spec('openpyxl') is not None})
     missing=[d['name'] for d in dependencies if not d['available']]
     requires_file=kind in {'file','inspection'}
@@ -93,6 +94,21 @@ def require_new_output(value,inputs):
 
 def run_helper(args):
     root=find_root(args.plugin_root);source=require_file(args.input)
+    if args.command=='trim-prompt-sections':
+        helper=root/'skills/aigc-review/scripts/trim_prompt_sections.py'
+        cmd=[sys.executable,str(helper),'--input',str(source),'--column',args.column]
+        for label in args.label:cmd+=['--label',label]
+        if args.sheet:cmd+=['--sheet',args.sheet]
+        if args.rows:cmd+=['--rows',args.rows]
+        if args.write:
+            if not args.output:raise ValueError('Write requires a new output path')
+            output=require_new_output(args.output,{source})
+            cmd+=['--write','--output',str(output)]
+        result=subprocess.run(cmd,capture_output=True,text=True,timeout=120)
+        try:payload=json.loads(result.stdout)
+        except json.JSONDecodeError:raise ValueError('Prompt trim helper returned invalid JSON')
+        if result.returncode or not payload.get('ok'):raise ValueError(payload.get('reason','Prompt trim validation failed'))
+        return {'operation':args.command,'result':payload,'scope':'Authorized metadata deletion only; not a director-semantic or generated-media pass.'}
     if args.command in {'lines-check','lines-export'}:
         helper=root/'skills/aigc-sound/scripts/storyboard_lines/build_lines_doc.py'
         review=require_file(args.review) if args.command=='lines-export' else None
@@ -132,6 +148,9 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest='command',required=True)
     p=sub.add_parser('preflight');p.add_argument('--task',choices=sorted(TASKS),required=True);p.add_argument('--input')
+    p=sub.add_parser('trim-prompt-sections');p.add_argument('--plugin-root');p.add_argument('--input',required=True)
+    p.add_argument('--label',action='append',required=True);p.add_argument('--column',default='提示词')
+    p.add_argument('--sheet');p.add_argument('--rows');p.add_argument('--write',action='store_true');p.add_argument('--output')
     for name in ['lines-check','lines-export','review-ledger','probe-media']:
         p=sub.add_parser(name);p.add_argument('--plugin-root');p.add_argument('--input',required=True)
         if name.startswith('lines-'):

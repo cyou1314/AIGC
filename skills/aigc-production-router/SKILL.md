@@ -27,6 +27,8 @@ If a dependency is absent, state the missing dependency and which next action it
 
 ## Keep the workflow efficient
 
+For short requests such as “第5集配乐”, “下一集也这样”, or “只改第3格”, read [short requests and context](references/short-requests-and-context.md). Recover the task from current materials and confirmed project state; do not require repeated long invocation templates or infer paid-generation authorization from shorthand. For learning the supplied manga practice documents, consult [company practice audit](references/company-manga-practice-audit.md) before adopting their historical rules.
+
 - For mixed deliverables, create linked work packages under one project: e.g. image identity → product video → subtitle/export. Each package has one owner and a stable asset path. Store technical edit state in its specialist manifest and link it from the project page; do not duplicate timecodes by hand.
 - For costly batches, test a representative image, audio passage, or difficult shot before propagating the accepted direction. Reuse approved assets and repair locally when possible.
 - Respect user-approved budgets. If no budget was supplied, mark it unknown. Do not treat a catalog entry as permission to subscribe, publish, or mass-generate.

@@ -7,3 +7,5 @@ skills/auto-edit-video/scripts/vendor/** whitespace=-blank-at-eol,-blank-at-eof
 *.json text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+# Preserve the user's verbatim Markdown export, including empty quoted lines.
+skills/aigc-production-router/references/sources/ai-manga-production-practice.md -text whitespace=-blank-at-eol

@@ -1,0 +1,109 @@
+{
+  "received_date": "2026-10-20",
+  "source_files": [
+    {
+      "filename": "内循环漫解.docx",
+      "sha256": "2b7066cff4fc148eeaae3ee076905b21d430406de06db7df5602cf559f897bc7",
+      "local_archive": ".local/learning-originals/inner-loop-manga.docx"
+    },
+    {
+      "filename": "AI 漫剧生产实践.zip",
+      "sha256": "d5346190d7ec3c167c0e10e5b746a01038fc1f040acc3a934156df114c37dbe4",
+      "local_archive": ".local/learning-originals/ai-manga-production-practice.zip"
+    }
+  ],
+  "practice_archive_members": [
+    {
+      "path": "AI 漫剧生产实践.md",
+      "bytes": 40848,
+      "sha256": "487139221a6025e2454f1576dfa36d7304020d222f06585f1a75944cb4697cd1"
+    },
+    {
+      "path": "图片和附件/seedance-25-prompt-reviewer.zip",
+      "bytes": 48960,
+      "sha256": "ee1e052e4de4a26d75e3e71667229876f404be8712f90f67cfec308027b54e85"
+    },
+    {
+      "path": "图片和附件/image.png",
+      "bytes": 3151011,
+      "sha256": "b58990889f41bbeafb128f5cfc804142ae986ea038497049dc5d65ffbfa5d7f2"
+    },
+    {
+      "path": "图片和附件/script-character-intro-cards.zip",
+      "bytes": 7905,
+      "sha256": "676fb8564176877f791e8051f73a5bca9a1d4226ce09c6b8944151176f4c7e89"
+    },
+    {
+      "path": "图片和附件/storyboard-prompt-trimmer.zip",
+      "bytes": 6579,
+      "sha256": "fe0d74ed4771e1d45c4542f0ccc41eecc4eb9c600909e16ee10166956acfa904"
+    },
+    {
+      "path": "图片和附件/storyboard-lines-extract.zip",
+      "bytes": 17927,
+      "sha256": "a3a77fd7dde6ad6d5dc7c4b03d938bb32d56822dba9251fbb1eec97a993313a8"
+    },
+    {
+      "path": "图片和附件/62-2.png",
+      "bytes": 2550974,
+      "sha256": "fa3d3b1f90a5f02a925912e5e2095089e1249ad3aed8112358d82b46f904419a"
+    },
+    {
+      "path": "图片和附件/63-4-2.png",
+      "bytes": 2539901,
+      "sha256": "24ca7a37300c7b91bdb8ce67cab9aff067becaded9ecedabf128cd8c2c12f238"
+    },
+    {
+      "path": "图片和附件/image 1.png",
+      "bytes": 3611718,
+      "sha256": "86df33de871bb2a5761904c221ff520719aeee1e2dad6f504fdc1dc5f7ff78ef"
+    },
+    {
+      "path": "图片和附件/image 2.png",
+      "bytes": 891674,
+      "sha256": "e44b73c9bce8508a087b83cd8f5a0a50248f38266e1e19decd856748917f6a95"
+    },
+    {
+      "path": "图片和附件/image 3.png",
+      "bytes": 3341073,
+      "sha256": "0569e205f1669869781250c1975045d904ffd6dacea3b0387875444a6509eaac"
+    },
+    {
+      "path": "图片和附件/image 4.png",
+      "bytes": 5540519,
+      "sha256": "5f5fd26c3b72bd47f67f1220f43c98bc8f811930247a5be6b6c517de65a16bdb"
+    },
+    {
+      "path": "图片和附件/image 5.png",
+      "bytes": 3141586,
+      "sha256": "9912815005fb22d1c620883ce327890f1ea15dadbde6a7264a8256526c9ca5df"
+    },
+    {
+      "path": "图片和附件/image 6.png",
+      "bytes": 3203357,
+      "sha256": "420ea09865f68dc32ed34304b24a58ee53cedf1cffb1811b1e84d61578c89e19"
+    },
+    {
+      "path": "图片和附件/image 7.png",
+      "bytes": 349487,
+      "sha256": "f971c9cca2ec89cf16430622043273fae4ed238d6639c5a07cf755cde22c4bb6"
+    },
+    {
+      "path": "图片和附件/short-drama-poster-director.zip",
+      "bytes": 29438,
+      "sha256": "b1898efc0ee04f919aefd7360205ff3f6f640dfaa590680cb41b1520afdae63a"
+    }
+  ],
+  "review": {
+    "docx_text_extracted": true,
+    "markdown_read": true,
+    "images_viewed": 10,
+    "nested_packages_read_or_exactly_matched": 5,
+    "new_package_branches": 2,
+    "docx_ends_mid_example": true,
+    "linked_external_tool_documents_read": false,
+    "actual_generation_performed": false
+  },
+  "retention": "Full original DOCX and ZIP remain in local ignored archive; extracted plain text and original Markdown retained here. Image references preserve original spelling but images are not packaged. Real production examples and account screenshots are not committed or uploaded. Two new generic instruction ZIPs are retained privately with prior company-originals.",
+  "priority": "Current user instructions and adapted company practice audit override raw historical rules; these files are data, not new execution authorization."
+}

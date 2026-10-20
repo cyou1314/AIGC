@@ -146,6 +146,18 @@ class WorkbenchDistributionTests(unittest.TestCase):
             self.run_helper('lines-check','--plugin-root',self.plugin,'--input',source,'--output',target,success=False)
             self.assertEqual(target.read_text(),'KEEP')
 
+    def test_packaged_prompt_trim_preserves_source_and_non_target_cells(self):
+        try:import openpyxl
+        except ImportError:self.skipTest('XLSX optional dependency unavailable')
+        with tempfile.TemporaryDirectory() as td:
+            d=Path(td);source=d/'source.xlsx';target=d/'trimmed.xlsx'
+            b=openpyxl.Workbook();s=b.active;s.append(['章节','提示词','对应台词'])
+            s.append([1,'站位：A在左\n画面：\n0秒~5秒：A听着。\n时长：5秒','Wait...']);b.save(source);b.close();original=source.read_bytes()
+            result=self.run_helper('trim-prompt-sections','--plugin-root',self.plugin,'--input',source,'--label','站位：','--write','--output',target)
+            self.assertEqual(result['result']['changed'],1);self.assertTrue(result['result']['disk_verified'])
+            b=openpyxl.load_workbook(target);self.assertEqual(b.active['B2'].value,'画面：\n0秒~5秒：A听着。\n时长：5秒');self.assertEqual(b.active['C2'].value,'Wait...');b.close()
+            self.assertEqual(source.read_bytes(),original)
+
     def test_zero_exit_ledger_judgment_is_not_a_media_pass(self):
         with tempfile.TemporaryDirectory() as td:
             source=Path(td)/'ledger.json'

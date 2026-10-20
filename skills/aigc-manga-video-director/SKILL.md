@@ -17,6 +17,8 @@ Read the same reference for paired cut/transition design, world-versus-screen st
 
 ## Existing-Prompt Review Mode
 
+For narrated manga / 解说漫 / 内循环漫解 or the company's eight-field storyboard JSON, read [narrated storyboards and company JSON](references/narrated-storyboards-and-company-json.md). Keep VO, dialogue, media voices and subtitle-only text distinct, synchronize sound and image as separate tracks, preserve sources and asset state, and use the JSON contract only when requested. Do not inherit chapter-based downgrades to 2.0, mechanical shot quotas, or the unqualified last-end-plus-one timing rule from the source document.
+
 For “seedance-25-prompt-reviewer”, existing-prompt review, adjacent-shot handoff, wrong speaker/lip/axis, or visual-only next-prompt repair, read [公司提示词审查](references/company-prompt-review.md); load [交接契约](references/reviewer-handoff.md) only when its risk gate triggers. Preserve exact tags/dialogue and truly editable spans; unknown geometry is not a proven error. Review-only returns evidence and issues, not a rewrite. Explicit revision returns one complete authorized replacement. These review/minimal-difference defaults do not override the company director's already-authorized redesign or timing changes; apply the user's actual mode and current locks first. The MIT ledger helper checks extracted assertions, not raw prose, camera geometry or generated media. Its exit code alone is not a pass.
 
 ## User Defaults

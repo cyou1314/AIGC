@@ -23,11 +23,12 @@ SKIP = {'.git', '.local', '__pycache__', '.venv', 'node_modules', '.aigc-backups
 GUIDES = ['使用手册.md', '安装指南.md', '常用指令速查.md', '项目快照模板.md', 'Preview_验收清单.md', '最简单使用方式.md', '执行合同.md', '验收说明.md']
 # Runtime-free reference material, preserved as background under each module.
 REFERENCES = {
+ 'aigc-workbench': [('aigc-production-router', 'references/short-requests-and-context.md'), ('aigc-production-router', 'references/company-manga-practice-audit.md')],
  'aigc-writing': [('aigc-screenwriter', 'references/scene-and-dialogue.md'), ('aigc-screenwriter', 'references/script-duration-planning.md')],
- 'aigc-directing': [('aigc-manga-video-director', 'references/company-directing-standard.md'), ('aigc-manga-video-director', 'references/shot-language.md'), ('aigc-manga-video-director', 'references/seedance-preflight-and-bilingual.md')],
- 'aigc-visuals': [('aigc-image-director', 'references/company-short-drama-poster.md'), ('aigc-image-director', 'references/company-poster-prototypes.md')],
+ 'aigc-directing': [('aigc-manga-video-director', 'references/company-directing-standard.md'), ('aigc-manga-video-director', 'references/narrated-storyboards-and-company-json.md'), ('aigc-manga-video-director', 'references/shot-language.md'), ('aigc-manga-video-director', 'references/seedance-preflight-and-bilingual.md')],
+ 'aigc-visuals': [('aigc-image-director', 'references/company-short-drama-poster.md'), ('aigc-image-director', 'references/company-poster-prototypes.md'), ('aigc-image-director', 'references/company-character-intro-cards.md'), ('aigc-image-director', 'references/reference-repair-and-expansion.md')],
  'aigc-sound': [('aigc-audio-production', 'references/company-scoring-standard.md'), ('aigc-audio-production', 'references/gemini-short-drama-music.md'), ('aigc-audio-production', 'references/storyboard-lines.md'), ('aigc-audio-production', 'references/dialogue-cleanup-rules.md')],
- 'aigc-review': [('aigc-manga-video-director', 'references/company-prompt-review.md'), ('aigc-manga-video-director', 'references/reviewer-handoff.md')],
+ 'aigc-review': [('aigc-manga-video-director', 'references/company-prompt-review.md'), ('aigc-manga-video-director', 'references/reviewer-handoff.md'), ('prompt-optimizer', 'references/storyboard-section-trimming.md')],
 }
 
 
@@ -211,6 +212,7 @@ def build(output):
     (plugin / 'skills/aigc-review/scripts').mkdir(parents=True)
     for name in ['prompt_review_checks.py', 'LICENSE.prompt-review-checks']:
         shutil.copy2(review / 'scripts' / name, plugin / 'skills/aigc-review/scripts' / name)
+    shutil.copy2(ROOT / 'skills/prompt-optimizer/scripts/trim_prompt_sections.py', plugin / 'skills/aigc-review/scripts/trim_prompt_sections.py')
     # Keep the imported MIT notice next to adapted references as well.
     shutil.copy2(review / 'scripts/LICENSE.prompt-review-checks', plugin / 'skills/aigc-review/LICENSE')
     compatibility = output / 'AIGC-GPT-compatible'

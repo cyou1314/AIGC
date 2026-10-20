@@ -7,7 +7,7 @@
 | auto-edit-video | 本机已安装Skill；内含MIT许可证，版权为natyang1234及贡献者 | 保留 `skills/auto-edit-video/LICENSE.txt` 和原第三方说明 |
 | auto-edit-video内OpenCC | 内含许可证和字典数据 | 保留vendor目录及其许可证 |
 | transcribe | 本机已安装Skill；内含Apache-2.0许可证 | 保留 `skills/transcribe/LICENSE.txt` |
-| jianying-editing | 用户私有仓库 `cyou1314/jianying-editing-skill` 的本机版本 | 保留原功能与安全边界，CLI独立安装 |
+| jianying-editing | 用户私有仓库 `cyou1314/jianying-editing-skill` 的本机版本 | 保留来源方法；用户已排除CLI安装/调用，现行交付为手动剪映操作与素材交接 |
 | capcut-edit | 本机已安装Skill的文档/配方快照 | 未随附capcut CLI；仅作个人备份使用，未来分发前核对上游许可 |
 | AIGC专业技能/知识 | 用户原工作流与本机修订 | 保留引用、来源说明、适用范围和证据边界 |
 | 外部Codex插件 | 仅集成依赖与名称 | 不打包插件缓存、服务代码、账户或凭证 |
@@ -21,3 +21,5 @@
 2026-10-20公司标准整合：用户上传的cinematic-storyboard-optimizer v0.4.0、使用说明与ai-cinematic-music-prompt-generator用于本私有工作流的学习适配。保留来源与适用边界，仅将决策方法重写到现有导演/音频Skill；未复制包内脚本、测试、代理配置或研究原文，未安装其依赖。附件未附统一再分发许可，不宣称已获得公开再分发授权；包作者的历史访问和测试不作为本次验证证据。
 
 2026-10-20补充公司包：seedance-25-prompt-reviewer为MIT，已保留scripts/LICENSE.prompt-review-checks及原版权说明；移植其账本脚本、两组功能测试并适配交接参考。storyboard-lines-extract两份ZIP完全同摘要，仅保留一份的规则/本地脚本/回归，未附许可证，不对其授予公开再分发权。short-drama-poster-director未附许可证，仅在私有工作流提炼规则及关系构图原型，未复制44张图库/完整剧名数据集或其作品案例。附件中的默认飞书发布及作者历史研究/验证声明不作为本次授权或实际证据。
+
+1.3.3补充学习：用户《内循环漫解.docx》《AI 漫剧生产实践.zip》的原件与真实作品/账号截图仅本地忽略归档；提取文本、原Markdown及来源散列作为惰性参考，现行方法另行适配。script-character-intro-cards与storyboard-prompt-trimmer两个新指令包保留原ZIP供私有追溯，未附公开再分发许可；前者的方法/设计参考并入图像入口，后者原脚本仅归档，现行受限裁段助手另写并经功能验证，不声称获得原包统一开源授权。此前重复三包按摘要去重。

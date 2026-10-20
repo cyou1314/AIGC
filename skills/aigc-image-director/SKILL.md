@@ -21,6 +21,10 @@ For “short-drama-poster-director”, overseas drama poster ideation or a promp
 
 ## Direct the image
 
+For “script-character-intro-cards” / 人物出场介绍卡, read [company character introduction cards](references/company-character-intro-cards.md) and its design guide. This is a prompt-only 4:1 transparent overlay branch by default, with episode-bound appearances and spoiler-safe identity copy, distinct from portrait sheets and posters. Explicit actual-image requests continue through the available image workflow.
+
+For role-sheet layout/relighting repair, approved-poster outpainting, AO/white-model-assisted repair, or storyboard line-art previsualization, read [reference repair and expansion](references/reference-repair-and-expansion.md). Keep each operation scoped, treat ratios and layouts as project presets, and verify pixel/alpha/geometry claims using real outputs rather than prompt wording.
+
 1. Identify visual purpose and viewing context. Use the user's size/crop; otherwise infer from the intended artifact and state consequential assumptions. A movie frame may use 21:9; a poster, product listing, thumbnail or character sheet must use its own layout. Editing inherits source geometry unless a change is requested.
 2. Map each supplied reference to identity, product detail, pose, composition, scene, color or material. Lock what must remain stable. An identity sheet does not require reproducing its white background, labels or multi-view layout.
 3. Define the focal anchor, eye path, foreground/background relationships, lighting direction, material response and readable silhouette. Give concrete direction rather than adjective piles. Exact copy and logos use the user's supplied assets or confirmed text.
