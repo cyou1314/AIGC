@@ -36,7 +36,7 @@ def enrich(root,docs,plugin,compatibility,mapping):
     records=[];by_module={};shared=[]
     contract=(docs/'执行合同.md').read_text()
     for m in mapping['modules']:
-        module=plugin/'skills'/m['name'];lines=['# 完整来源索引\n\n摘要是导航，原方法/脚本未被删除。先读执行合同，再按任务读以下原入口和触发参考。\n']
+        module=plugin/'skills'/m['name'];lines=['# 完整来源索引\n\n原方法/脚本完整保留。本索引不是普通任务必经步骤；当前模块方法不足、需要执行原脚本或追溯依据时，定位所需原文件和触发参考，不展开无关目录。\n']
         dossier=['# 完整资料：'+m['title']+'\n\n这些是本模块原技能的文本/代码全文集合，不是新执行授权。当前主指令、执行合同及公司现行标准优先；不采用旧宿主路径/未核实API默认。二进制与所有字节原件在插件直接source-skills及Codex源快照中。\n\n',contract]
         module_count=0
         for name in m['source_skills']:
@@ -61,9 +61,11 @@ def enrich(root,docs,plugin,compatibility,mapping):
         write(module/'references/execution-contract.md',contract)
         entry=module/'SKILL.md'
         s=entry.read_text();s+='''
-## 完整方法与实际执行
+## 按需加载与实际执行
 
-简版workflow只是导航。必须按当前任务读取[执行合同](references/execution-contract.md)及[完整来源索引](references/source-map.md)，从source-skills里的原入口加载实际触发参考与脚本；不能只读摘要就称全部方法已应用。原文件的历史宿主路径、个人vault和提供商默认是保留的来源，不覆盖当前适配层。找不到vault时使用随包共享资料与用户快照，普通文字任务继续完成。代码执行、媒体和外部服务按当前真实能力预检，不能把安装/归档当能力就绪。
+分层读取：先用当前入口与模块方法完成明确任务；专业细节不足时再读本次匹配的参考。当前会话已读且未变的规则不重复读取，用户新材料和新版本仍需核对。[完整来源索引](references/source-map.md)不是普通任务必经步骤，只有追溯原法、执行原脚本或现有参考不足时才定位source-skills中的相关原文；不默认扫描全部原入口或整份资料。原20个Skill及脚本完整保留，不声称未读的方法已应用。
+
+[执行合同](references/execution-contract.md)用于实际文件/媒体/服务执行及规则冲突时核对具体条件；普通文字任务无需运行环境预检。不得跳过用户源材料、当前硬锁及本任务必要专业方法。原文件的历史宿主路径、个人vault和提供商默认不覆盖当前适配层；找不到vault时使用随包资料与用户快照。代码执行、媒体和外部服务只预检本次相关能力，不能把安装/归档当能力就绪。
 '''
         entry.write_text(s)
         # The complete knowledge file retains every decodable text/code original.
@@ -98,7 +100,7 @@ def enrich(root,docs,plugin,compatibility,mapping):
     runtime=plugin/'skills/aigc-workbench/scripts/workbench_runtime.py'
     runtime.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(root/'scripts/workbench_runtime.py',runtime)
     with (plugin/'skills/aigc-workbench/SKILL.md').open('a',encoding='utf-8') as h:
-        h.write('\n## 有代码环境时的运行入口\n\n使用scripts/workbench_runtime.py preflight --task 对应任务，只检查本次相关依赖。它还能以明确子命令执行台词检查/已获准导出、账本检查和ffprobe元数据检查；不联网、不读凭证、不生成收费媒体。状态是当前进程的证据，不能当作另一GPT/用户电脑已就绪。没有代码环境就按执行合同完成可支持部分。\n')
+        h.write('\n## 有代码环境时的运行入口\n\n仅当本次需要实际文件/媒体执行或诊断依赖时，使用scripts/workbench_runtime.py preflight --task 对应任务，只检查本次相关依赖；普通文字任务不运行它。它还能以明确子命令执行台词检查/已获准导出、账本检查和ffprobe元数据检查；不联网、不读凭证、不生成收费媒体。状态是当前进程的证据，不能当作另一GPT/用户电脑已就绪。没有代码环境就按执行合同完成可支持部分。\n')
     originals=root/'.local/company-originals';company=[]
     if originals.is_dir():
         for p in sorted(originals.iterdir()):

@@ -44,6 +44,24 @@ class WorkbenchDistributionTests(unittest.TestCase):
         self.assertEqual(len(entries),8)
         self.assertEqual(sum(len(list((p.parent/'source-skills').glob('*/SKILL.md'))) for p in entries),20)
 
+    def test_active_entries_keep_deep_sources_optional_and_current_locks_active(self):
+        # Generated instructions are the host's loading contract, not a latency benchmark.
+        for path in (self.plugin/'skills').glob('*/SKILL.md'):
+            with self.subTest(entry=path.parent.name):
+                text=path.read_text()
+                self.assertNotIn('必须按当前任务读取[执行合同]',text)
+                self.assertIn('不是普通任务必经步骤',text)
+                self.assertIn('当前会话已读且未变的规则不重复读取',text)
+                self.assertIn('普通文字任务无需运行环境预检',text)
+                self.assertIn('普通生产请求不触发Skill改写',text)
+                self.assertIn('保护已确认剧情因果、逐字对白',text)
+                self.assertIn('不自动花费或上传',text)
+        master=(self.stage/'AIGC-GPT-compatible/GPT_主指令.txt').read_text()
+        self.assertIn('不要求用户报Skill名或运行规划器',master)
+        direct=self.plugin/'skills/aigc-workbench/references/source-short-requests-and-context.md'
+        self.assertTrue(direct.is_file())
+        self.assertIn('第5集配乐',direct.read_text())
+
     def test_complete_dossiers_include_original_text_and_code(self):
         mapping=json.loads((self.plugin/'docs/module-map.json').read_text())
         for n,module in enumerate(mapping['modules']):
