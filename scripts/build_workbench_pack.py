@@ -191,6 +191,13 @@ def build(output):
         else:
             # Core locks belong in active skill instructions, not only retrieval.
             common += '\n' + master[master.index('【授权与事实】'):master.index('【视频】')] + '\n'
+        if m['name'] == 'aigc-sound':
+            common += ('\n## 配乐提示词固定开头\n\n'
+                       '每份独立配乐提示词的代码块内第一行原样写：\n\n'
+                       '> 请根据以下风格和结构生成短剧背景音乐。只要纯器乐，不要演唱、说话、哼唱或合唱。\n\n'
+                       '随后写Style/Structure正文，默认正文英文；固定中文首句是用户明确要求的语言例外，每份完整稿只加一次。'
+                       '分输入框时只放主说明/Style框开头，不填歌词框。此规则不用于配音、台词提取或纯音效，'
+                       '不解锁视频既有无BGM要求，不授权实际音频生成；用户本轮明确变更优先。\n')
         write(skill / 'SKILL.md', front + '# ' + m['title'] + '\n\n' + common)
         write(skill / 'references/workflow.md', (DOCS / 'knowledge' / m['knowledge_file']).read_text())
         descriptions = {'aigc-workbench':'选择任务入口、项目接续与交付归档', 'aigc-writing':'剧本、剧情诊断与获准对白修复',

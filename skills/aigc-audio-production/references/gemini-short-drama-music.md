@@ -23,11 +23,13 @@
 
 标准方案保留英文Style和Structure两部分，中文只简述剧情力度与保护点。Style写整体类型、音色、动态和留白；Structure按本集顺序写实际演奏变化、停点与结束方式。
 
-Gemini常用同一个音乐提示输入框：将两部分连同Style/Structure标头一起粘贴进去，不让用户去找Suno式Style/Lyrics两个框。若用户要“Gemini直接可复制版”，只交一个合并英文块，内部保留这两个标头；不再重复附三份同义长稿。用户明确要求分别两框时按其要求给两块，并说明在Gemini合并粘贴。
+Gemini常用同一个音乐提示输入框：将固定中文前置句和两部分连同Style/Structure标头一起粘贴进去，不让用户去找Suno式Style/Lyrics两个框。若用户要“Gemini直接可复制版”，只交一个完整块，第一行保留用户指定中文原句，Style/Structure正文用英文；不再重复附三份同义长稿。用户明确要求分别两框时按其要求给两块，前置句只放主说明/Style框首行，并说明在Gemini合并粘贴。
 
-合并投喂的开头可采用：
+合并投喂的固定开头与格式如下；每份独立配乐提示词均先原样放置中文首句，用户本轮明确变更时按新要求：
 
 ```text
+请根据以下风格和结构生成短剧背景音乐。只要纯器乐，不要演唱、说话、哼唱或合唱。
+
 Create an instrumental background score for the supplied short-drama beats. No singing, spoken words, humming, or choir. Keep the arrangement sparse around the indicated dialogue and foley beats. Silence instructions apply to the music only.
 
 Style:
