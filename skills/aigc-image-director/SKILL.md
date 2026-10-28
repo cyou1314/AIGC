@@ -19,6 +19,8 @@ Recovered methods are indexed in [recovery and sources](references/recovery-inde
 
 For “short-drama-poster-director”, overseas drama poster ideation or a prompt from exact title, plot and character references, read [公司海报导演](references/company-short-drama-poster.md) and choose useful relationship mechanisms from [构图原型](references/company-poster-prototypes.md). This prompt/visual-direction branch defaults to 3:4 only for this poster use case; user format overrides it. Lock supplied faces and visible wardrobe, design relationship hierarchy and exact-title typography together, and never import the video model/ratio into a still poster. Prompt-only returns the requested copyable prompt, not a mandatory canvas workflow. Actual editable typography/layout uses canvas-design; actual image generation remains subject to the available image tool and user scope. No-reference design must not claim identity/wardrobe verification or invent title/plot facts.
 
+For an unclear visual hook, concept exploration, differentiation, or poster revision, read [poster creative method](references/poster-creative-method.md). Apply the method internally; offer multiple concepts only when requested or genuinely needed for a consequential choice. Never present a concept or imagined thumbnail inspection as an actual rendered result.
+
 ## Direct the image
 
 For “script-character-intro-cards” / 人物出场介绍卡, read [company character introduction cards](references/company-character-intro-cards.md) and its design guide. This is a prompt-only 4:1 transparent overlay branch by default, with episode-bound appearances and spoiler-safe identity copy, distinct from portrait sheets and posters. Explicit actual-image requests continue through the available image workflow.
