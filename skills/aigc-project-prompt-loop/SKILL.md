@@ -119,7 +119,7 @@ For each shot, include only shot-specific deltas:
 - continuity constraints
 - avoid rules only if this shot has special risks
 
-Use Seedance 2.5 as the current video planning target. Follow the director Skill’s current company standard: 4–30 seconds per production unit as a user-supplied planning condition, not an internal-shot minimum or an unverified API guarantee. When revising an existing board, preserve its source total duration and original trailing duration line by default; changes to total duration or splitting require the user’s explicit approval. Preserve one-take and no-split locks; only reallocate unlocked beats within the approved duration. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
+Use Seedance 2.5 as the current video planning target. Follow the director Skill’s current company standard: 4–30 seconds per production unit as a user-supplied planning condition, not an internal-shot minimum or an unverified API guarantee. When revising an existing board, use the source duration as the starting point; preserve it when feasible. The user permits changing it or splitting when genuinely needed for essential action, natural dialogue or reactions; explain the source and new durations and keep an exact trailing duration in each resulting prompt. Preserve explicit duration, one-take and no-split locks. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
 
 ### 5. Revision Loop
 
@@ -130,7 +130,7 @@ When the user gives修改意见:
 3. Return the complete updated prompt for the requested scope unless the user asks for a local patch. Compare against the chosen base for unauthorized omissions, contradictions and residual old states; preserve the trailing duration line. Notes stay outside the copyable prompt and are optional.
 4. Track the version when useful, without claiming user acceptance or displaying obsolete versions unless requested.
 
-For a stronger version, deepen only the elements the user asked to change; retain other accepted camera, performance and continuity decisions. Do not pad with generic style adjectives.
+For a stronger version, make proportionate improvements to the requested elements and necessary connected details; preserve explicit locks, established story and accepted decisions unless the user opens them for revision. Do not pad with generic style adjectives.
 
 ### 6. Review Generated Video
 
