@@ -24,7 +24,9 @@ Use repeatable `--replace N=PATH` mappings:
 & "<python>" "<skill>/scripts/replace_storyboard_panels.py" `
   --board "<board.png>" `
   --replace "1=<new-image-1.png>" `
-  --replace "3=<new-image-3.png>"
+  --replace "3=<new-image-3.png>" `
+  --mode window `
+  --output "<new-output.png>"
 ```
 
 ## Replace From A Numbered Folder
@@ -34,7 +36,9 @@ Put replacement images in one folder and name them `1.png`, `2.jpg`, `3.webp`, a
 ```powershell
 & "<python>" "<skill>/scripts/replace_storyboard_panels.py" `
   --board "<board.png>" `
-  --replace-dir "<replacement-folder>"
+  --replace-dir "<replacement-folder>" `
+  --mode window `
+  --output "<new-output.png>"
 ```
 
 An explicit `--replace` mapping overrides the same number found in `--replace-dir`.
