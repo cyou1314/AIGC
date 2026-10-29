@@ -240,7 +240,8 @@ class Sync:
     def plan(self, config):
         roster = {item['name'] for item in json.loads((self.root / 'sources.json').read_text())['skills']}
         registered = {unit['target'].split('/')[1] for unit in config['units'] if unit['directory']}
-        if roster != registered:
+        excluded = set(config.get('excluded_skills', []))
+        if roster != registered | excluded or registered & excluded:
             raise SyncError('Skill roster changed; register new sources or review removed sources before publishing')
         current = self.inventory(config); updates = {}; changed_sources = {}
         for relative in sorted(set(current) | set(config['records'])):

@@ -108,6 +108,8 @@ class SyncIntegrationTests(unittest.TestCase):
         self.assertEqual(config['visibility'], 'public')
         self.assertEqual(config['units'], [])
         self.assertEqual(config['records'], {})
+        updates, changes, _ = self.sync.plan(config)
+        self.assertEqual((updates, changes), ({}, {}))
         with self.assertRaises(S.SyncError):
             self.sync.register(SimpleNamespace(skill=None, knowledge='agent/example.md'))
 
