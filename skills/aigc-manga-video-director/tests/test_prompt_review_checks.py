@@ -256,5 +256,37 @@ class RoutingAndMinimalDiffTests(unittest.TestCase):
         self.assertEqual(result["issues"][0]["code"], "OUTSIDE_SCOPE_CHANGED")
 
 
+class DurationLineTests(unittest.TestCase):
+    def check(self, original, revised):
+        return CHECKS.verify_duration_line({"original": original, "revised": revised})
+
+    def test_exact_duration_retained_after_authorized_visual_edit(self):
+        result = self.check("旧画面\n时长：24秒", "新画面\n时长：24秒")
+        self.assertEqual(result["status"], CHECKS.PASS)
+
+    def test_deleted_approximate_changed_moved_and_outside_block_fail(self):
+        original = "画面\n时长：24秒"
+        revisions = ["画面", "画面\n时长：约24秒", "画面\n时长：30秒",
+                     "时长：24秒\n画面", "画面\n时长：24秒\n说明"]
+        for revised in revisions:
+            with self.subTest(revised=revised):
+                self.assertEqual(self.check(original, revised)["status"], CHECKS.DEFINITE)
+
+    def test_missing_or_approximate_original_is_unknown_not_pass(self):
+        for original in ("画面", "画面\n时长：约24秒", "", "时长：24秒\n画面"):
+            with self.subTest(original=original):
+                self.assertEqual(self.check(original, "画面\n时长：24秒")["status"], CHECKS.JUDGMENT)
+
+    def test_per_board_duration_not_borrowed(self):
+        self.assertEqual(self.check("第一板\n时长：18秒", "第一板\n时长：24秒")["status"], CHECKS.DEFINITE)
+
+    def test_missing_input_is_not_pass(self):
+        self.assertEqual(CHECKS.verify_duration_line({})["status"], CHECKS.JUDGMENT)
+
+    def test_other_recognized_field_preserves_exact_spelling(self):
+        self.assertEqual(self.check("画面\n总时长: 19秒", "画面\n总时长: 19秒")["status"], CHECKS.PASS)
+        self.assertEqual(self.check("画面\n总时长: 19秒", "画面\n时长：19秒")["status"], CHECKS.DEFINITE)
+
+
 if __name__ == "__main__":
     unittest.main()

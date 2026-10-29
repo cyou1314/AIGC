@@ -17,7 +17,7 @@ Read the same reference for paired cut/transition design, world-versus-screen st
 
 ## Existing-Prompt Review Mode
 
-When revising an existing company storyboard/video prompt, lock the source duration and its final duration line, preserve all unrelated constraints, calibrate rather than erase the intended emotion, and check both state continuity and visual distinction at adjacent cuts. Apply the detailed delivery checks in [公司提示词审查](references/company-prompt-review.md). If a duration change or split appears necessary, explain the conflict and obtain explicit approval before changing it.
+When revising an existing company storyboard/video prompt, lock the source duration and retain its final duration line inside the copyable prompt; if that line is absent, add the verified duration for this board rather than guess. Preserve all unrelated constraints, calibrate rather than erase the intended emotion, and check state continuity and visual distinction within and across available adjacent boards. Apply the detailed delivery checks in [公司提示词审查](references/company-prompt-review.md). If a duration change or split appears necessary, explain the conflict and obtain explicit approval before changing it.
 
 For narrated manga / 解说漫 / 内循环漫解 or the company's eight-field storyboard JSON, read [narrated storyboards and company JSON](references/narrated-storyboards-and-company-json.md). Keep VO, dialogue, media voices and subtitle-only text distinct, synchronize sound and image as separate tracks, preserve sources and asset state, and use the JSON contract only when requested. Do not inherit chapter-based downgrades to 2.0, mechanical shot quotas, or the unqualified last-end-plus-one timing rule from the source document.
 

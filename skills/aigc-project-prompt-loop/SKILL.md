@@ -119,7 +119,7 @@ For each shot, include only shot-specific deltas:
 - continuity constraints
 - avoid rules only if this shot has special risks
 
-Use Seedance 2.5 as the current video planning target. Follow the director Skill’s current company standard: 4–30 seconds per production unit as a user-supplied planning condition, not an internal-shot minimum or an unverified API guarantee. Preserve this task’s explicit total duration, one-take and no-split locks; otherwise explain necessary reallocation/splitting. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
+Use Seedance 2.5 as the current video planning target. Follow the director Skill’s current company standard: 4–30 seconds per production unit as a user-supplied planning condition, not an internal-shot minimum or an unverified API guarantee. When revising an existing board, preserve its source total duration and original trailing duration line by default; changes to total duration or splitting require the user’s explicit approval. Preserve one-take and no-split locks; only reallocate unlocked beats within the approved duration. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
 
 ### 5. Revision Loop
 

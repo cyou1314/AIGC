@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import difflib
 import json
+import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -473,6 +474,33 @@ def verify_minimal_difference(payload: dict[str, Any]) -> dict[str, Any]:
     return {"status": DEFINITE if issues else PASS, "issues": [asdict(i) for i in issues]}
 
 
+def verify_duration_line(payload: dict[str, Any]) -> dict[str, Any]:
+    """Compare one prompt's original trailing duration field, not its timeline."""
+    original, revised = payload.get("original"), payload.get("revised")
+    if not isinstance(original, str) or not isinstance(revised, str):
+        issue = _issue(JUDGMENT, "DURATION_INPUT_MISSING", "需要一板的原稿和替换稿正文。")
+        return {"status": JUDGMENT, "issues": [asdict(issue)]}
+    old_lines = original.splitlines()
+    new_lines = revised.splitlines()
+    while old_lines and not old_lines[-1].strip():
+        old_lines.pop()
+    while new_lines and not new_lines[-1].strip():
+        new_lines.pop()
+    if not old_lines:
+        issue = _issue(JUDGMENT, "DURATION_SOURCE_UNKNOWN", "原稿为空，无法确认时长。")
+        return {"status": JUDGMENT, "issues": [asdict(issue)]}
+    old_last = old_lines[-1]
+    pattern = r"\s*(?:总时长|时长)\s*[:：]\s*(约)?\s*\d+(?:\.\d+)?\s*秒\s*"
+    match = re.fullmatch(pattern, old_last)
+    if not match or match.group(1):
+        issue = _issue(JUDGMENT, "DURATION_SOURCE_UNKNOWN", "原稿末行缺少可确认的精确时长，或原稿为估计值；核对同板权威来源。")
+        return {"status": JUDGMENT, "issues": [asdict(issue)]}
+    if not new_lines or new_lines[-1] != old_last:
+        issue = _issue(DEFINITE, "TRAILING_DURATION_CHANGED", "替换稿末尾时长行与原稿不一致、被删除或移位；请核对授权。")
+        return {"status": DEFINITE, "issues": [asdict(issue)]}
+    return {"status": PASS, "issues": []}
+
+
 def _print_result(result: dict[str, Any]) -> None:
     print(f"结果：{result['status']}")
     if result.get("message"):
@@ -496,14 +524,15 @@ def _print_result(result: dict[str, Any]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
-    for command in ("dialogue", "minimal-diff", "handoff", "visual-only"):
+    for command in ("dialogue", "minimal-diff", "handoff", "visual-only", "duration-line"):
         sub = subparsers.add_parser(command)
         sub.add_argument("--input", required=True, type=Path, help="UTF-8 JSON input")
         sub.add_argument("--json", action="store_true", help="print JSON instead of readable text")
     args = parser.parse_args()
     payload = json.loads(args.input.read_text(encoding="utf-8"))
     audits = {"dialogue": audit_dialogue_ledger, "minimal-diff": verify_minimal_difference,
-              "handoff": audit_handoff_ledger, "visual-only": verify_visual_only_revision}
+              "handoff": audit_handoff_ledger, "visual-only": verify_visual_only_revision,
+              "duration-line": verify_duration_line}
     result = audits[args.command](payload)
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2))
