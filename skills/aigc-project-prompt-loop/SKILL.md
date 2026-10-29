@@ -125,15 +125,12 @@ Use Seedance 2.5 as the current video planning target. Follow the director Skill
 
 When the user gives修改意见:
 
-1. Classify each note:
-   - `立即修改`: apply to the latest prompt pack.
-   - `可复用偏好`: remember for this project and consider at closeout.
-   - `需要澄清`: ask only if the change cannot be safely inferred.
-2. Return the complete updated final prompt block, not only the changed fragment, unless the user asks for a local patch.
-3. Keep a short `本版修改` note before or after the prompt when helpful.
-4. Increment versions as `v2`, `v3`, etc. Do not keep multiple obsolete prompt versions in the main answer unless the user asks for comparison.
+1. Choose the base: the version the user identifies, otherwise the latest confirmed complete prompt for the correct episode/board. Distinguish accepted work, an unaccepted candidate and actual media; never silently combine versions. If the base is ambiguous and changes the edit, ask which version.
+2. Classify each note: `立即修改` within its authorized scope; `可复用偏好` for this project; `需要澄清` only when it cannot be safely inferred. Before changing text, identify protected dialogue, facts, asset tags, sound policy, duration, accepted staging and negative constraints; check required downstream effects without rewriting unselected boards.
+3. Return the complete updated prompt for the requested scope unless the user asks for a local patch. Compare against the chosen base for unauthorized omissions, contradictions and residual old states; preserve the trailing duration line. Notes stay outside the copyable prompt and are optional.
+4. Track the version when useful, without claiming user acceptance or displaying obsolete versions unless requested.
 
-If the user asks for a stronger version, deepen camera/composition/action detail first. Do not pad with generic style adjectives.
+For a stronger version, deepen only the elements the user asked to change; retain other accepted camera, performance and continuity decisions. Do not pad with generic style adjectives.
 
 ### 6. Review Generated Video
 
