@@ -98,6 +98,33 @@ class SyncIntegrationTests(unittest.TestCase):
     def remote_sha(self):
         return self.git('rev-parse', 'refs/heads/main', cwd=self.remote)
 
+    def test_public_setup_excludes_personal_vault_and_unreviewed_skill(self):
+        self.sync.state.unlink()
+        self.args.visibility = 'public'
+        self.args.exclude_skill = ['demo']
+        result = self.sync.setup(self.args)
+        config = self.sync.load()
+        self.assertEqual(result['excluded_skills'], ['demo'])
+        self.assertEqual(config['visibility'], 'public')
+        self.assertEqual(config['units'], [])
+        self.assertEqual(config['records'], {})
+        with self.assertRaises(S.SyncError):
+            self.sync.register(SimpleNamespace(skill=None, knowledge='agent/example.md'))
+
+    def test_remote_visibility_must_match_explicit_configuration(self):
+        self.auth.stop()
+        try:
+            with patch.object(self.sync, 'git', return_value='https://github.com/test/AIGC.git'):
+                with patch.object(S, 'command', return_value='false'):
+                    self.sync.verify_remote({'repository': 'test/AIGC', 'visibility': 'public'})
+                    with self.assertRaises(S.SyncError):
+                        self.sync.verify_remote({'repository': 'test/AIGC'})
+                with patch.object(S, 'command', return_value='true'):
+                    with self.assertRaises(S.SyncError):
+                        self.sync.verify_remote({'repository': 'test/AIGC', 'visibility': 'public'})
+        finally:
+            self.auth.start()
+
     def test_setup_does_not_replace_historical_platform_differences(self):
         updates, _, _ = self.sync.plan(self.sync.load())
         self.assertEqual(updates, {})

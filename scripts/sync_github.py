@@ -178,20 +178,29 @@ class Sync:
         skills = Path(args.skills_dir).expanduser().resolve()
         vault = Path(args.vault).expanduser().resolve()
         names = [item['name'] for item in json.loads((self.root / 'sources.json').read_text())['skills']]
-        units = [{'source': str(skills / name), 'target': 'skills/' + name, 'directory': True} for name in names]
-        for group in ['agent', 'learning']:
-            for page in sorted((self.root / 'knowledge' / group).glob('*.md')):
-                units.append({'source': str(vault / group / page.name),
-                              'target': 'knowledge/' + group + '/' + page.name, 'directory': False})
-        for filename, local_name in [('project-quick.md', '_项目快速模板.md'), ('project-full.md', '_项目模板.md')]:
-            units.append({'source': str(vault / 'projects' / local_name),
-                          'target': 'templates/' + filename, 'directory': False})
-        config = {'schema_version': 1, 'repository': args.repository,
+        visibility = getattr(args, 'visibility', 'private')
+        excluded = sorted(set(getattr(args, 'exclude_skill', None) or []))
+        if any(name not in names for name in excluded):
+            raise SyncError('Excluded skill must be in the repository source inventory')
+        units = [{'source': str(skills / name), 'target': 'skills/' + name, 'directory': True}
+                 for name in names if name not in excluded]
+        # Personal vault material is not imported to a public repository automatically.
+        if visibility == 'private':
+            for group in ['agent', 'learning']:
+                for page in sorted((self.root / 'knowledge' / group).glob('*.md')):
+                    units.append({'source': str(vault / group / page.name),
+                                  'target': 'knowledge/' + group + '/' + page.name, 'directory': False})
+            for filename, local_name in [('project-quick.md', '_项目快速模板.md'), ('project-full.md', '_项目模板.md')]:
+                units.append({'source': str(vault / 'projects' / local_name),
+                              'target': 'templates/' + filename, 'directory': False})
+        config = {'schema_version': 1, 'repository': args.repository, 'visibility': visibility,
+                  'excluded_skills': excluded,
                   'skills_dir': str(skills), 'vault': str(vault),
                   'workspace': str(Path(args.workspace).expanduser().resolve()),
                   'outputs': str(Path(args.outputs).expanduser().resolve()), 'units': units}
         self.checkpoint(config)
         return {'status': 'configured', 'tracked_sources': len(config['records']),
+                'visibility': visibility, 'excluded_skills': excluded,
                 'note': 'Historical platform differences recorded, not overwritten'}
 
     def register(self, args):
@@ -206,6 +215,8 @@ class Sync:
                 raise SyncError('Add and review the Skill in both source and repository before registration')
             unit = {'source': str(source), 'target': target, 'directory': True}
         else:
+            if config.get('visibility', 'private') == 'public':
+                raise SyncError('Personal vault pages are not registered for public synchronization')
             relative = Path(args.knowledge)
             if len(relative.parts) != 2 or relative.parts[0] not in {'agent', 'learning'} or relative.suffix != '.md':
                 raise SyncError('Knowledge registration uses agent/name.md or learning/name.md')
@@ -221,6 +232,8 @@ class Sync:
             if relative == target or relative.startswith(target + '/'):
                 config['records'][relative] = {'source': str(path), 'sha': digest(data),
                     'text': self.normalize(data, relative, config), 'repo_sha': digest(read(self.root / relative))}
+        if args.skill and args.skill in config.get('excluded_skills', []):
+            config['excluded_skills'].remove(args.skill)
         write_json(self.state, config)
         return {'status': 'registered', 'target': target, 'existing_baselines': 'preserved'}
 
@@ -266,8 +279,12 @@ class Sync:
         if len(origins) != 1 or len(pushes) != 1 or origins[0] not in expected or pushes[0] not in expected:
             raise SyncError('Remote URL does not match the configured repository')
         private = command(['gh', 'repo', 'view', slug, '--json', 'isPrivate', '--jq', '.isPrivate'], self.root)
-        if private != 'true':
-            raise SyncError('Repository must remain private')
+        expected_visibility = config.get('visibility', 'private')
+        if expected_visibility not in {'private', 'public'}:
+            raise SyncError('Invalid expected repository visibility')
+        expected_value = 'true' if expected_visibility == 'private' else 'false'
+        if private != expected_value:
+            raise SyncError('Repository visibility differs from configured expectation')
 
     def dirty(self):
         names = set(self.git('diff', '--name-only', '-z').split('\0'))
@@ -332,6 +349,11 @@ class Sync:
                     raise SyncError('Version needs a reviewed semantic version')
                 version = '.'.join(parts[:2] + [str(int(parts[2]) + 1)])
                 (self.root / 'VERSION').write_text(version + '\n', encoding='utf-8')
+                mapping = self.root / 'docs/workbench/module-map.json'
+                if mapping.is_file():
+                    data = json.loads(mapping.read_text(encoding='utf-8'))
+                    data['version'] = version
+                    write_json(mapping, data)
                 date = dt.datetime.now(dt.timezone(dt.timedelta(hours=8))).date()
                 changelog = self.root / 'CHANGELOG.md'
                 old = changelog.read_text(encoding='utf-8')
@@ -377,6 +399,8 @@ def main():
     setup.add_argument('--skills-dir', default=str(Path.home() / '.agents/skills'))
     setup.add_argument('--vault', required=True); setup.add_argument('--workspace', required=True)
     setup.add_argument('--outputs', required=True); setup.add_argument('--repository', default='cyou1314/AIGC')
+    setup.add_argument('--visibility', choices=('private', 'public'), default='private')
+    setup.add_argument('--exclude-skill', action='append', default=[], help='leave an unreviewed local skill outside the sync baseline')
     sub.add_parser('run'); sub.add_parser('status')
     register = sub.add_parser('register'); group = register.add_mutually_exclusive_group(required=True)
     group.add_argument('--skill'); group.add_argument('--knowledge')
@@ -398,9 +422,13 @@ def main():
             result = sync.register(args)
         else:
             config = sync.load(); updates, changed, _ = sync.plan(config)
-            result = {'status': 'pending' if updates or sync.dirty() else 'clean',
+            dirty = sync.dirty()
+            ahead = int(sync.git('rev-list', '--count', 'refs/remotes/origin/main..HEAD'))
+            result = {'status': 'pending' if updates or dirty or ahead else 'clean',
                       'source_changes': len(changed), 'pending_imports': sorted(updates),
-                      'repository_changes': sync.dirty(), 'proof': 'local-check-only'}
+                      'repository_changes': dirty, 'outgoing_commits': ahead,
+                      'visibility': config.get('visibility', 'private'),
+                      'excluded_skills': config.get('excluded_skills', []), 'proof': 'local-check-only'}
         print(json.dumps(result, ensure_ascii=False, indent=2))
     except (ValueError, OSError, subprocess.TimeoutExpired) as exc:
         print(json.dumps({'status': 'blocked', 'reason': str(exc)}, ensure_ascii=False), file=sys.stderr)
