@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.10",
+  "version": "1.3.11",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -37,7 +37,7 @@
       "path": "skills/aigc-manga-video-director",
       "origin": "user-installed-workflow-snapshot",
       "files": 30,
-      "sha256_normalized_text": "fc51d025e4449409bcc933c5c1d4d51463f67c3d2d51b2ca81c8e6acaf94b324"
+      "sha256_normalized_text": "4334be84677d0dffa2cb49eb9bb8fdfbf7eb97a54938d83219988c2786c1fec0"
     },
     {
       "name": "aigc-output-qc",
@@ -140,7 +140,7 @@
       "path": "skills/prompt-optimizer",
       "origin": "user-installed-workflow-snapshot",
       "files": 6,
-      "sha256_normalized_text": "0da1163e45c4e9306202f6270f5a85bdef6eb11dd97d4f062965057a0ae51c71"
+      "sha256_normalized_text": "484a438bea5d37d6b43307644eff869b21b56dfd1b1bd288218edae84500f5fe"
     },
     {
       "name": "storyboard-image-replacer",
