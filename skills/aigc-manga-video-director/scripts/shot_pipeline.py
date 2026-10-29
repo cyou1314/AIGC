@@ -136,9 +136,12 @@ def main() -> int:
     if not video.exists():
         raise SystemExit(f"Video not found: {video}")
 
-    out = Path(args.out).expanduser().resolve() if args.out else video.with_suffix("")
+    out = Path(args.out).expanduser().absolute() if args.out else video.with_suffix("")
+    if out.exists() or out.is_symlink():
+        raise SystemExit("Output folder already exists; select a new folder to preserve prior files.")
+    out.mkdir(parents=True, exist_ok=False)
     frames_dir = out / "shot_frames"
-    frames_dir.mkdir(parents=True, exist_ok=True)
+    frames_dir.mkdir()
 
     cap = cv2.VideoCapture(str(video))
     if not cap.isOpened():

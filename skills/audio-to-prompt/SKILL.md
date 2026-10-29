@@ -78,7 +78,7 @@ Use concrete creative terms instead of generic labels. For example, turn "sad" i
 
 ## Output Format
 
-Default to Chinese if the user writes Chinese. Provide:
+Default to Chinese if the user writes Chinese. Honor the requested output: when the user asks for only a prompt, return one complete copyable prompt with essential timing, emotional and sound controls and no unsolicited report. Use the following fuller analysis format only when requested or materially necessary:
 
 ```markdown
 ## 转录摘要

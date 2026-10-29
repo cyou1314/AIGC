@@ -13,7 +13,7 @@ Transcribe audio using OpenAI, with optional speaker diarization when requested.
 2. Verify `OPENAI_API_KEY` is set. If missing, ask the user to set it locally (do not ask them to paste the key).
 3. Run the bundled `transcribe_diarize.py` CLI with sensible defaults (fast text transcription).
 4. Validate the output: transcription quality, speaker labels, and segment boundaries; iterate with a single targeted change if needed.
-5. Save outputs under `output/transcribe/` when working in this repo.
+5. Save outputs in the user-requested or project-authoritative location. For deliverable files in the Desktop project, use the configured Codex-generated-files folder; keep originals untouched. A repository-local `output/transcribe/` is only a suitable choice when that repository is the actual requested work location.
 
 ## Decision rules
 - Default to `gpt-4o-mini-transcribe` with `--response-format text` for fast transcription.
@@ -22,7 +22,7 @@ Transcribe audio using OpenAI, with optional speaker diarization when requested.
 - Prompting is not supported for `gpt-4o-transcribe-diarize`.
 
 ## Output conventions
-- Use `output/transcribe/<job-id>/` for evaluation runs.
+- Use a task-specific, non-overwriting output directory appropriate to the active project for evaluation runs.
 - Use `--out-dir` for multiple files to avoid overwriting.
 
 ## Dependencies (install if missing)
@@ -44,8 +44,7 @@ python3 -m pip install openai
 ## Skill path (set once)
 
 ```bash
-export CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
-export TRANSCRIBE_CLI="$CODEX_HOME/skills/transcribe/scripts/transcribe_diarize.py"
+TRANSCRIBE_CLI="${CODEX_HOME:-$HOME/.codex}/skills/transcribe/scripts/transcribe_diarize.py"
 ```
 
 User-scoped skills install under `$CODEX_HOME/skills` (default: `~/.codex/skills`).

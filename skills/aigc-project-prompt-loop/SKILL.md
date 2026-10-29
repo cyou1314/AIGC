@@ -11,7 +11,7 @@ Use this skill as the project conductor for one AIGC manga/drama production thre
 
 - Work in Chinese by default.
 - Treat `开始` as opening this loop only when narrative-video intent is established. For an untyped project use `aigc-production-router`; an existing project keeps its recorded route.
-- Treat the user's `结束` as project closeout: keep the latest prompt pack internally, audit the whole project process, and evolve the reusable rules with additions, corrections, merges, demotions, and deletions.
+- Treat `结束` as closeout only in the established project context. Preserve the latest project state and observed acceptance; record reusable lessons as project candidates when useful. Do not promote them to global Skills merely because the project ended; explicit upgrade or a separately authorized governance review is required.
 - Use this skill to manage state and sequencing; use specialized skills for deep work.
 - Prefer practical production outputs over theory: shot tables, storyboard logic, prompt packs, revision notes, continuity risks, and final copyable prompts.
 - Keep outputs medium-density: concise enough to copy, complete enough to reproduce the shot.
@@ -149,14 +149,14 @@ Never submit regeneration or a paid edit automatically. QC supplies evidence and
 
 When the user says `结束`:
 
-1. Treat the current latest prompt pack as the final version unless the user says it still needs changes, and write the final version, output path, and status into the project page.
+1. Record the latest available prompt pack, output path and actual status; distinguish user-accepted work from a draft or unverified generation, and never infer acceptance merely from `结束`.
 2. Keep the final prompt pack in project state, but do not show it again by default. The user already has the latest working version; only re-output the final prompt if the user explicitly asks.
 3. Complete the closeout audit internally. Do not show the final prompt or full audit unless the user explicitly asks to看总结, 查看学习项, or show the closeout.
 4. Audit the entire project process, not only the final prompt: initial assumptions, reference analysis, storyboard mapping, every meaningful correction, rejected approaches, accepted revisions, generation feedback, and production efficiency.
-5. Run a `规则进化审计` over relevant existing rules. Assign each rule exactly one action: `保留`, `强化`, `改写`, `合并`, `降级观察`, or `删除`.
+5. If the project warrants it, note concrete reusable candidates and the evidence; do not audit or alter every rule by default. A broad rule audit or changes to reusable Skills require the user’s explicit upgrade request or a separately authorized governance review.
 6. Do not accumulate rules by default. New learning must replace, narrow, merge with, or clearly outperform existing guidance; otherwise keep it project-local or under observation.
 7. 删除不是每次收尾的必选动作，也没有删除配额。大多数项目可以没有任何删除项；仅当一条规则已几乎没有剩余适用价值，而且保留、缩小范围、改写、合并或降级观察都不合适时，才把删除作为最后手段。
-8. Persist project-local evidence and the resume point on the project page. Put reusable observations in `知识候选`; promote them only through the R7/R8 governance rules and only when evidence supports it.
+8. Persist useful project-local evidence and the resume point when needed. Put reusable observations in `知识候选`; ordinary project closeout alone does not authorize promoting them to global Skills.
 
 Never treat `结束` as just a goodbye. It means the production project is complete and should be closed cleanly.
 

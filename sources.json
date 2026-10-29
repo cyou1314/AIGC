@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.17",
+  "version": "1.3.18",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -9,7 +9,7 @@
       "path": "skills/aigc-audio-production",
       "origin": "user-installed-workflow-snapshot",
       "files": 11,
-      "sha256_normalized_text": "412c72665a7c75e09a9cee0a5bc2740f65dcaee3dbf9de56ad13a1fbd7d0c385"
+      "sha256_normalized_text": "32d7a2c7327f843c5be8180b5536f3d45fd9b9d9e15f642f38d72b32dd69ef53"
     },
     {
       "name": "aigc-commercial-content",
@@ -36,29 +36,29 @@
       "name": "aigc-manga-video-director",
       "path": "skills/aigc-manga-video-director",
       "origin": "user-installed-workflow-snapshot",
-      "files": 30,
-      "sha256_normalized_text": "255bebcbd5508dd05a49492bbe02fc15638864cd5be369cac428e0462c6478fb"
+      "files": 32,
+      "sha256_normalized_text": "cee772a7bac685c6be159ca46119a86cad8c9b79509cb15c5f79c68a60415d33"
     },
     {
       "name": "aigc-output-qc",
       "path": "skills/aigc-output-qc",
       "origin": "user-installed-workflow-snapshot",
       "files": 3,
-      "sha256_normalized_text": "41f255afebd3a2ed383cb5d31b41ac26e2c6f1839f0a570c4ad7f2881ff944a6"
+      "sha256_normalized_text": "73283a06ca087a1525eef18e8b555ca05b9ddd37cb78c4823805ea635d789206"
     },
     {
       "name": "aigc-production-router",
       "path": "skills/aigc-production-router",
       "origin": "user-installed-workflow-snapshot",
       "files": 12,
-      "sha256_normalized_text": "54979255b920cd2a3fd855373b51f0115f039ac9c817a86a70d722076f44294f"
+      "sha256_normalized_text": "549736c6dc68cce5c1a10ad56859a29827ffc9ef81ce686ed7d5641ec7cdf5cf"
     },
     {
       "name": "aigc-project-prompt-loop",
       "path": "skills/aigc-project-prompt-loop",
       "origin": "user-installed-workflow-snapshot",
       "files": 3,
-      "sha256_normalized_text": "18dd28a51429d9db2015d38e408d83d1aea7129599bb9d356dd2d62812370927"
+      "sha256_normalized_text": "41d036a450a480b6c1450b74835a9ce5483b991c0c44e8b88730382cd2665f5b"
     },
     {
       "name": "aigc-screenwriter",
@@ -72,14 +72,14 @@
       "path": "skills/audio-to-prompt",
       "origin": "user-installed-workflow-snapshot",
       "files": 4,
-      "sha256_normalized_text": "4e60770c2cbf73fb55f1a0944ebf0805f815c0ee3c161f957f8cb17a1fab23db"
+      "sha256_normalized_text": "b323c6f1a7324c443eb0551b63ad775167d855ab90b1e69958356255c9917026"
     },
     {
       "name": "auto-edit-video",
       "path": "skills/auto-edit-video",
       "origin": "user-installed-workflow-snapshot",
       "files": 328,
-      "sha256_normalized_text": "2093220847f75d0f40541116261377dce2e20640661c87e6d9f0a888793de746"
+      "sha256_normalized_text": "8f0e72dd7e5472898a6d08bfb411a04dc5993c2422a1c52062295fefba45eb9a"
     },
     {
       "name": "canvas-design",
@@ -133,7 +133,7 @@
       "path": "skills/obsidian-codex-knowledge-loop",
       "origin": "user-installed-workflow-snapshot",
       "files": 4,
-      "sha256_normalized_text": "96438f054989253ea84775e6e721fce5c9ddb301bddcc13bea23efb62664d1b2"
+      "sha256_normalized_text": "22fed6ecdd06affe4cc55a50ebd3b157f20834cbd5fe516cfb5f374582bf106d"
     },
     {
       "name": "prompt-optimizer",
@@ -147,14 +147,14 @@
       "path": "skills/storyboard-image-replacer",
       "origin": "user-installed-workflow-snapshot",
       "files": 6,
-      "sha256_normalized_text": "d80fe8892b60f0e318ed13273147dad917d84927600bb00fa99cc4286902235c"
+      "sha256_normalized_text": "ff9c52d97878fbff5aef7b474c831ff142ff266e0fa0a9c33d2b03d4d4e7aeeb"
     },
     {
       "name": "transcribe",
       "path": "skills/transcribe",
       "origin": "user-installed-workflow-snapshot",
       "files": 7,
-      "sha256_normalized_text": "37770aee398b4298fff18f3cac9ad8d0c445a05bf106148169a38e30f5258561"
+      "sha256_normalized_text": "7964e2b28670d4faecea7a1ba4c4b10fdd59d89bbee60f440e452dc8cc134a2a"
     }
   ]
 }

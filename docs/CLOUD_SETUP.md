@@ -38,7 +38,7 @@ bash "$aigc_repo/scripts/cloud-init.sh"
 
 终端gh需要允许精确域名 `api.github.com`；允许 `github.com` 并不会允许它的api子域名。Settings → Codex Cloud → Environments → AIGC → Edit → Additional allowed domains追加api.github.com，保留现有域名，保存并测试；如组织策略仍阻止，由管理员调整允许规则。代理隧道403是目的域名访问阻塞，不应据此重新输入或打印Token。
 
-当前Git传输和已连接的GitHub连接器可以独立具有有效权限。连接器验证私有仓库与写权限后，正常push发布分支、创建PR、审查与标准合并即可；不绕过分支保护或强推。只有读回main SHA并验证修复提交属于其祖先，才说明代码发布成功。环境Republish与新任务发现仍需独立验收。
+当前Git传输和已连接的GitHub连接器可以独立具有有效权限。连接器验证目标仓库身份、可见性与写权限后，正常push发布分支、创建PR、审查与标准合并即可；不绕过分支保护或强推。只有读回main SHA并验证修复提交属于其祖先，才说明代码发布成功。环境Republish与新任务发现仍需独立验收。
 
 ## 指令范围
 

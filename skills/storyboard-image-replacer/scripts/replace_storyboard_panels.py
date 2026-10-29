@@ -75,7 +75,7 @@ def collect_replacements(
     return replacements
 
 
-def detect_window(image: Image.Image, panel: Rect) -> Rect:
+def detect_window(image: Image.Image, panel: Rect) -> Rect | None:
     rgb = image.convert("RGB")
     x1, y1, x2, y2 = panel
     min_w = max(40, int((x2 - x1) * 0.35))
@@ -122,10 +122,11 @@ def detect_window(image: Image.Image, panel: Rect) -> Rect:
     row_runs = [run for run in merge_runs(row_hits, 5) if run[1] - run[0] >= min_h]
     col_runs = [run for run in merge_runs(col_hits, 5) if run[1] - run[0] >= min_w]
     if not row_runs or not col_runs:
-        return panel
+        return None
     yy = max(row_runs, key=lambda run: run[1] - run[0])
     xx = max(col_runs, key=lambda run: run[1] - run[0])
-    return (xx[0], yy[0], xx[1], yy[1])
+    candidate = (xx[0], yy[0], xx[1], yy[1])
+    return None if candidate == panel else candidate
 
 
 def fit_image(source: Image.Image, size: Tuple[int, int], fit: str, fill: Tuple[int, int, int]) -> Image.Image:
@@ -160,7 +161,34 @@ def draw_debug(image: Image.Image, panels: List[Rect], output: Path) -> None:
         draw.rectangle((x1 + 4, y1 + 4, x1 + 70, y1 + 34), fill=(255, 0, 0))
         draw.text((x1 + 12, y1 + 10), str(idx), fill=(255, 255, 255), font=font)
     output.parent.mkdir(parents=True, exist_ok=True)
-    annotated.save(output)
+    save_new_image(annotated, output)
+
+
+def save_new_image(image: Image.Image, output: Path) -> None:
+    """Write exclusively; never replace an existing image or follow an output symlink."""
+    image_format = Image.registered_extensions().get(output.suffix.lower())
+    if not image_format:
+        raise ValueError(f"Unsupported output image extension: {output.suffix}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with output.open("xb") as handle:
+            image.save(handle, format=image_format)
+    except FileExistsError as exc:
+        raise ValueError(f"Output already exists; choose a new path: {output}") from exc
+
+
+def validate_target_path(output: Path, protected: list[Path]) -> None:
+    resolved = output.resolve()
+    if any(resolved == path.resolve() for path in protected):
+        raise ValueError(f"Output must not overwrite a source image: {output}")
+    if output.exists() or output.is_symlink():
+        raise ValueError(f"Output already exists; choose a new path: {output}")
+
+
+def validated_rect(rect: Rect, bounds: Rect) -> bool:
+    x1, y1, x2, y2 = rect
+    bx1, by1, bx2, by2 = bounds
+    return bx1 <= x1 < x2 <= bx2 and by1 <= y1 < y2 <= by2
 
 
 def default_output(board: Path) -> Path:
@@ -183,27 +211,55 @@ def main() -> int:
     parser.add_argument("--list-panels", action="store_true", help="Print detected panel rectangles and exit.")
     parser.add_argument("--debug-layout", type=Path, help="Write annotated panel detection preview.")
     parser.add_argument("--manual-panel", action="append", type=parse_manual_panel, default=[], help="Override panel rectangle as N=X,Y,W,H. Repeatable.")
+    parser.add_argument("--manual-window", action="append", type=parse_manual_panel, default=[], help="Specify picture window N=X,Y,W,H in board pixels; requires --mode window.")
     args = parser.parse_args()
 
     if not args.board.exists():
         parser.error(f"Board image does not exist: {args.board}")
     image = Image.open(args.board).convert("RGB")
     layout: LayoutResult = detect_layout(image)
-    panels = list(layout.panels)
+    panels = list(layout.panels)  # detect_layout already returns reading order.
     manual: Dict[int, Rect] = dict(args.manual_panel)
-    for index, rect in manual.items():
-        while len(panels) < index:
-            panels.append((0, 0, image.width, image.height))
-        panels[index - 1] = rect
-    panels = sorted(panels, key=lambda rect: (rect[1], rect[0]))
-
-    if args.debug_layout:
-        draw_debug(image, panels, args.debug_layout)
+    if len(manual) != len(args.manual_panel):
+        parser.error("A panel may be manually defined only once.")
+    bounds = (0, 0, image.width, image.height)
+    for index, rect in sorted(manual.items()):
+        if not validated_rect(rect, bounds):
+            parser.error(f"Manual panel {index} is outside the source image.")
+        if index > len(panels) + 1:
+            parser.error(f"Manual panel {index} leaves an undefined panel index.")
+        if index == len(panels) + 1:
+            panels.append(rect)
+        else:
+            panels[index - 1] = rect  # Preserve the requested number; do not re-sort.
+    manual_windows: Dict[int, Rect] = dict(args.manual_window)
+    if len(manual_windows) != len(args.manual_window):
+        parser.error("A picture window may be manually defined only once.")
+    if manual_windows and args.mode != "window":
+        parser.error("--manual-window requires --mode window.")
 
     try:
         replacements = collect_replacements(args.replace, args.replace_dir)
     except ValueError as exc:
         parser.error(str(exc))
+
+    protected = [args.board, *replacements.values()]
+    out_path = args.output or default_output(args.board)
+    try:
+        if args.debug_layout:
+            validate_target_path(args.debug_layout, protected)
+        if not args.list_panels:
+            validate_target_path(out_path, protected)
+        if args.debug_layout and not args.list_panels and args.debug_layout.resolve() == out_path.resolve():
+            raise ValueError("Debug preview and result must use different paths.")
+    except ValueError as exc:
+        parser.error(str(exc))
+
+    if args.debug_layout:
+        try:
+            draw_debug(image, panels, args.debug_layout)
+        except (ValueError, OSError) as exc:
+            parser.error(str(exc))
 
     if args.list_panels:
         print(f"board={args.board} size={image.width}x{image.height} panels={len(panels)}")
@@ -216,6 +272,11 @@ def main() -> int:
             "Nothing to replace. Add --replace N=PATH, --replace-dir PATH, "
             "or use --list-panels."
         )
+
+    if layout.confidence < 0.72:
+        missing_manual = sorted(set(replacements) - set(manual))
+        if missing_manual:
+            parser.error(f"Panel layout confidence is low ({layout.confidence:.2f}); inspect it and specify --manual-panel for targets {missing_manual}. No result was written.")
 
     fill_text = args.fill.lstrip("#")
     if len(fill_text) != 6:
@@ -232,16 +293,20 @@ def main() -> int:
             )
         rect = panels[index - 1]
         if args.mode == "window":
-            rect = detect_window(image, rect)
+            window = manual_windows.get(index) or detect_window(image, rect)
+            if window is None or not validated_rect(window, rect) or window == rect:
+                parser.error(f"Picture window for panel {index} is uncertain; inspect the layout and provide --manual-window {index}=X,Y,W,H. No result was written.")
+            rect = window
         x1, y1, x2, y2 = rect
         replacement = Image.open(replacement_path)
         fitted = fit_image(replacement, (x2 - x1, y2 - y1), args.fit, fill)
         output.paste(fitted, (x1, y1))
         print(f"replaced panel {index}: {replacement_path}")
 
-    out_path = args.output or default_output(args.board)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    output.save(out_path)
+    try:
+        save_new_image(output, out_path)
+    except (ValueError, OSError) as exc:
+        parser.error(str(exc))
     print(f"wrote {out_path}")
     return 0
 

@@ -260,13 +260,17 @@ def main():
         inputs = {Path(args.input).resolve()}
         if args.review:
             inputs.add(Path(args.review).resolve())
-        if output in inputs or companion in inputs:
+        if output in inputs or (args.mode == 'extract' and companion in inputs):
             raise ValueError('输出路径不能覆盖源文件或确认清单')
+        targets = [output] + ([companion] if args.mode == 'extract' else [])
+        if any(target.exists() or target.is_symlink() for target in targets):
+            raise ValueError('输出文件已存在；请使用新的输出路径')
         if args.mode == 'extract' and (not args.review or not args.confirmed):
             raise ValueError('提取前需提供 --review 和 --confirmed；先展示检查清单并取得确认')
         expected = make_review(args)
         if args.mode == 'check':
-            output.write_text(json.dumps(expected, ensure_ascii=False, indent=2), encoding='utf-8')
+            with output.open('x', encoding='utf-8') as handle:
+                handle.write(json.dumps(expected, ensure_ascii=False, indent=2))
             s = expected['summary']
             print(f"检查完成（未应用修改）：{s['file']} | {s['episodes']} | 台词 {s['total']}条 | "
                   f"标点建议 {s['punctuation_suggestions']}条 | 数字相关 {s['digit_label']} -> {output}",
@@ -274,8 +278,10 @@ def main():
         else:
             approved = json.loads(Path(args.review).read_text(encoding='utf-8'))
             eps = apply_review(expected, approved)
-            output.write_text(build_xml(eps, args.title), encoding='utf-8')
-            companion.write_text('\n\n'.join(ep + '\n' + '\n'.join(lines) for ep, lines in eps.items()) + '\n', encoding='utf-8')
+            with output.open('x', encoding='utf-8') as handle:
+                handle.write(build_xml(eps, args.title))
+            with companion.open('x', encoding='utf-8') as handle:
+                handle.write('\n\n'.join(ep + '\n' + '\n'.join(lines) for ep, lines in eps.items()) + '\n')
             print(f'提取完成：{len(eps)} 组，{sum(map(len, eps.values()))} 条 -> {output}', file=sys.stderr)
     except (ValueError, KeyError, OSError, ImportError) as error:
         parser.exit(1, f'错误：{error}\n')

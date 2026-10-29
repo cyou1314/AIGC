@@ -167,6 +167,23 @@ class WorkflowTests(unittest.TestCase):
             self.assertEqual(records, again)
             self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(), digest)
 
+    def test_existing_review_and_export_companion_are_not_overwritten(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source, review = root / 'input.txt', root / 'review.json'
+            source.write_text('Keep me.', encoding='utf-8')
+            review.write_text('previous review', encoding='utf-8')
+            self.run_cli(source, '--output', review, success=False)
+            self.assertEqual(review.read_text(), 'previous review')
+            review.unlink()
+            self.run_cli(source, '--output', review)
+            companion = root / 'draft.txt'
+            companion.write_text('prior transcript', encoding='utf-8')
+            self.run_cli(source, '--mode', 'extract', '--review', review, '--confirmed',
+                         '--output', root / 'draft.xml', success=False)
+            self.assertFalse((root / 'draft.xml').exists())
+            self.assertEqual(companion.read_text(), 'prior transcript')
+
     def test_source_cannot_be_overwritten(self):
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / 'input.txt'

@@ -104,14 +104,20 @@ def main() -> int:
     source = Path(args.input).expanduser().resolve()
     if not source.exists():
         raise SystemExit(f"Input not found: {source}")
-    out_dir = Path(args.out).expanduser().resolve() if args.out else source.with_name(source.stem + "_enhanced")
-    out_dir.mkdir(parents=True, exist_ok=True)
+    inputs = iter_images(source)
+    stems = [p.stem.casefold() for p in inputs]
+    if len(set(stems)) != len(stems):
+        raise SystemExit("Input images have duplicate basenames; select distinct names to avoid overwriting outputs.")
+    out_dir = Path(args.out).expanduser().absolute() if args.out else source.with_name(source.stem + "_enhanced")
+    if out_dir.exists() or out_dir.is_symlink():
+        raise SystemExit("Output folder already exists; select a new folder to preserve prior files.")
+    out_dir.mkdir(parents=True, exist_ok=False)
     all_outputs: list[Path] = []
-    for image_path in iter_images(source):
+    for image_path in inputs:
         all_outputs.extend(enhance(image_path, out_dir, args.width))
     if args.contact_sheet:
         make_contact_sheet(all_outputs, out_dir / "sketch_enhancement_contact_sheet.jpg")
-    print(f"Input frames: {len(iter_images(source))}")
+    print(f"Input frames: {len(inputs)}")
     print(f"Enhanced files: {len(all_outputs)}")
     print(f"Output: {out_dir}")
     return 0

@@ -20,7 +20,7 @@ Judge generated video against its real production contract. Preserve usable work
 
 Use what exists: generated video, latest prompt, storyboard plus exact panel range, real references, first/final-frame locks, supplied audio, exact dialogue timing, previous accepted endpoint, and next-shot continuity.
 
-If a required comparison source is missing, judge only supported dimensions. Use `证据不足` for the unsupported contract instead of guessing.
+If a required comparison source is missing, judge only supported dimensions. Mark unsupported dimensions `证据不足` instead of guessing; do not let missing evidence conceal an independently observed blocking failure. An overall pass requires evidence covering the required time ranges and criteria. Sparse frames can locate candidates, but do not prove continuous motion, lip sync, temporal stability or audio quality; mark uninspected intervals and unlistened audio as not verified.
 
 Read `references/qc-contract.md` for the detailed input contract, review dimensions, cause classes, action ladder, and examples.
 

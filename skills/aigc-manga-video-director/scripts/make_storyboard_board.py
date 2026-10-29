@@ -154,9 +154,18 @@ def main() -> int:
     csv_path = Path(args.csv_path).expanduser().resolve()
     if not csv_path.exists():
         raise SystemExit(f"CSV not found: {csv_path}")
-    out = Path(args.out).expanduser().resolve() if args.out else csv_path.with_suffix(".html")
+    out = Path(args.out).expanduser().absolute() if args.out else csv_path.with_suffix(".html")
+    if out.resolve() == csv_path or out.is_symlink():
+        raise SystemExit("Output must be a new file, not the source or a symlink.")
+    if out.suffix.lower() not in {".html", ".htm"}:
+        raise SystemExit("Output must use .html or .htm.")
     rows = normalize_rows(csv_path)
-    out.write_text(render(rows, args.title, csv_path.parent), encoding="utf-8")
+    content = render(rows, args.title, csv_path.parent)
+    try:
+        with out.open("x", encoding="utf-8") as handle:
+            handle.write(content)
+    except FileExistsError as exc:
+        raise SystemExit("Output already exists; choose a new file path.") from exc
     print(out)
     return 0
 

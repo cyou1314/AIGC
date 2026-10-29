@@ -39,7 +39,7 @@
       "label": "后期制作：剪辑、字幕、声音、变体导出",
       "lead": "jianying-editing",
       "alternatives": ["auto-edit-video", "video-editing", "ffmpeg"],
-      "support": ["capcut-edit", "subtitles", "adobe-create-social-variations", "aigc-output-qc"],
+      "support": ["subtitles", "adobe-create-social-variations", "aigc-output-qc"],
       "deliverables": ["可编辑工程或真实导出视频（以请求为准）", "字幕/音轨/媒体路径完整"],
       "acceptance": ["时间线和媒体可恢复", "真实导出或工程重开检查", "字幕/声音/指定渠道规格"],
       "boundary": "本地原始口播自动粗剪选auto-edit-video；已有剪映工程选jianying-editing；简单转换用ffmpeg。"

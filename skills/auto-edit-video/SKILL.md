@@ -115,7 +115,13 @@ Chinese transcripts are normalized with the vendored OpenCC `s2twp` Taiwan
 dictionary. Contextual patches therefore target Taiwan Traditional text. Every
 step completes before any SRT, GUI, highlight, or card artifact is built. Latin
 text and word timings remain unchanged. Explicit `zh-CN` is the supported
-opt-out.
+opt-out. For this user, when the source or requested captions are Simplified
+Chinese, set `zh-CN` rather than `auto`; do not silently convert them to Taiwan
+Traditional. `zh-en` currently enables Traditional normalization, so for a
+Simplified Chinese/English mix choose `zh-CN` with the relevant glossary and
+verify English retention; if the requested result cannot be met, report the
+limitation instead of silently changing scripts. Explicit language preferences
+always override this default.
 
 Director profiles control copy, captions, cards, and motion language. The
 separate video-template selector controls source framing and compositing: three
@@ -254,8 +260,11 @@ Defaults are deliberately conservative:
 
 Transcribe locally with AutoClip/Whisper or HyperFrames Whisper. Always pin a
 multilingual model for non-English audio; never use `small.en` on Chinese.
-For Chinese/English teaching or interview footage, use source language `zh-en`
-and supply known English terms through `--transcription-glossary`. When exact
+For Chinese/English teaching or interview footage, select the requested script
+as well as language: `zh-en` currently normalizes to Taiwan Traditional, while
+`zh-CN` avoids that conversion. Supply known English terms through
+`--transcription-glossary` and verify retained wording; use `zh-en` only when
+Traditional output is appropriate or explicitly requested. When exact
 ASR homophones are known, add `--transcription-calibration
 "複數=富數;雪茄=學家|雪家"`. A mechanical issue count of zero is not semantic
 clearance: `not_configured`, `applied_needs_review`, and human approval are

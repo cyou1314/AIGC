@@ -39,7 +39,7 @@ Keep reusable observations as project candidates. Run broad promotion only at th
 
 ## Workflow source updates and GitHub closeout
 
-The user requests local AIGC workflow updates to reach the private AIGC repository.
+The user requests scoped local AIGC workflow updates to reach the configured AIGC repository. Its visibility and registered source exclusions are machine-specific: inspect the current sync configuration, and do not assume the repository is private.
 After changing a registered production Skill, shared workflow knowledge or template,
 follow the configured repository's docs/AUTO_SYNC.md and run scripts/sync_github.py run
 with a validated Python interpreter. This standing instruction authorizes scoped

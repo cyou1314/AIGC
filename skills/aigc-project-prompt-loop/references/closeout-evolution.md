@@ -1,6 +1,6 @@
 # Project Closeout Evolution
 
-Use this reference only at project closeout or when changing reusable rules from project evidence.
+Use this reference for an explicitly requested Skill review or separately authorized governance review. During ordinary project closeout, record useful observations as project-local candidates; do not edit or promote global Skills automatically.
 
 ## Evidence Order
 

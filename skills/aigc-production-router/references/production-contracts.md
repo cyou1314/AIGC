@@ -28,7 +28,7 @@ First distinguish an on-camera presenter, explicitly faceless narration, supplie
 
 ## Postproduction
 
-Existing JianYing/CapCut draft: use `jianying-editing` as the lead, with `capcut-edit` as the command reference. Inspect the exact draft, back it up via the supported tool and comply with open-editor conflict checks. Editable project delivery and rendered MP4 are distinct. JSON validation cannot prove playback quality.
+Existing JianYing/CapCut draft: use `jianying-editing` as the lead for the editor UI and supported draft inspection. The user prohibits JianYing/CapCut CLI: do not install, probe or invoke it, or route to CLI instructions. Inspect the exact draft, back it up through a supported method and comply with open-editor conflict checks. Editable project delivery and rendered MP4 are distinct. JSON validation cannot prove playback quality.
 
 Raw local speech footage with automatic cleanup requested: `auto-edit-video`. Run its own preflight; do not infer readiness from a CLI file. Deterministic trimming/conversion: `ffmpeg`. Requested Higgsedit composition: `video-editing`. Burned captions: `subtitles` or an applicable local renderer. A caption style suggestion does not trigger video rendering.
 

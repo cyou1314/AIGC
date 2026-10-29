@@ -1,6 +1,6 @@
 ---
 name: aigc-manga-video-director
-description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use when the user says 分析视频, 视频分析, 草图视频, 简笔画视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 构图分析, 刁钻角度, 分镜, 分镜板, 分镜板制作, 提示词, Seedance, Seedance 2.5, 导演分镜优化, cinematic-storyboard-optimizer, seedance-25-prompt-reviewer, 提示词审查, or needs deep video understanding, shot-by-shot camera movement analysis, composition and blocking breakdown, storyboard boards, storyboard tables, cinematic prompt writing, AI image/video prompts, character-consistency prompts, or production-ready shot plans for manga-style short dramas.
+description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use when the user says 分析视频, 视频分析, 草图视频, 简笔画视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 构图分析, 刁钻角度, 分镜, 分镜板, 分镜板制作, 视频提示词, Seedance, Seedance 2.5, 导演分镜优化, cinematic-storyboard-optimizer, seedance-25-prompt-reviewer, 提示词审查, or needs deep video understanding, shot-by-shot camera movement analysis, composition and blocking breakdown, storyboard boards, storyboard tables, cinematic prompt writing, AI image/video prompts, character-consistency prompts, or production-ready shot plans for manga-style short dramas.
 ---
 
 # AIGC Manga Video Director
@@ -49,7 +49,7 @@ Use these defaults unless the user says otherwise:
 - Read `references/seedance-preflight-and-bilingual.md` before delivering final Seedance prompts, when the user asks whether a prompt/video can run well, or when Chinese-English mixed prompting may improve clarity.
 - Read `references/charisma-action-language.md` when the user asks for `帅`, `酷`, `霸气`, `气场`, `男主感`, `神性`, `疯批感`, `反派感`, or when a prompt risks using those words without concrete camera, action, posture, rhythm, environment, and sound controls.
 - Read `references/cool-video-reference-patterns.md` when the user asks to learn from cool/stylish/action/anime/fight/hype videos, wants more `帅`, `酷`, `燃`, `炫`, `动作高级`, or asks for reference-video-inspired camera/action prompt patterns.
-- Learn from the user's corrections during use. If a correction is reusable for future AIGC manga video analysis, update this skill or its references instead of treating it as a one-off note.
+- Apply the user’s corrections to the current project. Record reusable observations as project candidates when useful; update a global Skill only on an explicit upgrade request or a separately authorized governance review.
 
 ## Core Rule
 
@@ -71,18 +71,12 @@ When `aigc-output-qc` requests evidence from a generated clip, report observed c
 4. Keep ownership boundaries explicit: FFmpeg does not decide shot boundaries, cinematic meaning, camera interpretation, composition, continuity, or prompt wording. This skill and its existing analysis scripts own those decisions.
 5. If the input is a script or includes recurring characters, read `references/character-asset-anchors.md` and build provisional character anchors before final prompt writing.
 6. If the input is a sketch animatic, rough storyboard, line drawing, or stick-figure video, read `references/sketch-video-understanding.md` and treat the drawing as a camera/blocking intent map.
-7. If a video is available, use the fast sampling workflow before deep analysis:
-   - run `scripts/shot_pipeline.py` first for most videos; it detects visual change points and exports start/mid/end frames per shot
-   - run `scripts/enhance_sketch_frames.py` on extracted frames when the source is low-contrast sketch, pencil, storyboard, or simple line art
-   - run `scripts/fast_sample_video.py` when `ffmpeg` is available
-   - use the current machine's Python virtual environment when OpenCV/PySceneDetect/yt-dlp are needed; invoke that interpreter directly rather than reuse another computer's PYTHONPATH
-   - use `scenedetect` for shot boundary detection before deep visual analysis
-   - create a low-resolution contact sheet and a timestamp manifest first
-   - inspect representative frames in the first pass to locate the strongest moments
-   - deepen analysis for every important shot, especially action peaks, reveals, camera moves, difficult angles, and prompt-critical continuity
+7. If video is available and sampling helps, choose the smallest useful method: inspect the actual clip directly, use `shot_pipeline.py` for tentative change points, or `fast_sample_video.py` for a compact sample. Enhance sketches only if source readability needs it; use `scenedetect` only when actually needed and available, never force all tools to run. Use the current machine’s dependencies and a new task-specific analysis directory; do not reuse existing output folders.
+   - A sample/contact sheet locates moments for closer inspection, not proof of complete motion or sound coverage. Scene-mode fast-sampler timestamps are unavailable; fixed-rate hints are nominal and must be checked against the media before citation.
+   - Deepen analysis for important action peaks, reveals, camera moves, difficult angles and continuity; inspect continuous playback and audio when the requested conclusions require them.
 8. If a video is available, inspect it as a sequence:
    - find scene changes, action peaks, reaction beats, reveals, and transitions
-   - compare adjacent frames to infer camera movement and subject movement
+   - compare frames as clues, then inspect continuous process where the requested camera or action conclusion requires it; mark missing motion evidence unknown
    - note motion direction, speed, easing, and whether the background/foreground parallax supports the inference
    - distinguish physical camera movement, zoom/crop, subject movement, edit/reframe, and mixed movement before writing prompts
 9. Break material into stable shot IDs: `S01`, `S02`, `S03`.
@@ -248,12 +242,4 @@ Before finishing, check that:
 
 ## Self-Improvement
 
-When the user corrects format, terminology, prompt style, storyboard structure, Seedance behavior, aspect-ratio rules, or analysis depth, classify the correction:
-
-- **Current task only**: use it in the current answer but do not change the skill.
-- **Reusable preference**: update `references/aigc-manga-production-playbook.md` or the most relevant reference file.
-- **Workflow/tooling rule**: update `SKILL.md` or a script when it affects future execution.
-
-Persist a rule when it is clearly reusable, consistent with the user's AIGC manga workflow, and not contradicted by existing rules. Do not wait for exact wording like "write this into the skill" when the user is clearly expressing a stable working preference.
-
-After updating the skill, briefly tell the user what changed. Keep updates narrow and avoid adding broad unrelated rules.
+Apply corrections to the current task and protect them in the project state when needed. A potentially reusable preference or workflow lesson is a project candidate, not automatic permission to change a global Skill. On an explicit Skill-upgrade request or separately authorized governance review, assess evidence and scope, revise the smallest relevant reference or tool, verify the result, and tell the user what actually changed. Avoid promoting project-specific facts or weakly supported assumptions.

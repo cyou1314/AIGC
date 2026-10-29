@@ -61,7 +61,7 @@ def sample_frames(ffmpeg: str, video: Path, frames_dir: Path, args: argparse.Nam
         cmd = [
             ffmpeg,
             "-hide_banner",
-            "-y",
+            "-n",
             "-i",
             str(video),
             "-vf",
@@ -77,7 +77,7 @@ def sample_frames(ffmpeg: str, video: Path, frames_dir: Path, args: argparse.Nam
         cmd = [
             ffmpeg,
             "-hide_banner",
-            "-y",
+            "-n",
             "-i",
             str(video),
             "-vf",
@@ -92,9 +92,10 @@ def sample_frames(ffmpeg: str, video: Path, frames_dir: Path, args: argparse.Nam
 def trim_frames(frames: list[Path], max_frames: int) -> list[Path]:
     if len(frames) <= max_frames:
         return frames
-    keep_indexes = {
-        round(i * (len(frames) - 1) / (max_frames - 1)) for i in range(max_frames)
-    }
+    if max_frames < 1:
+        raise ValueError("max_frames must be positive")
+    keep_indexes = ({0} if max_frames == 1 else
+        {round(i * (len(frames) - 1) / (max_frames - 1)) for i in range(max_frames)})
     keep = [frame for idx, frame in enumerate(frames) if idx in keep_indexes]
     for idx, frame in enumerate(frames):
         if idx not in keep_indexes:
@@ -114,7 +115,14 @@ def write_manifest(frames: list[Path], manifest: Path, fps: float, mode: str) ->
         writer = csv.writer(handle)
         writer.writerow(["shot_hint", "timestamp_hint", "frame_path", "sampling_mode"])
         for idx, frame in enumerate(frames, start=1):
-            writer.writerow([f"K{idx:02d}", timestamp_for(idx - 1, fps), str(frame), mode])
+            # Scene cuts do not carry a verified timestamp here; fixed FPS is only
+            # a nominal index. Do not renumber retained sparse frames as adjacent.
+            try:
+                frame_number = int(frame.stem.removeprefix("frame_"))
+            except ValueError:
+                frame_number = 0
+            hint = timestamp_for(frame_number - 1, fps) if mode == "fixed" and frame_number > 0 else ""
+            writer.writerow([f"K{idx:02d}", hint, str(frame), mode])
 
 
 def make_contact_sheet(frames: list[Path], output: Path) -> None:
@@ -145,9 +153,13 @@ def main() -> int:
     video = Path(args.video).expanduser().resolve()
     if not video.exists():
         raise SystemExit(f"Video not found: {video}")
-    out = Path(args.out).expanduser().resolve() if args.out else video.with_suffix("")
+    if args.max_frames < 1 or args.fps <= 0 or args.width <= 0:
+        raise SystemExit("fps, width and max-frames must be positive.")
+    out = Path(args.out).expanduser().absolute() if args.out else video.with_suffix("")
+    if out.exists() or out.is_symlink():
+        raise SystemExit("Output folder already exists; select a new folder to preserve prior files.")
+    out.mkdir(parents=True, exist_ok=False)
     frames_dir = out / "frames"
-    out.mkdir(parents=True, exist_ok=True)
     sample_frames(ffmpeg, video, frames_dir, args)
     frames = sorted(frames_dir.glob("frame_*.jpg"))
     frames = trim_frames(frames, args.max_frames)

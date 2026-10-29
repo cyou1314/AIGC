@@ -56,6 +56,6 @@ If the video is long or the user asks for "analyze this video" without a target,
 
 ## Tool Preference
 
-Use `scripts/fast_sample_video.py` if available and `ffmpeg` is installed. It creates a timestamped frame folder, a manifest, and a contact sheet.
+Use `scripts/fast_sample_video.py` if available and `ffmpeg` is installed. It creates frames, a manifest, and a contact sheet in a new output folder. Scene-mode timestamps are not extracted and remain blank; fixed-rate timestamps are nominal hints, not verified media timestamps. Check real timing separately before citing it.
 
 If `ffmpeg` is not available, do not attempt slow exhaustive extraction. Ask for screenshots/keyframes or request that `ffmpeg` be installed for fast local analysis.
