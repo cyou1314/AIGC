@@ -2,7 +2,7 @@
   "pack_name": "aigc-production-workbench",
   "display_name": "Xan",
   "date": "2026-10-21",
-  "version": "1.3.16",
+  "version": "1.3.17",
   "coverage": "20 repository Skills plus integrated company branches; external plugins remain optional dependencies",
   "modules": [
     {

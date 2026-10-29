@@ -11,6 +11,8 @@ Select the requested mode: design/critique, prompt-only, actual generation/edit,
 
 Read only the branch needed for this action: [characters](references/characters.md) for identity/silhouette/multi-view, [costumes](references/costumes.md) for layers/material/function, and [environments](references/environments.md) for usable space/perspective/continuity. For mixed visual development maintain shared character, costume and scene IDs rather than three disconnected styles.
 
+For short-drama character/scene asset-board prompts modeled on the user’s production examples, read [short-drama asset boards](references/drama-asset-boards.md). Treat the observed arrangements as project patterns, not platform-wide requirements; the user’s current layout, source references and asset workflow take precedence.
+
 Actual poster composition with editable/substantial typography is led by canvas-design; this skill owns its generated main visual and the overseas short-drama poster prompt-only branch. UI/web layout is led by frontend-design, not image generation. Explicit design critique or a learning comparison can use aigc-design-review; video QC remains separate.
 
 Recovered methods are indexed in [recovery and sources](references/recovery-index.md). For multi-reference edits read [reference control](references/legacy-reference-control.md); for an under-authored composition read [composition engine](references/legacy-creative-composition-engine.md); for requested style/light/value diagnosis read [art direction](references/legacy-aesthetic-art-direction.md) or [visual diagnosis](references/legacy-visual-diagnosis.md). Current user intent, output format and this entrypoint override historical host presets. Do not load all recovered references for every image.
