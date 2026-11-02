@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.22",
+  "version": "1.3.23",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -30,7 +30,7 @@
       "path": "skills/aigc-image-director",
       "origin": "user-installed-workflow-snapshot",
       "files": 19,
-      "sha256_normalized_text": "b26623c4c3a2b3abf7852d7b337794c8d91f88163a06082733281fd9e71322b0"
+      "sha256_normalized_text": "36ccb014ce31cacf899b8cbc357f3397dfb0fa91f6a2f7fd64213ab36a39232b"
     },
     {
       "name": "aigc-manga-video-director",
