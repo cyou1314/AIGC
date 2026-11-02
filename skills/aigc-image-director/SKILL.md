@@ -25,7 +25,7 @@ For an unclear visual hook, concept exploration, differentiation, or poster revi
 
 ## Direct the image
 
-For “script-character-intro-cards” / 人物出场介绍卡, read [company character introduction cards](references/company-character-intro-cards.md) and its design guide. This is a prompt-only 4:1 transparent overlay branch by default, with episode-bound appearances and spoiler-safe identity copy, distinct from portrait sheets and posters. Explicit actual-image requests continue through the available image workflow.
+For “script-character-intro-cards” / 人物出场介绍卡, read [company character introduction cards](references/company-character-intro-cards.md) and its design guide. Use the requested episode, scene, character or full-project scope and the information available at the card's intended moment. A 4:1 transparent overlay and prompt-only delivery are defaults for this branch, not overrides of the user's requested format or actual-image deliverable. Distinguish it from portrait sheets and posters.
 
 For role-sheet layout/relighting repair, approved-poster outpainting, AO/white-model-assisted repair, or storyboard line-art previsualization, read [reference repair and expansion](references/reference-repair-and-expansion.md). Keep each operation scoped, treat ratios and layouts as project presets, and verify pixel/alpha/geometry claims using real outputs rather than prompt wording.
 
