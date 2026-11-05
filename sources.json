@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.24",
+  "version": "1.3.25",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -16,7 +16,7 @@
       "path": "skills/aigc-commercial-content",
       "origin": "user-installed-workflow-snapshot",
       "files": 2,
-      "sha256_normalized_text": "b854ac46441006781404c55edb68b33582fdb8a5d39db392168dd8faa6e1c7cd"
+      "sha256_normalized_text": "74fc8cff36380117d6c21bfa60262cfd9640d7368e20e4ddaaf7edb200756b3c"
     },
     {
       "name": "aigc-design-review",
@@ -37,14 +37,14 @@
       "path": "skills/aigc-manga-video-director",
       "origin": "user-installed-workflow-snapshot",
       "files": 32,
-      "sha256_normalized_text": "83f35164dbaa2b9a3fc366ced4d9c61f6a95ee9af54687b92c474875282f6ebd"
+      "sha256_normalized_text": "fbdd8522e61616ed086ca5823746d7f836a2b683b7d46877caeb220db5dd6eac"
     },
     {
       "name": "aigc-output-qc",
       "path": "skills/aigc-output-qc",
       "origin": "user-installed-workflow-snapshot",
       "files": 3,
-      "sha256_normalized_text": "73283a06ca087a1525eef18e8b555ca05b9ddd37cb78c4823805ea635d789206"
+      "sha256_normalized_text": "b5374f90f5c71367f83e7f85a96d574dc6e742384487cfed87a3bc18d41c91f3"
     },
     {
       "name": "aigc-production-router",
@@ -58,7 +58,7 @@
       "path": "skills/aigc-project-prompt-loop",
       "origin": "user-installed-workflow-snapshot",
       "files": 3,
-      "sha256_normalized_text": "41d036a450a480b6c1450b74835a9ce5483b991c0c44e8b88730382cd2665f5b"
+      "sha256_normalized_text": "f2543f63502798fa0e0f7da8c8943f6440bdce3265681cbbbf51c11dad627a91"
     },
     {
       "name": "aigc-screenwriter",

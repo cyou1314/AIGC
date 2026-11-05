@@ -1,6 +1,6 @@
 ---
 name: aigc-manga-video-director
-description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use when the user says 分析视频, 视频分析, 草图视频, 简笔画视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 构图分析, 刁钻角度, 分镜, 分镜板, 分镜板制作, 视频提示词, Seedance, Seedance 2.5, 导演分镜优化, cinematic-storyboard-optimizer, seedance-25-prompt-reviewer, 提示词审查, or needs deep video understanding, shot-by-shot camera movement analysis, composition and blocking breakdown, storyboard boards, storyboard tables, cinematic prompt writing, AI image/video prompts, character-consistency prompts, or production-ready shot plans for manga-style short dramas.
+description: Analyze reference videos, sketch animatics, rough storyboard videos, image sequences, screenshots, or scripts for AIGC manga/drama production. Use for 分析视频, 视频分析, 草图视频, 分镜草图, 动态分镜, 镜头分析, 运镜分析, 分镜, 分镜板, 视频提示词, Seedance, 导演分镜优化, cinematic-storyboard-optimizer, seedance-25-prompt-reviewer, or review of storyboard/video prompts. Also use for shot-by-shot camera and blocking analysis, storyboard image prompts, or production-ready shot plans. Standalone image and audio prompts follow their own specialists.
 ---
 
 # AIGC Manga Video Director
@@ -32,7 +32,7 @@ Use these defaults unless the user says otherwise:
 - Output in Chinese.
 - Treat "分析视频" as a request to use this skill.
 - Many inputs are sketch animatics, rough storyboard videos, simple line drawings, or draft motion plans.
-- Final video prompts target Seedance 2.5 (company planning profile; verify the actual generation surface).
+- For the current company production profile, plan for Seedance 2.5 unless this project's confirmed target or the user specifies otherwise. Other projects use their own target; if unknown, keep it unspecified instead of imposing the company preset. Verify the actual generation surface when needed.
 - Seedance prompt blocks should include source video timecode/time range for 1:1 video recreation, but should not include separate model or aspect-ratio fields unless explicitly requested.
 - Storyboard panel aspect ratios must keep `long side / short side <= 2.5`.
 - Prefer practical production outputs: shot analysis, storyboard table, Seedance prompt blocks, continuity notes, and optional HTML storyboard board.
@@ -226,7 +226,7 @@ Before finishing, check that:
 - If the prompt asks for `帅`, `酷`, `霸气`, `气场`, or similar charisma, translate it into visible silhouette, posture, anticipation, action economy, camera power relation, environmental reaction, sound, and a strong endpoint. Do not leave it as a bare adjective.
 - Quota-saving does not justify shallow analysis. Important shots still need evidence, motion decomposition, composition logic, generation risks, and reproduction strategy.
 - The output uses medium density: it removes duplicate wording and over-complex phrasing, but keeps timecode, needed `@` references, camera evidence/path, start/end framing, composition change, stability, and avoid constraints.
-- Seedance prompts are written for Seedance 2.5 (company planning profile; verify the actual generation surface) unless the user names another target model.
+- Seedance prompts follow the confirmed project/model target; the current company planning profile uses Seedance 2.5 when applicable, subject to actual surface verification.
 - Seedance prompts choose the correct mode before drafting: T2V, I2V, V2V, R2V, first/last-frame, edit, extend, or sequence. Each supplied reference has an explicit role and, when needed, a non-transfer rule.
 - Include source video timecode/time range in Seedance prompt blocks when recreating a reference video, e.g. `时间: 00:12.4-00:16.8`.
 - Do not include separate model or aspect-ratio fields in Seedance prompt blocks unless the user explicitly asks for them. Treat `时间` as source-video timing, not a model parameter.

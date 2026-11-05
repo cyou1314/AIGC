@@ -26,7 +26,7 @@ For conversion-oriented work, connect attention → evidence/use → response. B
 - Supplied clip variants: `ad-multiplier` when its length and edit constraints fit.
 - Existing local draft or footage: `jianying-editing` / `auto-edit-video`; requested Higgsedit graphics: `video-editing`.
 
-Read the selected specialist's full SKILL.md before execution. Do not load or launch all candidates. When a named plugin skill is unavailable, discover an executable alternative through the plugin tools; catalog presence is not connection proof.
+Read the selected specialist's full SKILL.md before execution. Do not load or launch all candidates. Named UGC and hosting specialists are optional, not guaranteed installed. If one is unavailable, discover an available suitable tool or continue the authorized concept/prompt work here; for actual video, use an available production workflow and report any missing execution capability. Catalog presence is not connection proof.
 
 ## Acceptance and variants
 

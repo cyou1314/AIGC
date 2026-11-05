@@ -18,7 +18,7 @@ Use this skill as the project conductor for one AIGC manga/drama production thre
 
 ## Project State
 
-Maintain project state in the project page managed by `obsidian-codex-knowledge-loop`; that page is the source of truth across turns and devices. Chat memory is only a working cache. At start, create or recover the page; after material changes, update its snapshot and knowledge capsule; after real generation, append a receipt.
+For an established or complex cross-turn project, recover its project page through `obsidian-codex-knowledge-loop` when available, and record the necessary state and actual generation evidence as needed. One-off work does not require a project page. The confirmed project materials and user's current instruction remain authoritative; a project page can be stale and must not override them.
 
 - `阶段`: start, video-analysis, input-collection, prompt-draft, revision, output-qc, closeout.
 - `参考视频/素材`: video files, screenshots, extracted frames, audio, scripts, rough animatics.
@@ -40,7 +40,7 @@ When state is missing, ask for only the next blocking input. Do not restart the 
 
 When the user says `开始`:
 
-1. Invoke `obsidian-codex-knowledge-loop`: recover an existing project page or create one from the quick template, then read `当前快照` and `当前知识胶囊`.
+1. For an established or complex cross-turn project, use `obsidian-codex-knowledge-loop` to recover the existing page or create one if useful; read the current snapshot and update stale details from authoritative inputs. Small one-off work does not require a page.
 2. Identify available materials and record authoritative inputs, constraints, output root, and one next step on the project page.
 3. If video/reference footage is present, move directly to video analysis.
 4. If a script is present, treat it as a valid starting material: extract characters, scenes, emotional beats, and then route character/staging work to `aigc-manga-video-director`.
@@ -119,7 +119,7 @@ For each shot, include only shot-specific deltas:
 - continuity constraints
 - avoid rules only if this shot has special risks
 
-Use Seedance 2.5 as the current video planning target. Follow the director Skill’s current company standard: 4–30 seconds per production unit as a user-supplied planning condition, not an internal-shot minimum or an unverified API guarantee. When revising an existing board, use the source duration as the starting point; preserve it when feasible. The user permits changing it or splitting when genuinely needed for essential action, natural dialogue or reactions; explain the source and new durations and keep an exact trailing duration in each resulting prompt. Preserve explicit duration, one-take and no-split locks. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
+Use the user's or project's confirmed video target. The applicable current company profile plans for Seedance 2.5 and 4–30 seconds per production unit; this is not an internal-shot minimum or an unverified API guarantee. When revising an existing board, use the source duration as the starting point; preserve it when feasible. The user permits changing it or splitting when genuinely needed for essential action, natural dialogue or reactions; explain the source and new durations and keep an exact trailing duration in each resulting prompt. Preserve explicit duration, one-take and no-split locks. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
 
 ### 5. Revision Loop
 
@@ -248,5 +248,5 @@ Before answering in any phase, check:
 - Accepted defects are recorded as explicit exceptions and are not repeatedly re-flagged.
 - QC returns repair deltas; this skill returns the complete updated prompt when revision is required.
 - Image-generation prompts are absent unless the user explicitly requested them.
-- Closeout audits the entire project process and does not treat the final prompt alone as sufficient evidence.
-- Closeout reviews harmful, outdated, redundant, conflicting, or low-value rules instead of only adding new learning; deletion remains optional and requires the strongest evidence.
+- When the project warrants it, closeout records meaningful outcomes and evidence; a final prompt alone does not prove successful production or user acceptance.
+- Review reusable rules only when explicitly requested or separately authorized; ordinary closeout keeps useful observations as project candidates.

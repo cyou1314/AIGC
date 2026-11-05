@@ -27,10 +27,10 @@ Read `references/qc-contract.md` for the detailed input contract, review dimensi
 ## Review Workflow
 
 1. Identify the asset ID, intended shot, and available contract evidence.
-2. Use `ffprobe` for metadata. Ask `ffmpeg` for only the proxy, trim, frames, or audio derivative needed for inspection.
+2. Inspect metadata when relevant and available; use `ffmpeg` only for the proxy, trim, frames, or audio derivative needed for inspection. If an inspection tool is unavailable, evaluate only what existing evidence supports and mark the rest unverified.
 3. Sample the start, action beats, dialogue beats, transitions, and end. Deep-read only risky ranges.
-4. Ask `aigc-manga-video-director` for observed visual, camera, action, artifact, and continuity evidence.
-5. Use `transcribe` or `audio-to-prompt` when exact words, delivery, pacing, sound, or lip sync matter.
+4. Use `aigc-manga-video-director` when specialist visual, camera, action, artifact, or continuity analysis materially helps; otherwise inspect available evidence directly.
+5. Use `transcribe` or `audio-to-prompt` when their specific capability is needed for words, delivery, pacing or sound; neither transcription nor audio alone proves lip sync.
 6. Compare evidence with the contract, assign one verdict, then choose the lowest-cost valid action.
 7. Record accepted exceptions so later checks do not repeatedly flag them.
 
@@ -99,7 +99,7 @@ Lead with:
 
 For `通过`, omit empty problem and repair sections. Mark uncertain causes as inference.
 
-For `证据不足`, use only:
+For `证据不足` with no independently observed blocking failure, use:
 
 ```text
 验收结论: 证据不足
@@ -108,6 +108,8 @@ For `证据不足`, use only:
 缺失证据:
 下一步:
 ```
+
+If an independently observed blocking failure is sufficient for `需要重做`, report that failure and the missing evidence separately; incomplete coverage must not hide a supported failure or be described as an overall pass.
 
 ## Companion Skills
 
