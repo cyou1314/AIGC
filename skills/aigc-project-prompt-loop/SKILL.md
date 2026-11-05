@@ -119,7 +119,7 @@ For each shot, include only shot-specific deltas:
 - continuity constraints
 - avoid rules only if this shot has special risks
 
-Use the user's or project's confirmed video target. The applicable current company profile plans for Seedance 2.5 and 4–30 seconds per production unit; this is not an internal-shot minimum or an unverified API guarantee. When revising an existing board, use the source duration as the starting point; preserve it when feasible. The user permits changing it or splitting when genuinely needed for essential action, natural dialogue or reactions; explain the source and new durations and keep an exact trailing duration in each resulting prompt. Preserve explicit duration, one-take and no-split locks. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
+Default video storyboards and prompts to Seedance 2.5 across projects unless the user explicitly specifies a different target. The applicable current company profile plans for 4–30 seconds per production unit; this is not an internal-shot minimum or an unverified API guarantee. When revising an existing board, use the source duration as the starting point; preserve it when feasible. The user permits changing it or splitting when genuinely needed for essential action, natural dialogue or reactions; explain the source and new durations and keep an exact trailing duration in each resulting prompt. Preserve explicit duration, one-take and no-split locks. Include source ranges for recreation and deliver one complete copyable prompt unless alternatives are requested. Verify the actual generation surface before paid execution.
 
 ### 5. Revision Loop
 

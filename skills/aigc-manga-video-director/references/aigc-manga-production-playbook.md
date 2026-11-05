@@ -10,7 +10,7 @@ Always optimize for production use. The user needs outputs that can be used to g
 
 Default output language: Chinese.
 
-Use the user's or project's confirmed video target. Seedance 2.5 is a planning default only for the applicable company profile; verify the actual generation surface when relevant.
+Default video storyboards and prompts to Seedance 2.5 across projects unless the user explicitly specifies a different target; verify the actual generation surface when relevant.
 
 Main shot table placement: put the shot table at the very top or the very bottom of the answer. Default to the top for video analysis, storyboard plans, and production handoff. Use the bottom only when a short conclusion or warning must come first. Do not place the shot table in the middle between long analysis sections.
 
@@ -161,7 +161,7 @@ Do not use extreme panel ratios such as `1:3`, `3:1`, `9:26`, or `26:9`.
 Do this:
 
 1. Ask or infer whether the prompt is for image generation, Seedance video generation, or both.
-2. If no model is named, use the applicable confirmed project target; only assume Seedance 2.5 when the company planning profile applies. Otherwise leave the target unspecified until it matters.
+2. If no model is named, use Seedance 2.5 for video across projects; an explicit current user instruction selecting another model takes priority.
 3. Build or update character anchors when recurring characters or character references are present.
 4. Include source time/time range when recreating source video; do not output model/ratio fields by default.
 5. Insert user-provided images into the prompt where they matter, especially `参考图`, `首帧`, `尾帧`, `风格`, and `稳定性`. Use `@图片名` only; do not include position, coordinates, path, or file extension in the mention.

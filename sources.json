@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.25",
+  "version": "1.3.26",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -37,7 +37,7 @@
       "path": "skills/aigc-manga-video-director",
       "origin": "user-installed-workflow-snapshot",
       "files": 32,
-      "sha256_normalized_text": "fbdd8522e61616ed086ca5823746d7f836a2b683b7d46877caeb220db5dd6eac"
+      "sha256_normalized_text": "a69e0746071b9ef33b125c14782f35d66d1fdbca1577f3c782a4b1edabe3b0b3"
     },
     {
       "name": "aigc-output-qc",
@@ -58,7 +58,7 @@
       "path": "skills/aigc-project-prompt-loop",
       "origin": "user-installed-workflow-snapshot",
       "files": 3,
-      "sha256_normalized_text": "f2543f63502798fa0e0f7da8c8943f6440bdce3265681cbbbf51c11dad627a91"
+      "sha256_normalized_text": "24e69bdddf7490e3095a3194757b4fcce1411632117c3135d40d119f3b879b1a"
     },
     {
       "name": "aigc-screenwriter",

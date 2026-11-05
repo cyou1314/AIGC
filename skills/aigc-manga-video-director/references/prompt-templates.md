@@ -6,7 +6,7 @@ Use these templates when writing AIGC manga/drama video prompts. Prefer concrete
 
 Templates are reference structures, not mandatory forms. Select, merge, shorten, or expand them according to the specific task: source material, shot complexity, one-shot vs multi-shot structure, reference images, audio, target model, and whether the user needs analysis, a copyable prompt, or a production board. If the user provides a template, learn its useful ordering and constraints, then adapt it to the current shot instead of copying the layout mechanically.
 
-Use the user's or project's confirmed video target; Seedance 2.5 is the default only within the applicable company planning profile. Read `seedance-prompting.md` when writing final prompts for these models.
+Default video prompts to Seedance 2.5 across projects unless the user explicitly specifies another target. Read `seedance-prompting.md` when writing final prompts for these models.
 
 Before final Seedance output, read `seedance-preflight-and-bilingual.md` and run a mental preflight: can the clip execute physically, preserve identity, follow one camera logic, and end on the intended frame? Revise before output when the answer is no.
 
