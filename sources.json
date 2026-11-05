@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "1.3.23",
+  "version": "1.3.24",
   "provenance": "THIRD_PARTY_NOTICES.md",
   "note": "Packaged snapshot, not upstream release verification. Private fixtures excluded.",
   "skills": [
@@ -37,7 +37,7 @@
       "path": "skills/aigc-manga-video-director",
       "origin": "user-installed-workflow-snapshot",
       "files": 32,
-      "sha256_normalized_text": "cee772a7bac685c6be159ca46119a86cad8c9b79509cb15c5f79c68a60415d33"
+      "sha256_normalized_text": "83f35164dbaa2b9a3fc366ced4d9c61f6a95ee9af54687b92c474875282f6ebd"
     },
     {
       "name": "aigc-output-qc",
